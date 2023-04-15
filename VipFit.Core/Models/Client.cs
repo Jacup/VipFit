@@ -5,6 +5,14 @@
     /// </summary>
     internal class Client : DbObject, IEquatable<Client>
     {
+        public Client(string firstName, string lastName, string phone, string email)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Phone = phone;
+            Email = email;
+        }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
