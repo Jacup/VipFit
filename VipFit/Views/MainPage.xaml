@@ -7,6 +7,16 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        
+        <StackPanel>
+            <TextBox x:Name="Input_Box"/>
+            <Button Click="AddData">Add</Button>
+            <ListView x:Name="Output">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox Text="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
     </Grid>
 </Page>

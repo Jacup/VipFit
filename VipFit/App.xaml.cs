@@ -6,6 +6,7 @@ using VipFit.Activation;
 using VipFit.Contracts.Services;
 using VipFit.Core.Contracts.Services;
 using VipFit.Core.Services;
+using VipFit.Database;
 using VipFit.Helpers;
 using VipFit.Models;
 using VipFit.Notifications;
@@ -45,45 +46,47 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        Host = Microsoft.Extensions.Hosting.Host.
-        CreateDefaultBuilder().
-        UseContentRoot(AppContext.BaseDirectory).
-        ConfigureServices((context, services) =>
-        {
-            // Default Activation Handler
-            services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+        DataAccess.InitializeDatabase();
 
-            // Other Activation Handlers
-            services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
+        Host = Microsoft.Extensions.Hosting.Host
+            .CreateDefaultBuilder()
+            .UseContentRoot(AppContext.BaseDirectory)
+            .ConfigureServices((context, services) =>
+            {
+                // Default Activation Handler
+                services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
 
-            // Services
-            services.AddSingleton<IAppNotificationService, AppNotificationService>();
-            services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
-            services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-            services.AddTransient<INavigationViewService, NavigationViewService>();
+                // Other Activation Handlers
+                services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
 
-            services.AddSingleton<IActivationService, ActivationService>();
-            services.AddSingleton<IPageService, PageService>();
-            services.AddSingleton<INavigationService, NavigationService>();
+                // Services
+                services.AddSingleton<IAppNotificationService, AppNotificationService>();
+                services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
+                services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+                services.AddTransient<INavigationViewService, NavigationViewService>();
 
-            // Core Services
-            services.AddSingleton<ISampleDataService, SampleDataService>();
-            services.AddSingleton<IFileService, FileService>();
+                services.AddSingleton<IActivationService, ActivationService>();
+                services.AddSingleton<IPageService, PageService>();
+                services.AddSingleton<INavigationService, NavigationService>();
 
-            // Views and ViewModels
-            services.AddTransient<SettingsViewModel>();
-            services.AddTransient<SettingsPage>();
-            services.AddTransient<ClientListViewModel>();
-            services.AddTransient<ClientListPage>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<MainPage>();
-            services.AddTransient<ShellPage>();
-            services.AddTransient<ShellViewModel>();
+                // Core Services
+                services.AddSingleton<ISampleDataService, SampleDataService>();
+                services.AddSingleton<IFileService, FileService>();
 
-            // Configuration
-            services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
-        }).
-        Build();
+                // Views and ViewModels
+                services.AddTransient<SettingsViewModel>();
+                services.AddTransient<SettingsPage>();
+                services.AddTransient<ClientListViewModel>();
+                services.AddTransient<ClientListPage>();
+                services.AddTransient<MainViewModel>();
+                services.AddTransient<MainPage>();
+                services.AddTransient<ShellPage>();
+                services.AddTransient<ShellViewModel>();
+
+                // Configuration
+                services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+            })
+            .Build();
 
         App.GetService<IAppNotificationService>().Initialize();
 
@@ -100,7 +103,7 @@ public partial class App : Application
     {
         base.OnLaunched(args);
 
-        App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+        //App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
 
         await App.GetService<IActivationService>().ActivateAsync(args);
     }
