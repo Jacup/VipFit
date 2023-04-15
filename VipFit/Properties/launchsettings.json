@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "VipFit (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "VipFit (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
