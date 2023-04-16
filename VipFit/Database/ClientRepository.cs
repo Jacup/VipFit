@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using VipFit.Core.Models;
-
-namespace VipFit.Database
+﻿namespace VipFit.Database
 {
+    using Microsoft.EntityFrameworkCore;
+    using VipFit.Core.Models;
+
     /// <summary>
     /// Communication with Clients database using EF Core.
     /// </summary>
@@ -10,6 +10,10 @@ namespace VipFit.Database
     {
         private readonly VipFitContext db;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientRepository"/> class.
+        /// </summary>
+        /// <param name="db">Client repository.</param>
         public ClientRepository(VipFitContext db) => this.db = db;
 
         public async Task<IEnumerable<Client>> GetAsync() => await db.Clients.AsNoTracking().ToListAsync();
