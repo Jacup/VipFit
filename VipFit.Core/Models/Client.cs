@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a client entity.
     /// </summary>
-    internal class Client : DbObject, IEquatable<Client>
+    public class Client : DbObject, IEquatable<Client>
     {
         public Client(string firstName, string lastName, string phone, string email)
         {
@@ -11,6 +11,10 @@
             LastName = lastName;
             Phone = phone;
             Email = email;
+        }
+
+        public Client()
+        {
         }
 
         public string FirstName { get; set; }

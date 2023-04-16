@@ -3,7 +3,7 @@
     /// <summary>
     /// Base class for database entities.
     /// </summary>
-    internal class DbObject
+    public class DbObject
     {
         /// <summary>
         /// Gets or sets the database id.
