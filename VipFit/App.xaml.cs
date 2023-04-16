@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
@@ -7,18 +8,22 @@ using VipFit.Contracts.Services;
 using VipFit.Core.Contracts.Services;
 using VipFit.Core.Services;
 using VipFit.Database;
-using VipFit.Helpers;
 using VipFit.Models;
 using VipFit.Notifications;
 using VipFit.Services;
 using VipFit.ViewModels;
 using VipFit.Views;
+using Windows.Storage;
 
 namespace VipFit;
 
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
 public partial class App : Application
 {
+    private static readonly string dbName = "vipfit_sqlite.db";
+    private static readonly string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, dbName);
+
+
     // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
     // https://docs.microsoft.com/dotnet/core/extensions/generic-host
     // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
@@ -46,8 +51,6 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        DataAccess.InitializeDatabase();
-
         Host = Microsoft.Extensions.Hosting.Host
             .CreateDefaultBuilder()
             .UseContentRoot(AppContext.BaseDirectory)
@@ -69,6 +72,11 @@ public partial class App : Application
                 services.AddSingleton<IPageService, PageService>();
                 services.AddSingleton<INavigationService, NavigationService>();
 
+                // Database
+                services.AddDbContext<VipFitContext>(
+                    options => options.UseSqlite($@"Data Source={dbpath}"));
+
+
                 // Core Services
                 services.AddSingleton<ISampleDataService, SampleDataService>();
                 services.AddSingleton<IFileService, FileService>();
@@ -89,6 +97,7 @@ public partial class App : Application
             .Build();
 
         App.GetService<IAppNotificationService>().Initialize();
+        App.GetService<VipFitContext>().Initialize();
 
         UnhandledException += App_UnhandledException;
     }
