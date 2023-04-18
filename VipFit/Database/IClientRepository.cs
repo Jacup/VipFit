@@ -18,7 +18,7 @@
         /// </summary>
         /// <param name="id">Cliend ID.</param>
         /// <returns>Client with provided ID, otherwise null.</returns>
-        Task<Client> GetAsync(Guid id);
+        Task<Client?> GetAsync(Guid id);
 
         /// <summary>
         /// Gets clients from database by content. For search purposes.

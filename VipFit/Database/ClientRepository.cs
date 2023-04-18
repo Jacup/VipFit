@@ -20,7 +20,7 @@
         public async Task<IEnumerable<Client>> GetAsync() => await db.Clients.AsNoTracking().ToListAsync();
 
         /// <inheritdoc/>
-        public async Task<Client> GetAsync(Guid id) => await db.Clients.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        public async Task<Client?> GetAsync(Guid id) => await db.Clients.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
 
         /// <inheritdoc/>
         public async Task<IEnumerable<Client>> GetAsync(string args)
@@ -69,6 +69,5 @@
                 await db.SaveChangesAsync();
             }
         }
-
     }
 }
