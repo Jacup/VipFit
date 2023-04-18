@@ -7,7 +7,5 @@ public class MainViewModel : ObservableRecipient
 {
     public MainViewModel()
     {
-        var dbcontext = App.GetService<VipFitContext>();
-        var entities = dbcontext.Clients.ToList();
     }
 }

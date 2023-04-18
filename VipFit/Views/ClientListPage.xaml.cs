@@ -1,5 +1,11 @@
-﻿using Microsoft.UI.Xaml.Controls;
-
+﻿using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using VipFit.ViewModels;
 
 namespace VipFit.Views;
@@ -8,14 +14,55 @@ namespace VipFit.Views;
 // For more details, see the documentation at https://docs.microsoft.com/windows/communitytoolkit/controls/datagrid.
 public sealed partial class ClientListPage : Page
 {
-    public ClientListViewModel ViewModel
-    {
-        get;
-    }
+    private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+    public ClientListViewModel ViewModel { get; }
 
     public ClientListPage()
     {
         ViewModel = App.GetService<ClientListViewModel>();
         InitializeComponent();
+    }
+
+    private async Task ResetClientList() => await dispatcherQueue.EnqueueAsync(ViewModel.GetClientListAsync);
+
+    /// <summary>
+    /// Reverts all changes to the row if the row has changes but a cell is not currently in edit mode.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void DataGrid_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key == Windows.System.VirtualKey.Escape &&
+            ViewModel.SelectedClient != null &&
+            ViewModel.SelectedClient.IsModified &&
+            !ViewModel.SelectedClient.IsInEdit)
+        {
+            (sender as DataGrid).CancelEdit(DataGridEditingUnit.Row);
+        }
+    }
+
+    /// <summary>
+    /// Selects right click the tapped Client. 
+    /// </summary>
+    private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
+        ViewModel.SelectedClient = (e.OriginalSource as FrameworkElement).DataContext as ClientViewModel;
+
+
+
+
+    /// <summary>
+    /// Resets the clients list when leaving the page.
+    /// </summary>
+    protected async override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        await ResetClientList();
+    }
+
+    /// <summary>
+    /// Applies any existing filter when navigating to the page.
+    /// </summary>
+    protected async override void OnNavigatedTo(NavigationEventArgs e)
+    {
     }
 }

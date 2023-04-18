@@ -75,7 +75,7 @@ public partial class App : Application
                 // Database
                 services.AddDbContext<VipFitContext>(
                     options => options.UseSqlite($@"Data Source={dbpath}"));
-
+                services.AddTransient<IClientRepository, ClientRepository>();
 
                 // Core Services
                 services.AddSingleton<ISampleDataService, SampleDataService>();

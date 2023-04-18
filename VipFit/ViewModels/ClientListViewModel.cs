@@ -1,38 +1,85 @@
-﻿using System.Collections.ObjectModel;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using VipFit.Contracts.ViewModels;
-using VipFit.Core.Contracts.Services;
-using VipFit.Core.Models;
-
-namespace VipFit.ViewModels;
-
-public class ClientListViewModel : ObservableRecipient, INavigationAware
+﻿namespace VipFit.ViewModels
 {
-    private readonly ISampleDataService _sampleDataService;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.WinUI;
+    using Microsoft.UI.Dispatching;
+    using System.Collections.ObjectModel;
+    using VipFit.Database;
 
-    public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
-
-    public ClientListViewModel(ISampleDataService sampleDataService)
+    /// <summary>
+    /// ViewModel for ClientList.
+    /// </summary>
+    public class ClientListViewModel : ObservableRecipient
     {
-        _sampleDataService = sampleDataService;
-    }
+        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        private ClientViewModel? selectedClient;
 
-    public async void OnNavigatedTo(object parameter)
-    {
-        Source.Clear();
+        private bool isLoading = false;
 
-        // TODO: Replace with real data.
-        var data = await _sampleDataService.GetGridDataAsync();
+        /// <summary>
+        /// Creates a new ClientListViewModel.
+        /// </summary>
+        public ClientListViewModel() => Task.Run(GetClientListAsync);
 
-        foreach (var item in data)
+        /// <summary>
+        /// Collection of clients in the list.
+        /// </summary>
+        public ObservableCollection<ClientViewModel> Clients { get; } = new ObservableCollection<ClientViewModel>();
+
+        /// <summary>
+        /// Gets or sets the selected client, or null if no client is selected. 
+        /// </summary>
+        public ClientViewModel? SelectedClient
         {
-            Source.Add(item);
+            get => selectedClient;
+            set => SetProperty(ref selectedClient, value);
         }
-    }
 
-    public void OnNavigatedFrom()
-    {
+        /// <summary>
+        /// Gets or sets a value indicating whether the clients list is currently being updated. 
+        /// </summary>
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+
+        /// <summary>
+        /// Gets the list of clients from database.
+        /// </summary>
+        /// <returns>List of clients.</returns>
+        public async Task GetClientListAsync()
+        {
+            await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
+
+            var clients = await App.GetService<IClientRepository>().GetAsync();
+
+            if (clients == null)
+                return;
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Clients.Clear();
+
+                foreach (var client in clients)
+                    Clients.Add(new ClientViewModel(client));
+
+                IsLoading = false;
+            });
+        }
+
+        /// <summary>
+        /// Saves any modified clients and reloads the client list from the database.
+        /// </summary>
+        public void Refresh()
+        {
+            Task.Run(async () =>
+            {
+                foreach (var modifiedClient in Clients.Where(client => client.IsModified).Select(client => client.Model))
+                    await App.GetService<IClientRepository>().UpsertAsync(modifiedClient);
+
+                await GetClientListAsync();
+            });
+        }
     }
 }
