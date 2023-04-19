@@ -65,4 +65,16 @@ public sealed partial class ClientListPage : Page
     protected async override void OnNavigatedTo(NavigationEventArgs e)
     {
     }
+
+    /// <summary>
+    /// Menu flyout click control for selecting a customer and displaying details.
+    /// </summary>
+    private void ViewDetails_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedClient != null)
+        {
+            Frame.Navigate(typeof(Client), ViewModel.SelectedClient.Model.Id,
+                new DrillInNavigationTransitionInfo());
+        }
+    }
 }

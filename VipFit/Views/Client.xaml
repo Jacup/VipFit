@@ -1,0 +1,78 @@
+<Page
+    x:Class="VipFit.Views.Client"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:viewmodels="using:VipFit.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ClientViewModel}"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarButton
+                Icon="Save"
+                Label="Save"/>
+            <AppBarButton
+                Icon="Cancel"
+                Label="Cancel"/>
+            <AppBarSeparator Visibility="Visible"/>
+            <AppBarButton
+                Icon="Tag"
+                Label="Show pass"/>
+
+        </CommandBar>
+
+        <ScrollViewer
+            x:Name="DetailPanel"
+            Grid.Row="1"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto">
+
+            <StackPanel Margin="8,0">
+                <StackPanel.Resources>
+                    <Style TargetType="muxc:Expander">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <muxc:Expander x:Name="GeneralExpander">
+
+                    <muxc:Expander.Header>
+                        <Grid>
+                            <TextBlock
+                            Text="General"
+                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+
+                    <RelativePanel Margin="8,0,0,12">
+                        <TextBox
+                                x:Name="FirstName"
+                                MinWidth="120"
+                                Margin="0,8,16,8"
+                                Header="First name"
+                                RelativePanel.AlignLeftWithPanel="True"
+                                Text="{x:Bind FirstName, Mode=TwoWay}"/>
+                    </RelativePanel>
+
+                </muxc:Expander>
+
+
+
+            </StackPanel>
+        </ScrollViewer>
+
+
+    </Grid>
+</Page>

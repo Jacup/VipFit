@@ -8,16 +8,48 @@
     xmlns:viewmodels="using:VipFit.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ClientListViewModel}"
     mc:Ignorable="d">
 
-        <Grid x:Name="ContentArea">
+    <Grid x:Name="ContentArea">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-            
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LayoutVisualStates">
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TitleTxt.Margin" Value="16,48,16,24" />
+                        <Setter Target="itemGridView.Padding" Value="16,0,16,36" />
+                        <Setter Target="TitleTxt.Style" Value="{StaticResource SubtitleTextBlockStyle}" />
+                        <Setter Target="itemGridView.ItemContainerStyle" Value="{StaticResource GridViewItemStyleSmall}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-            <AppBarButton Icon="Add" Label="Add"/>
-            <AppBarButton Icon="Edit" Label="Edit"/>
+            <AppBarButton 
+                Icon="Add" 
+                Label="Add" 
+                IsEnabled="False"/>
+            <AppBarButton 
+                Icon="Edit" 
+                Label="Edit" 
+                IsEnabled="False"/>
+            <AppBarButton
+                    Click="ViewDetails_Click"
+                    Icon="Contact"
+                    Label="View details"
+                    ToolTipService.ToolTip="View details" />
             <AppBarButton
                     Click="{x:Bind ViewModel.Refresh}"
                     Icon="Refresh"
@@ -26,36 +58,35 @@
 
 
         </CommandBar>
-            
+
         <controls:DataGrid Grid.Row="1"
                 AutoGenerateColumns="False"
                 GridLinesVisibility="Horizontal"
                 ItemsSource="{x:Bind ViewModel.Clients}"
                 SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"
                 SelectionMode="Single">
-                <controls:DataGrid.Resources>
-                    <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
-                </controls:DataGrid.Resources>
-                <controls:DataGrid.Columns>
-                    <!-- TODO: Replace column definitions to match real data. Consider adding Header values to Resources.resw. -->
-                    <controls:DataGridTextColumn
+            <controls:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
+            </controls:DataGrid.Resources>
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn
                     Header="First name"
                     Tag="FirstName"
                     Binding="{Binding FirstName}" />
-                    <controls:DataGridTextColumn
+                <controls:DataGridTextColumn
                     Header="last name"
                     Tag="LastName"
                     Binding="{Binding LastName}" />
-                    <controls:DataGridTextColumn
+                <controls:DataGridTextColumn
                     Header="Phone"
                     Tag="Phone"
                     Binding="{Binding Phone}" />
-                    <controls:DataGridTextColumn
+                <controls:DataGridTextColumn
                     Header="Email"
                     Tag="Email"
                     Binding="{Binding Email}" />
 
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>
-        </Grid>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+    </Grid>
 </Page>
