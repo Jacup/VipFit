@@ -66,15 +66,39 @@ public sealed partial class ClientListPage : Page
     {
     }
 
-    /// <summary>
-    /// Menu flyout click control for selecting a customer and displaying details.
-    /// </summary>
-    private void ViewDetails_Click(object sender, RoutedEventArgs e)
+    private void NewClient_Click(object sender, RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(Client), null, new DrillInNavigationTransitionInfo());
+    }
+
+    private void EditClient_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedClient != null)
         {
             Frame.Navigate(typeof(Client), ViewModel.SelectedClient.Model.Id,
                 new DrillInNavigationTransitionInfo());
         }
+    }
+
+    /// <summary>
+    /// Menu flyout click control for selecting a customer and displaying details.
+    /// </summary>
+    private void ViewClient_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedClient != null)
+        {
+            Frame.Navigate(typeof(Client), ViewModel.SelectedClient.Model.Id,
+                new DrillInNavigationTransitionInfo());
+        }
+    }
+
+    private void RegisterTraining_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void SellPass_Click(object sender, RoutedEventArgs e)
+    {
+
     }
 }
