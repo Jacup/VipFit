@@ -75,7 +75,7 @@ public partial class App : Application
                 // Database
                 services.AddDbContext<VipFitContext>(
                     options => options.UseSqlite($@"Data Source={dbpath}"));
-                services.AddTransient<IClientRepository, ClientRepository>();
+                services.AddSingleton<IClientRepository, ClientRepository>();
 
                 // Core Services
                 services.AddSingleton<ISampleDataService, SampleDataService>();
@@ -84,7 +84,7 @@ public partial class App : Application
                 // Views and ViewModels
                 services.AddTransient<SettingsViewModel>();
                 services.AddTransient<SettingsPage>();
-                services.AddTransient<ClientListViewModel>();
+                services.AddSingleton<ClientListViewModel>();
                 services.AddTransient<ClientListPage>();
                 services.AddTransient<MainViewModel>();
                 services.AddTransient<MainPage>();

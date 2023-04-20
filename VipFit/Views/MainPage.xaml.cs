@@ -1,18 +1,19 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using VipFit.ViewModels;
-
-namespace VipFit.Views;
-
-public sealed partial class MainPage : Page
+﻿namespace VipFit.Views
 {
-    public MainViewModel ViewModel
-    {
-        get;
-    }
+    using Microsoft.UI.Xaml.Controls;
+    using VipFit.ViewModels;
 
-    public MainPage()
+    public sealed partial class MainPage : Page
     {
-        ViewModel = App.GetService<MainViewModel>();
-        InitializeComponent();
+        public MainViewModel ViewModel
+        {
+            get;
+        }
+
+        public MainPage()
+        {
+            ViewModel = App.GetService<MainViewModel>();
+            InitializeComponent();
+        }
     }
 }

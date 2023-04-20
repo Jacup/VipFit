@@ -9,7 +9,7 @@ namespace VipFit.ViewModels
     /// <summary>
     /// Client VM.
     /// </summary>
-    public class ClientViewModel : ObservableRecipient, INavigationAware
+    public class ClientViewModel : ObservableRecipient
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -24,6 +24,11 @@ namespace VipFit.ViewModels
         /// </summary>
         /// <param name="model">Client view model.</param>
         public ClientViewModel(Client? model = null) => Model = model ?? new Client();
+
+        /// <summary>
+        /// Raised when the user cancels the changes they've made to the client data.
+        /// </summary>
+        public event EventHandler AddNewClientCanceled;
 
         /// <summary>
         /// Gets or sets the underlying Customer object.
@@ -168,16 +173,10 @@ namespace VipFit.ViewModels
             if (IsNewClient)
             {
                 IsNewClient = false;
-                //App.Repository.Clients.Add
-                //App.GetService<ClientListViewModel>().Clients.Add(this);
+                App.GetService<ClientListViewModel>().Clients.Add(this);
             }
             await App.GetService<IClientRepository>().UpsertAsync(Model);
         }
-
-        /// <summary>
-        /// Raised when the user cancels the changes they've made to the client data.
-        /// </summary>
-        public event EventHandler AddNewClientCanceled;
 
         /// <summary>
         /// Cancels any in progress edits.
@@ -221,7 +220,6 @@ namespace VipFit.ViewModels
         /// </summary>
         public async Task RefreshClientAsync()
         {
-
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
         }
 
@@ -235,22 +233,5 @@ namespace VipFit.ViewModels
         /// </summary>
         public async void EndEdit() => await SaveAsync();
 
-        #region WinUI Implementations
-
-        public async void OnNavigatedTo(object parameter)
-        {
-            //Source.Clear();
-            //var data = await _sampleDataService.GetGridDataAsync();
-            //foreach (var item in data)
-            //{
-            //    Source.Add(item);
-            //}
-        }
-
-        public void OnNavigatedFrom()
-        {
-        }
-
-        #endregion
     }
 }

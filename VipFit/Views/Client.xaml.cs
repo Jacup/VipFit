@@ -1,34 +1,129 @@
-// Copyright (c) Microsoft Corporation and Contributors.
-// Licensed under the MIT License.
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace VipFit.Views
 {
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Navigation;
+    using VipFit.ViewModels;
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class Client : Page
     {
+        /// <summary>
+        /// Client ViewModel.
+        /// </summary>
+        public ClientViewModel ViewModel { get; set; }
+
+        /// <summary>
+        /// Navigate to the previous page when the user cancels the creation of a new customer record.
+        /// </summary>
+        private void AddNewClientCanceled(object sender, EventArgs e) => Frame.GoBack();
+
+        /// <summary>
+        /// Initialize the Client Page.
+        /// </summary>
         public Client()
         {
             this.InitializeComponent();
         }
+
+        #region INavigation
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter == null)
+            {
+                ViewModel = new ClientViewModel
+                {
+                    IsNewClient = true,
+                    IsInEdit = true
+                };
+                VisualStateManager.GoToState(this, "NewCustomer", false);
+            }
+            else
+            {
+
+                var vm = App.GetService<ClientListViewModel>();
+                var clients = App.GetService<ClientListViewModel>().Clients;
+                ViewModel = App.GetService<ClientListViewModel>().Clients.Where(
+                    c => c.Model.Id == (Guid)e.Parameter).First();
+            }
+
+            ViewModel.AddNewClientCanceled += AddNewClientCanceled;
+            base.OnNavigatedTo(e);
+        }
+
+        /// <summary>
+        /// Check whether there are unsaved changes and warn the user.
+        /// </summary>
+        protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            if (ViewModel.IsModified)
+            {
+                // Cancel the navigation immediately, otherwise it will continue at the await call. 
+                e.Cancel = true;
+
+                void resumeNavigation()
+                {
+                    if (e.NavigationMode == NavigationMode.Back)
+                    {
+                        Frame.GoBack();
+                    }
+                    else
+                    {
+                        Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
+                    }
+                }
+
+                var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+                saveDialog.XamlRoot = this.Content.XamlRoot;
+                await saveDialog.ShowAsync();
+                SaveChangesDialogResult result = saveDialog.Result;
+
+                switch (result)
+                {
+                    case SaveChangesDialogResult.Save:
+                        await ViewModel.SaveAsync();
+                        resumeNavigation();
+                        break;
+                    case SaveChangesDialogResult.DontSave:
+                        await ViewModel.RevertChangesAsync();
+                        resumeNavigation();
+                        break;
+                    case SaveChangesDialogResult.Cancel:
+                        break;
+                }
+            }
+
+            base.OnNavigatingFrom(e);
+        }
+
+        /// <summary>
+        /// Disconnects the AddNewCustomerCanceled event handler from the ViewModel 
+        /// when the parent frame navigates to a different page.
+        /// </summary>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            ViewModel.AddNewClientCanceled -= AddNewClientCanceled;
+            base.OnNavigatedFrom(e);
+        }
+
+        #endregion
+
+        #region Buttons Actions
+
+        private void SellPass_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Save_Click(object sender, RoutedEventArgs e)
+        {
+            FirstName.Focus(FocusState.Programmatic);
+            await ViewModel.SaveAsync();
+        }
+
+        #endregion
     }
 }

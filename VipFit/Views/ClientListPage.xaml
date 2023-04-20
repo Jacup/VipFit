@@ -6,7 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:helpers="using:VipFit.Helpers"
-    xmlns:viewmodels="using:VipFit.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ClientListViewModel}"
+    xmlns:viewmodels="using:VipFit.ViewModels" 
+    d:DataContext="{d:DesignInstance Type=viewmodels:ClientListViewModel}"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
@@ -41,12 +42,7 @@
             <AppBarButton
                 Click="ViewClient_Click"
                 Icon="Contact"
-                Label="Zobacz klienta"
-                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
-            <AppBarButton
-                Click="EditClient_Click"
-                Icon="Edit" 
-                Label="Edytuj klienta" 
+                Label="Szczegóły klienta"
                 IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
             <AppBarSeparator />
             <AppBarButton
@@ -56,7 +52,7 @@
                 IsEnabled="False"/>
             <AppBarButton
                 Click="RegisterTraining_Click"
-                Label="Zarejestruj wejście"
+                Label="Zarejestruj wejscie"
                 IsEnabled="False">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
@@ -72,7 +68,7 @@
                 ToolTipService.ToolTip="Odśwież" 
                 LabelPosition="Collapsed"/>
         </CommandBar>
-
+        <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
         <controls:DataGrid Grid.Row="1"
                 AutoGenerateColumns="False"
                 GridLinesVisibility="Horizontal"
@@ -84,15 +80,15 @@
             </controls:DataGrid.Resources>
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn
-                    Header="First name"
+                    Header="Imię"
                     Tag="FirstName"
                     Binding="{Binding FirstName}" />
                 <controls:DataGridTextColumn
-                    Header="last name"
+                    Header="Nazwisko"
                     Tag="LastName"
                     Binding="{Binding LastName}" />
                 <controls:DataGridTextColumn
-                    Header="Phone"
+                    Header="Telefon"
                     Tag="Phone"
                     Binding="{Binding Phone}" />
                 <controls:DataGridTextColumn
