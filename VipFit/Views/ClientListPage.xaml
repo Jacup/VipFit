@@ -7,7 +7,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:helpers="using:VipFit.Helpers"
     xmlns:viewmodels="using:VipFit.ViewModels" 
-    d:DataContext="{d:DesignInstance Type=viewmodels:ClientListViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ClientViewModel}"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">

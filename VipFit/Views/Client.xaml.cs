@@ -3,6 +3,8 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
+    using System.Runtime.InteropServices;
+    using VipFit.Interfaces;
     using VipFit.ViewModels;
 
     /// <summary>
@@ -67,13 +69,9 @@ namespace VipFit.Views
                 void resumeNavigation()
                 {
                     if (e.NavigationMode == NavigationMode.Back)
-                    {
                         Frame.GoBack();
-                    }
                     else
-                    {
                         Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
-                    }
                 }
 
                 var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
@@ -113,15 +111,33 @@ namespace VipFit.Views
 
         #region Buttons Actions
 
-        private void SellPass_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-
+            await ViewModel.SaveAsync();
         }
 
-        private async void Save_Click(object sender, RoutedEventArgs e)
+        private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            FirstName.Focus(FocusState.Programmatic);
-            await ViewModel.SaveAsync();
+            if (!ViewModel.IsModified)
+                return;
+
+            var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+            saveDialog.XamlRoot = this.Content.XamlRoot;
+            await saveDialog.ShowAsync();
+            SaveChangesDialogResult result = saveDialog.Result;
+
+            switch (result)
+            {
+                case SaveChangesDialogResult.Save:
+                    await ViewModel.SaveAsync();
+                    break;
+                case SaveChangesDialogResult.DontSave:
+                    await ViewModel.RevertChangesAsync();
+                    break;
+                case SaveChangesDialogResult.Cancel:
+                    break;
+            }
+
         }
 
         #endregion

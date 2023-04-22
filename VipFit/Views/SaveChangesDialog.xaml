@@ -13,6 +13,7 @@
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
     CloseButtonClick="ContentDialog_CloseButtonClick"
+    DefaultButton="Primary"
     mc:Ignorable="d">
 
     <ContentDialog.Resources>

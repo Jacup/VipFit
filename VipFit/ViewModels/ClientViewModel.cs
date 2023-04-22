@@ -2,7 +2,6 @@ namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
-    using VipFit.Contracts.ViewModels;
     using VipFit.Core.Models;
     using VipFit.Database;
 

@@ -8,10 +8,7 @@ namespace VipFit.Views
     /// </summary>
     public sealed partial class SaveChangesDialog : ContentDialog
     {
-        public SaveChangesDialog()
-        {
-            this.InitializeComponent();
-        }
+        public SaveChangesDialog() => InitializeComponent();
 
         /// <summary>
         /// Gets or sets the user's choice. 

@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:helpers="using:VipFit.Helpers"
     xmlns:models="using:VipFit.Core.Models"
     xmlns:viewmodels="using:VipFit.ViewModels"
@@ -16,7 +15,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" />
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <CommandBar
@@ -25,12 +24,11 @@
             IsOpen="False" 
             DefaultLabelPosition="Right">
 
-            <AppBarButton
-                Click="SellPass_Click"
-                Icon="Shop" 
+            <AppBarButton 
                 Label="Sprzedaj karnet"
+                Icon="Shop" 
                 IsEnabled="False"/>
-            <AppBarButton
+            <AppBarButton 
                 Label="Zarejestruj wejscie"
                 IsEnabled="False">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
@@ -44,96 +42,120 @@
                 Label="Edytuj"
                 ToolTipService.ToolTip="Edytuj dane klienta"/>
             <AppBarButton
-                    Click="{x:Bind ViewModel.SaveAsync}"
-                    Icon="Save"
-                    Label="Save"
-                    Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+                Click="{x:Bind ViewModel.SaveAsync}"
+                Icon="Save"
+                Label="Save"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
             <AppBarButton
-                    Click="{x:Bind ViewModel.CancelEditsAsync}"
-                    Icon="Cancel"
-                    Label="Cancel"
-                    Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+                Click="{x:Bind CancelButton_Click}"
+                Icon="Cancel"
+                Label="Cancel"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+
         </CommandBar>
 
-        <Grid x:Name="ClientContent" Grid.Row="1">
+        <ScrollViewer
+            Grid.Row="1"
+            ZoomMode="Disabled" 
+            IsTabStop="True"
+            VerticalScrollMode="Enabled" 
+            VerticalScrollBarVisibility="Auto">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+            <Grid x:Name="ClientContent">
 
-            <RelativePanel x:Name="ClientDetails" Grid.Column="0">
-                <TextBlock 
-                    x:Name="PersonDetalis"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignTopWithPanel="True"
-                    Margin="0,0,0,8"
-                    Text="Dane osobowe"
-                    Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBox
-                    x:Name="FirstName"
-                    Header="Imie" 
-                    MinWidth="140"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.Below="PersonDetalis"
-                    Margin="16,8"
-                    IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                    Text="{x:Bind ViewModel.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox
-                    x:Name="LastName"
-                    Header="Nazwisko"
-                    MinWidth="140"
-                    Margin="16,8"
-                    RelativePanel.RightOf="FirstName"
-                    RelativePanel.Below="PersonDetalis"
-                    IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                    Text="{x:Bind ViewModel.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock 
-                    x:Name="ContactDetails"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.Below="FirstName"
-                    Margin="0,32,0,8"
-                    Text="Dane kontakowe"
-                    Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBox
-                    x:Name="Phone"
-                    Header="Telefon" 
-                    MinWidth="140"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.Below="ContactDetails"
-                    Margin="16,8"
-                    IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                    Text="{x:Bind ViewModel.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox
-                    x:Name="Email"
-                    Header="Email"
-                    MinWidth="140"
-                    Margin="16,8"
-                    RelativePanel.RightOf="Phone"
-                    RelativePanel.Below="ContactDetails"
-                    IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                    Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock 
-                    x:Name="AgreementsDetails"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.Below="Phone"
-                    Margin="0,32,0,8"
-                    Text="Zgody"
-                    Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <StackPanel RelativePanel.Below="AgreementsDetails" Margin="16,8">
-                    <CheckBox 
-                        x:Name="AgreementsAll" 
-                        Content="Zaznacz wszystkie" 
-                        IsThreeState="True"/>
-                    <CheckBox x:Name="AgreementMarketing" Content="Zgoda marketingowa" Margin="24,0,0,0" />
-                    <CheckBox x:Name="AgreementPromo" Content="Zgoda wizerunkowa - materia³y promocyjne" Margin="24,0,0,0" IsChecked="True" />
-                    <CheckBox x:Name="AgreementWww" Content="Zgoda wizerunkowa - WWW" Margin="24,0,0,0" />
-                    <CheckBox x:Name="AgreementSocials" Content="Zgoda wizerunkowa - Media spo³ecznoœciowe" Margin="24,0,0,0" />
-                </StackPanel>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            </RelativePanel>
+                <RelativePanel x:Name="ClientData" Grid.Column="0">
+                    <TextBlock x:Name="PersonDetalis"
+                               RelativePanel.AlignLeftWithPanel="True"
+                               RelativePanel.AlignTopWithPanel="True"
+                               Margin="0,0,0,8"
+                               Text="Dane osobowe"
+                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <TextBox x:Name="FirstName"
+                             Header="Imie" 
+                             MinWidth="140"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.Below="PersonDetalis"
+                             Margin="16,8"
+                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Text="{x:Bind ViewModel.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="LastName"
+                             Header="Nazwisko"
+                             MinWidth="140"
+                             Margin="16,8"
+                             RelativePanel.RightOf="FirstName"
+                             RelativePanel.Below="PersonDetalis"
+                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Text="{x:Bind ViewModel.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="ContactDetails"
+                               RelativePanel.AlignLeftWithPanel="True"
+                               RelativePanel.Below="FirstName"
+                               Margin="0,32,0,8"
+                               Text="Dane kontakowe"
+                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <TextBox x:Name="Phone"
+                             Header="Telefon" 
+                             MinWidth="140"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.Below="ContactDetails"
+                             Margin="16,8"
+                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Text="{x:Bind ViewModel.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="Email"
+                             Header="Email"
+                             MinWidth="140"
+                             Margin="16,8"
+                             RelativePanel.RightOf="Phone"
+                             RelativePanel.Below="ContactDetails"
+                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="AgreementsDetails"
+                               RelativePanel.AlignLeftWithPanel="True"
+                               RelativePanel.Below="Phone"
+                               Margin="0,32,0,8"
+                               Text="Zgody"
+                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <StackPanel RelativePanel.Below="AgreementsDetails" Margin="16,8">
+                        <CheckBox x:Name="AgreementsAll"
+                                  IsEnabled="False"
+                                  Content="Zaznacz wszystkie"
+                                  IsThreeState="True"/>
+                        <CheckBox x:Name="AgreementMarketing"
+                                  IsEnabled="False"
+                                  Content="Zgoda marketingowa"
+                                  Margin="24,0,0,0"/>
+                        <CheckBox x:Name="AgreementPromo"
+                                  IsEnabled="False"
+                                  Content="Zgoda wizerunkowa - materia³y promocyjne"
+                                  Margin="24,0,0,0" IsChecked="True"/>
+                        <CheckBox x:Name="AgreementWww"
+                                  IsEnabled="False"
+                                  Content="Zgoda wizerunkowa - WWW"
+                                  Margin="24,0,0,0" />
+                        <CheckBox x:Name="AgreementSocials"
+                                  IsEnabled="False"
+                                  Content="Zgoda wizerunkowa - Media spo³ecznoœciowe"
+                                  Margin="24,0,0,0" />
+                    </StackPanel>
+                </RelativePanel>
 
+                <RelativePanel x:Name="PassData" Grid.Column="1">
+                    <TextBlock
+                        x:Name="PassDetails"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        Margin="0,0,0,8"
+                        Text="Karnet"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+                </RelativePanel>
 
-        </Grid>
+            </Grid>
+
+        </ScrollViewer>
+
     </Grid>
 </Page>
