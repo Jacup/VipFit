@@ -21,6 +21,12 @@
             value ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
+        /// Returns Visibility.Collapsed if the specified value is false; otherwise, returns Visibility.Visible.
+        /// </summary>
+        public static Visibility NotCollapsedIf(bool value) =>
+            !value ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
         /// Returns Visibility.Collapsed if the specified value is null; otherwise, returns Visibility.Visible.
         /// </summary>
         public static Visibility CollapsedIfNull(object value) =>

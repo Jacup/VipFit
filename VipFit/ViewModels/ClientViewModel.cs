@@ -2,6 +2,7 @@ namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
+    using VipFit.Core.Enums;
     using VipFit.Core.Models;
     using VipFit.DataAccessLayer;
 
@@ -163,17 +164,149 @@ namespace VipFit.ViewModels
             }
         }
 
+        #region Agreements
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user agreed for marketing purposes.
+        /// </summary>
+        public bool AgreementMarketing
+        {
+            get => Model.AgreementMarketing;
+            set
+            {
+                if (value != Model.AgreementMarketing)
+                {
+                    Model.AgreementMarketing = value;
+                    IsModified = true;
+                    Model.ModifiedAt = DateTime.Now;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user agreed for using image for promotional purposes.
+        /// </summary>
+        public bool AgreementPromoImage
+        {
+            get => Model.AgreementPromoImage;
+            set
+            {
+                if (value != Model.AgreementPromoImage)
+                {
+                    Model.AgreementMarketing = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user agreed for using image on website.
+        /// </summary>
+        public bool AgreementWebsiteImage
+        {
+            get => Model.AgreementWebsiteImage;
+            set
+            {
+                if (value != Model.AgreementWebsiteImage)
+                {
+                    Model.AgreementWebsiteImage = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user agreed for using image on socials.
+        /// </summary>
+        public bool AgreementSocialsImage
+        {
+            get => Model.AgreementSocialsImage;
+            set
+            {
+                if (value != Model.AgreementSocialsImage)
+                {
+                    Model.AgreementSocialsImage = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        /// <summary>
+        /// Gets or sets comment for client.
+        /// </summary>
+        public string Comment
+        {
+            get => Model.Comment;
+            set
+            {
+                if (value != Model.Comment)
+                {
+                    Model.Comment = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets client's status.
+        /// </summary>
+        public ClientStatus Status
+        {
+            get => Model.Status;
+            set
+            {
+                if (value != Model.Status)
+                {
+                    Model.Status = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether client is removed and is in "bin".
+        /// </summary>
+        public bool Trash
+        {
+            get => Model.Trash;
+            set
+            {
+                if (value != Model.Trash)
+                {
+                    Model.Trash = value;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         public async Task SaveAsync()
         {
             IsInEdit = false;
             IsModified = false;
+
             if (IsNewClient)
             {
                 IsNewClient = false;
+                Model.CreatedAt = DateTime.Now;
                 App.GetService<ClientListViewModel>().Clients.Add(this);
             }
+
+            Model.ModifiedAt = DateTime.Now;
             await App.GetService<IClientRepository>().UpsertAsync(Model);
         }
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipFit.DataAccessLayer;
 
@@ -10,9 +11,11 @@ using VipFit.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    partial class VipFitContextModelSnapshot : ModelSnapshot
+    [Migration("20230423155408_ExpandUserData")]
+    partial class ExpandUserData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
@@ -40,6 +43,8 @@ namespace VipFit.Core.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")

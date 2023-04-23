@@ -7,9 +7,17 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:VipFit.Helpers"
     xmlns:models="using:VipFit.Core.Models"
+    xmlns:behaviors="using:VipFit.Behaviors"
     xmlns:viewmodels="using:VipFit.ViewModels"
+    behaviors:NavigationViewHeaderBehavior.HeaderContext="{x:Bind Header, Mode=OneWay}"
     d:DataContext="{d:DesignInstance Type=viewmodels:ClientViewModel}"
     mc:Ignorable="d">
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate  x:DataType="helpers:HeaderHelper">
+            <TextBlock Text="{x:Bind Text, Mode=OneWay}" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea">
 
@@ -42,7 +50,7 @@
                 Label="Edytuj"
                 ToolTipService.ToolTip="Edytuj dane klienta"/>
             <AppBarButton
-                Click="{x:Bind ViewModel.SaveAsync}"
+                Click="{x:Bind SaveButton_Click}"
                 Icon="Save"
                 Label="Save"
                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
@@ -81,7 +89,7 @@
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.Below="PersonDetalis"
                              Margin="16,8"
-                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                              Text="{x:Bind ViewModel.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBox x:Name="LastName"
                              Header="Nazwisko"
@@ -89,7 +97,7 @@
                              Margin="16,8"
                              RelativePanel.RightOf="FirstName"
                              RelativePanel.Below="PersonDetalis"
-                             IsReadOnly="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                             Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                              Text="{x:Bind ViewModel.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock x:Name="ContactDetails"
                                RelativePanel.AlignLeftWithPanel="True"

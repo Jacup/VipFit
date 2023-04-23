@@ -3,17 +3,23 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
+    using System.ComponentModel;
+    using VipFit.Helpers;
+    using VipFit.Interfaces;
     using VipFit.ViewModels;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Client : Page
+    public sealed partial class Client : Page, IHeaderChanger
     {
         /// <summary>
         /// Client ViewModel.
         /// </summary>
         public ClientViewModel ViewModel { get; set; }
+
+        public HeaderHelper Header { get; private set; } = new();
+
 
         /// <summary>
         /// Navigate to the previous page when the user cancels the creation of a new customer record.
@@ -23,10 +29,7 @@ namespace VipFit.Views
         /// <summary>
         /// Initialize the Client Page.
         /// </summary>
-        public Client()
-        {
-            this.InitializeComponent();
-        }
+        public Client() => InitializeComponent();
 
         #region INavigation
 
@@ -34,6 +37,7 @@ namespace VipFit.Views
         {
             if (e.Parameter == null)
             {
+
                 ViewModel = new ClientViewModel
                 {
                     IsNewClient = true,
@@ -43,13 +47,13 @@ namespace VipFit.Views
             }
             else
             {
-
                 var vm = App.GetService<ClientListViewModel>();
                 var clients = App.GetService<ClientListViewModel>().Clients;
                 ViewModel = App.GetService<ClientListViewModel>().Clients.Where(
                     c => c.Model.Id == (Guid)e.Parameter).First();
-            }
 
+            }
+            Header.Text = ViewModel.Name;
             ViewModel.AddNewClientCanceled += AddNewClientCanceled;
             base.OnNavigatedTo(e);
         }
@@ -80,7 +84,7 @@ namespace VipFit.Views
                 switch (result)
                 {
                     case SaveChangesDialogResult.Save:
-                        await ViewModel.SaveAsync();
+                        SaveAndUpdateHeader();
                         resumeNavigation();
                         break;
                     case SaveChangesDialogResult.DontSave:
@@ -109,15 +113,29 @@ namespace VipFit.Views
 
         #region Buttons Actions
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ViewModel.IsModified)
+            {
+                // todo: dialog: not made any changes.
+            }
+
+            SaveAndUpdateHeader();
+        }
+
+        private async void SaveAndUpdateHeader()
         {
             await ViewModel.SaveAsync();
+            Header.Text = ViewModel.Name;
         }
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ViewModel.IsModified)
+            {
+                await ViewModel.RevertChangesAsync();
                 return;
+            }
 
             var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
             saveDialog.XamlRoot = this.Content.XamlRoot;
@@ -127,7 +145,7 @@ namespace VipFit.Views
             switch (result)
             {
                 case SaveChangesDialogResult.Save:
-                    await ViewModel.SaveAsync();
+                    SaveAndUpdateHeader();
                     break;
                 case SaveChangesDialogResult.DontSave:
                     await ViewModel.RevertChangesAsync();

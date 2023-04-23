@@ -28,6 +28,9 @@ dotnet_diagnostic.SA1101.severity = none
 # SA1503: Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = none
 
+# SA1124: Do not use regions
+dotnet_diagnostic.SA1124.severity = none
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4

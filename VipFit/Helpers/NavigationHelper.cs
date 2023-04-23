@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace VipFit.Helpers;
 
-// Helper class to set the navigation target for a NavigationViewItem.
+// Header class to set the navigation target for a NavigationViewItem.
 //
 // Usage in XAML:
 // <NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavigationHelper.NavigateTo="AppName.ViewModels.MainViewModel" />
