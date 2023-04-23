@@ -3,7 +3,7 @@ namespace VipFit.ViewModels
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
     using VipFit.Core.Models;
-    using VipFit.Database;
+    using VipFit.DataAccessLayer;
 
     /// <summary>
     /// Client VM.

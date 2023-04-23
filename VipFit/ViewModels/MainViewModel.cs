@@ -1,11 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using VipFit.Database;
-
-namespace VipFit.ViewModels;
-
-public class MainViewModel : ObservableRecipient
+﻿namespace VipFit.ViewModels
 {
-    public MainViewModel()
+    using CommunityToolkit.Mvvm.ComponentModel;
+
+    public class MainViewModel : ObservableRecipient
     {
+        public MainViewModel()
+        {
+        }
     }
 }
