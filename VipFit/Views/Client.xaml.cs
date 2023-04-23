@@ -113,6 +113,22 @@ namespace VipFit.Views
 
         #region Buttons Actions
 
+        public void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
+        {
+            // If the SelectAll box is checked (all options are selected),
+            // clicking the box will change it to its indeterminate state.
+            // Instead, we want to uncheck all the boxes,
+            // so we do this programatically. The indeterminate state should
+            // only be set programatically, not by the user.
+
+            if (ViewModel.AgreementMarketing && ViewModel.AgreementPromoImage && ViewModel.AgreementWebsiteImage && ViewModel.AgreementSocialsImage)
+            {
+                // This will cause SelectAll_Unchecked to be executed, so
+                // we don't need to uncheck the other boxes here.
+                ViewModel.AgreementsAll = false;
+            }
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ViewModel.IsModified)

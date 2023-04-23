@@ -82,12 +82,14 @@
                                RelativePanel.AlignTopWithPanel="True"
                                Margin="0,0,0,8"
                                Text="Dane osobowe"
+                               Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                                Style="{StaticResource SubtitleTextBlockStyle}"/>
                     <TextBox x:Name="FirstName"
                              Header="Imie" 
                              MinWidth="140"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.Below="PersonDetalis"
+                             RelativePanel.AlignTopWithPanel="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                              Margin="16,8"
                              Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                              Text="{x:Bind ViewModel.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -129,23 +131,29 @@
                                Style="{StaticResource SubtitleTextBlockStyle}"/>
                     <StackPanel RelativePanel.Below="AgreementsDetails" Margin="16,8">
                         <CheckBox x:Name="AgreementsAll"
-                                  IsEnabled="False"
-                                  Content="Zaznacz wszystkie"
-                                  IsThreeState="True"/>
+                                  IsChecked="{x:Bind ViewModel.AgreementsAll, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
+                                  IsThreeState="True"
+                                  Indeterminate="SelectAll_Indeterminate"
+                                  Content="Zaznacz wszystkie"/>
                         <CheckBox x:Name="AgreementMarketing"
-                                  IsEnabled="False"
+                                  IsChecked="{x:Bind ViewModel.AgreementMarketing, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                   Content="Zgoda marketingowa"
                                   Margin="24,0,0,0"/>
                         <CheckBox x:Name="AgreementPromo"
-                                  IsEnabled="False"
+                                  IsChecked="{x:Bind ViewModel.AgreementPromoImage, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                   Content="Zgoda wizerunkowa - materia³y promocyjne"
-                                  Margin="24,0,0,0" IsChecked="True"/>
+                                  Margin="24,0,0,0"/>
                         <CheckBox x:Name="AgreementWww"
-                                  IsEnabled="False"
+                                  IsChecked="{x:Bind ViewModel.AgreementWebsiteImage, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                   Content="Zgoda wizerunkowa - WWW"
                                   Margin="24,0,0,0" />
                         <CheckBox x:Name="AgreementSocials"
-                                  IsEnabled="False"
+                                  IsChecked="{x:Bind ViewModel.AgreementSocialsImage, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                   Content="Zgoda wizerunkowa - Media spo³ecznoœciowe"
                                   Margin="24,0,0,0" />
                     </StackPanel>

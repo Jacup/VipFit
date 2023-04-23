@@ -2,6 +2,7 @@ namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
+    using Microsoft.UI.Xaml;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
     using VipFit.DataAccessLayer;
@@ -166,6 +167,38 @@ namespace VipFit.ViewModels
 
         #region Agreements
 
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user agreed for all purposes.
+        /// </summary>
+        public bool? AgreementsAll
+        {
+            get
+            {
+                if (AgreementMarketing && AgreementPromoImage && AgreementWebsiteImage && AgreementSocialsImage)
+                    return true;
+                if (AgreementMarketing || AgreementPromoImage || AgreementWebsiteImage || AgreementSocialsImage)
+                    return null;
+                if (!AgreementMarketing && !AgreementPromoImage && !AgreementWebsiteImage && !AgreementSocialsImage)
+                    return false;
+                else return null;
+            }
+
+            set
+            {
+                if (value == null) { return; }
+                AgreementMarketing = (bool)value;
+                OnPropertyChanged(nameof(AgreementMarketing));
+                AgreementPromoImage = (bool)value;
+                OnPropertyChanged(nameof(AgreementPromoImage));
+                AgreementWebsiteImage = (bool)value;
+                OnPropertyChanged(nameof(AgreementWebsiteImage));
+                AgreementSocialsImage = (bool)value;
+                OnPropertyChanged(nameof(AgreementSocialsImage));
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether user agreed for marketing purposes.
         /// </summary>
@@ -178,8 +211,9 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementMarketing = value;
                     IsModified = true;
-                    Model.ModifiedAt = DateTime.Now;
+                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(AgreementsAll));
                 }
             }
         }
@@ -194,9 +228,11 @@ namespace VipFit.ViewModels
             {
                 if (value != Model.AgreementPromoImage)
                 {
-                    Model.AgreementMarketing = value;
+                    Model.AgreementPromoImage = value;
                     IsModified = true;
+                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(AgreementsAll));
                 }
             }
         }
@@ -213,7 +249,9 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementWebsiteImage = value;
                     IsModified = true;
+                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(AgreementsAll));
                 }
             }
         }
@@ -230,7 +268,9 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementSocialsImage = value;
                     IsModified = true;
+                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(AgreementsAll));
                 }
             }
         }
