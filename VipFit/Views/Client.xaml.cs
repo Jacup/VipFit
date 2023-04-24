@@ -4,6 +4,7 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
     using System.ComponentModel;
+    using VipFit.DataAccessLayer;
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;
@@ -169,7 +170,28 @@ namespace VipFit.Views
                 case SaveChangesDialogResult.Cancel:
                     break;
             }
+        }
 
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteDialog deleteDialog = new();
+            deleteDialog.XamlRoot = Content.XamlRoot;
+            await deleteDialog.ShowAsync();
+
+            bool result = deleteDialog.DeleteConfirmed;
+
+            if (result)
+            {
+                if (ViewModel != null)
+                {
+                    await ViewModel.DeleteAsync();
+                    Frame.GoBack();
+                }
+            }
+            else
+            {
+                return;
+            }
         }
 
         #endregion

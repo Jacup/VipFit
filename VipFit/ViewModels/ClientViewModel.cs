@@ -167,8 +167,6 @@ namespace VipFit.ViewModels
 
         #region Agreements
 
-
-
         /// <summary>
         /// Gets or sets a value indicating whether user agreed for all purposes.
         /// </summary>
@@ -359,6 +357,20 @@ namespace VipFit.ViewModels
                 AddNewClientCanceled?.Invoke(this, EventArgs.Empty);
             else
                 await RevertChangesAsync();
+        }
+
+        /// <summary>
+        /// Deletes user.
+        /// </summary>
+        /// <returns></returns>
+        public async Task DeleteAsync()
+        {
+            if (Model != null)
+            {
+                IsModified = false;
+                App.GetService<ClientListViewModel>().Clients.Remove(this);
+                await App.GetService<IClientRepository>().DeleteAsync(Model.Id);
+            }
         }
 
         /// <summary>

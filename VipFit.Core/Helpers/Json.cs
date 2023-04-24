@@ -1,22 +1,37 @@
-﻿using Newtonsoft.Json;
-
-namespace VipFit.Core.Helpers;
-
-public static class Json
+﻿namespace VipFit.Core.Helpers
 {
-    public static async Task<T> ToObjectAsync<T>(string value)
-    {
-        return await Task.Run<T>(() =>
-        {
-            return JsonConvert.DeserializeObject<T>(value);
-        });
-    }
+    using Newtonsoft.Json;
 
-    public static async Task<string> StringifyAsync(object value)
+    /// <summary>
+    /// Json helper.
+    /// </summary>
+    public static class Json
     {
-        return await Task.Run<string>(() =>
+        /// <summary>
+        /// Deserializes json.
+        /// </summary>
+        /// <typeparam name="T">Object.</typeparam>
+        /// <param name="value">Value.</param>
+        /// <returns>Deserialized object.</returns>
+        public static async Task<T> ToObjectAsync<T>(string value)
         {
-            return JsonConvert.SerializeObject(value);
-        });
+            return await Task.Run(() =>
+            {
+                return JsonConvert.DeserializeObject<T>(value);
+            });
+        }
+
+        /// <summary>
+        /// Serializes json.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <returns>Serialized string.</returns>
+        public static async Task<string> StringifyAsync(object value)
+        {
+            return await Task.Run(() =>
+            {
+                return JsonConvert.SerializeObject(value);
+            });
+        }
     }
 }
