@@ -1,20 +1,20 @@
-﻿using Microsoft.UI.Xaml.Controls;
-
-using VipFit.ViewModels;
-
-namespace VipFit.Views;
-
-// TODO: Set the URL for your privacy policy by updating SettingsPage_PrivacyTermsLink.NavigateUri in Resources.resw.
-public sealed partial class SettingsPage : Page
+﻿namespace VipFit.Views
 {
-    public SettingsViewModel ViewModel
+    using Microsoft.UI.Xaml.Controls;
+    using VipFit.ViewModels;
+    
+    // TODO: Set the URL for your privacy policy by updating SettingsPage_PrivacyTermsLink.NavigateUri in Resources.resw.
+    public sealed partial class SettingsPage : Page
     {
-        get;
-    }
+        public SettingsViewModel ViewModel
+        {
+            get;
+        }
 
-    public SettingsPage()
-    {
-        ViewModel = App.GetService<SettingsViewModel>();
-        InitializeComponent();
+        public SettingsPage()
+        {
+            ViewModel = App.GetService<SettingsViewModel>();
+            InitializeComponent();
+        }
     }
 }

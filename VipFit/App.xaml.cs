@@ -1,119 +1,119 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
-
-using VipFit.Activation;
-using VipFit.Contracts.Services;
-using VipFit.Core.Contracts.Services;
-using VipFit.Core.Services;
-using VipFit.Database;
-using VipFit.Models;
-using VipFit.Notifications;
-using VipFit.Services;
-using VipFit.ViewModels;
-using VipFit.Views;
-using Windows.Storage;
-
-namespace VipFit;
-
-// To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
-public partial class App : Application
+﻿namespace VipFit
 {
-    private static readonly string dbName = "vipfit_sqlite.db";
-    private static readonly string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, dbName);
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.UI.Xaml;
 
+    using VipFit.Activation;
+    using VipFit.Contracts.Services;
+    using VipFit.Core.Contracts.Services;
+    using VipFit.Core.Services;
+    using VipFit.DataAccessLayer;
+    using VipFit.Models;
+    using VipFit.Notifications;
+    using VipFit.Services;
+    using VipFit.ViewModels;
+    using VipFit.Views;
+    using Windows.Storage;
 
-    // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
-    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-    // https://docs.microsoft.com/dotnet/core/extensions/configuration
-    // https://docs.microsoft.com/dotnet/core/extensions/logging
-    public IHost Host
+    // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
+    public partial class App : Application
     {
-        get;
-    }
+        private static readonly string dbName = "vipfit_sqlite.db";
+        private static readonly string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, dbName);
 
-    public static T GetService<T>()
-        where T : class
-    {
-        if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+        // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
+        // https://docs.microsoft.com/dotnet/core/extensions/generic-host
+        // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
+        // https://docs.microsoft.com/dotnet/core/extensions/configuration
+        // https://docs.microsoft.com/dotnet/core/extensions/logging
+        public IHost Host
         {
-            throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+            get;
         }
 
-        return service;
-    }
-
-    public static WindowEx MainWindow { get; } = new MainWindow();
-
-    public App()
-    {
-        InitializeComponent();
-
-        Host = Microsoft.Extensions.Hosting.Host
-            .CreateDefaultBuilder()
-            .UseContentRoot(AppContext.BaseDirectory)
-            .ConfigureServices((context, services) =>
+        public static T GetService<T>()
+            where T : class
+        {
+            if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
             {
-                // Default Activation Handler
-                services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+            }
 
-                // Other Activation Handlers
-                services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
+            return service;
+        }
 
-                // Services
-                services.AddSingleton<IAppNotificationService, AppNotificationService>();
-                services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
-                services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-                services.AddTransient<INavigationViewService, NavigationViewService>();
+        public static WindowEx MainWindow { get; } = new MainWindow();
 
-                services.AddSingleton<IActivationService, ActivationService>();
-                services.AddSingleton<IPageService, PageService>();
-                services.AddSingleton<INavigationService, NavigationService>();
+        public App()
+        {
+            InitializeComponent();
 
-                // Database
-                services.AddDbContext<VipFitContext>(
-                    options => options.UseSqlite($@"Data Source={dbpath}"));
+            Host = Microsoft.Extensions.Hosting.Host
+                .CreateDefaultBuilder()
+                .UseContentRoot(AppContext.BaseDirectory)
+                .ConfigureServices((context, services) =>
+                {
+                    // Default Activation Handler
+                    services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
 
+                    // Other Activation Handlers
+                    services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
 
-                // Core Services
-                services.AddSingleton<ISampleDataService, SampleDataService>();
-                services.AddSingleton<IFileService, FileService>();
+                    // Services
+                    services.AddSingleton<IAppNotificationService, AppNotificationService>();
+                    services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
+                    services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+                    services.AddTransient<INavigationViewService, NavigationViewService>();
 
-                // Views and ViewModels
-                services.AddTransient<SettingsViewModel>();
-                services.AddTransient<SettingsPage>();
-                services.AddTransient<ClientListViewModel>();
-                services.AddTransient<ClientListPage>();
-                services.AddTransient<MainViewModel>();
-                services.AddTransient<MainPage>();
-                services.AddTransient<ShellPage>();
-                services.AddTransient<ShellViewModel>();
+                    services.AddSingleton<IActivationService, ActivationService>();
+                    services.AddSingleton<IPageService, PageService>();
+                    services.AddSingleton<INavigationService, NavigationService>();
 
-                // Configuration
-                services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
-            })
-            .Build();
+                    // Database
+                    services.AddDbContext<VipFitContext>(
+                        options => options.UseSqlite($@"Data Source=C:\Users\jacub\vipfit\db\mydb.db;"));
 
-        App.GetService<IAppNotificationService>().Initialize();
-        App.GetService<VipFitContext>().Initialize();
+                    services.AddSingleton<IClientRepository, ClientRepository>();
 
-        UnhandledException += App_UnhandledException;
-    }
+                    // Core Services
+                    services.AddSingleton<IFileService, FileService>();
 
-    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-    {
-        // TODO: Log and handle exceptions as appropriate.
-        // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
-    }
+                    // Views and ViewModels
+                    services.AddTransient<SettingsViewModel>();
+                    services.AddTransient<SettingsPage>();
+                    services.AddSingleton<ClientListViewModel>();
+                    services.AddTransient<ClientListPage>();
+                    services.AddTransient<MainViewModel>();
+                    services.AddTransient<MainPage>();
+                    services.AddTransient<ShellPage>();
+                    services.AddTransient<ShellViewModel>();
 
-    protected async override void OnLaunched(LaunchActivatedEventArgs args)
-    {
-        base.OnLaunched(args);
+                    // Configuration
+                    services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+                })
+                .Build();
 
-        //App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+            App.GetService<IAppNotificationService>().Initialize();
+            App.GetService<VipFitContext>().Initialize();
 
-        await App.GetService<IActivationService>().ActivateAsync(args);
+            UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            // TODO: Log and handle exceptions as appropriate.
+            // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        }
+
+        protected async override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            base.OnLaunched(args);
+
+            //App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+
+            await App.GetService<IActivationService>().ActivateAsync(args);
+        }
     }
 }

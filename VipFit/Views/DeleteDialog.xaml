@@ -1,0 +1,21 @@
+<ContentDialog
+    x:Class="VipFit.Views.DeleteDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:VipFit.Views"
+    Title="Usuwanie klienta"
+    Content="Czy potwierdzasz usuniêcie klienta? Tej operacji nie da siê cofn¹æ."
+    PrimaryButtonText="Usuñ"
+    CloseButtonText="Anuluj"
+    PrimaryButtonClick="DeleteDialog_DeleteButtonClick"
+    CloseButtonClick="DeleteDialog_CancelButtonClick"
+    DefaultButton="Primary"
+    mc:Ignorable="d">
+
+    <ContentDialog.Resources>
+        <Style TargetType="local:DeleteDialog" BasedOn="{StaticResource DefaultContentDialogStyle}"/>
+    </ContentDialog.Resources>
+
+</ContentDialog>

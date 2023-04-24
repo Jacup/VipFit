@@ -50,7 +50,7 @@
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="Shell_ClientList" helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.ClientListViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe80a;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

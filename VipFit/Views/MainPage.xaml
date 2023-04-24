@@ -4,7 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:VipFit.Behaviors"
+    xmlns:viewModels="using:VipFit.ViewModels"
+    xmlns:helpers="using:VipFit.Helpers"
+    behaviors:NavigationViewHeaderBehavior.HeaderContext="{x:Bind Header, Mode=OneWay}"
     mc:Ignorable="d">
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate  x:DataType="helpers:HeaderHelper">
+            <TextBlock Text="{x:Bind Text, Mode=OneWay}" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea">
     </Grid>

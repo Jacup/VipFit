@@ -4,36 +4,98 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:helpers="using:VipFit.Helpers"
+    xmlns:viewmodels="using:VipFit.ViewModels" 
+    d:DataContext="{d:DesignInstance Type=viewmodels:ClientViewModel}"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        <controls:DataGrid
-            AutoGenerateColumns="False"
-            GridLinesVisibility="Horizontal"
-            ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LayoutVisualStates">
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TitleTxt.Margin" Value="16,48,16,24" />
+                        <Setter Target="itemGridView.Padding" Value="16,0,16,36" />
+                        <Setter Target="TitleTxt.Style" Value="{StaticResource SubtitleTextBlockStyle}" />
+                        <Setter Target="itemGridView.ItemContainerStyle" Value="{StaticResource GridViewItemStyleSmall}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarButton
+                Click="ViewClient_Click"
+                Icon="Contact"
+                Label="Szczegóły klienta"
+                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
+            <AppBarSeparator />
+            <AppBarButton
+                Click="SellPass_Click"
+                Icon="Shop" 
+                Label="Sprzedaj karnet"
+                IsEnabled="False"/>
+            <AppBarButton
+                Click="RegisterTraining_Click"
+                Label="Zarejestruj wejscie"
+                IsEnabled="False">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
+            </AppBarButton>
+            <AppBarSeparator />
+            <AppBarButton
+                Click="NewClient_Click"
+                Icon="Add" 
+                ToolTipService.ToolTip="Dodaj klienta" 
+                LabelPosition="Collapsed"/>
+            <AppBarButton
+                Click="{x:Bind ViewModel.Refresh}"
+                Icon="Refresh"
+                ToolTipService.ToolTip="Odśwież" 
+                LabelPosition="Collapsed"/>
+        </CommandBar>
+        <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
+        <controls:DataGrid Grid.Row="1"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="Horizontal"
+                ItemsSource="{x:Bind ViewModel.Clients}"
+                SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"
+                SelectionMode="Single">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
             </controls:DataGrid.Resources>
             <controls:DataGrid.Columns>
-                <!-- TODO: Replace column definitions to match real data. Consider adding Header values to Resources.resw. -->
-                <controls:DataGridTextColumn Binding="{Binding OrderID}" Header="OrderID" />
-                <controls:DataGridTextColumn Binding="{Binding OrderDate}" Header="OrderDate" />
-                <controls:DataGridTextColumn Binding="{Binding Company}" Header="Company" />
-                <controls:DataGridTextColumn Binding="{Binding ShipTo}" Header="ShipTo" />
-                <controls:DataGridTextColumn Binding="{Binding OrderTotal}" Header="OrderTotal" />
-                <controls:DataGridTextColumn Binding="{Binding Status}" Header="Status" />
-                <controls:DataGridTemplateColumn Header="Symbol">
-                    <controls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <FontIcon
-                                HorizontalAlignment="Left"
-                                FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                Glyph="{Binding Symbol}"
-                                AutomationProperties.Name="{Binding SymbolName}" />
-                        </DataTemplate>
-                    </controls:DataGridTemplateColumn.CellTemplate>
-                </controls:DataGridTemplateColumn>
+                <controls:DataGridTextColumn
+                    Header="Imię"
+                    Tag="FirstName"
+                    Binding="{Binding FirstName}" />
+                <controls:DataGridTextColumn
+                    Header="Nazwisko"
+                    Tag="LastName"
+                    Binding="{Binding LastName}" />
+                <controls:DataGridTextColumn
+                    Header="Telefon"
+                    Tag="Phone"
+                    Binding="{Binding Phone}" />
+                <controls:DataGridTextColumn
+                    Header="Email"
+                    Tag="Email"
+                    Binding="{Binding Email}" />
+
             </controls:DataGrid.Columns>
         </controls:DataGrid>
     </Grid>

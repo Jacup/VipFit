@@ -1,4 +1,6 @@
-﻿namespace VipFit.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VipFit.Core.Models
 {
     /// <summary>
     /// Base class for database entities.
@@ -8,6 +10,7 @@
         /// <summary>
         /// Gets or sets the database id.
         /// </summary>
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
     }
 }
