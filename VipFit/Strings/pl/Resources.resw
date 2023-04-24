@@ -124,34 +124,34 @@
     <value>VipFit</value>
   </data>
   <data name="Shell_Main.Content" xml:space="preserve">
-    <value>Main</value>
+    <value>Strona główna</value>
   </data>
   <data name="Shell_ClientList.Content" xml:space="preserve">
-    <value>ClientList</value>
+    <value>Lista klientów</value>
   </data>
   <data name="Settings_Personalization.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personalizacja</value>
   </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
-    <value>Theme</value>
+    <value>Motyw</value>
   </data>
   <data name="Settings_Theme_Light.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>Jasny</value>
   </data>
   <data name="Settings_Theme_Dark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>Ciemny</value>
   </data>
   <data name="Settings_Theme_Default.Content" xml:space="preserve">
-    <value>Default</value>
+    <value>Domyślny</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>About this application</value>
+    <value>O aplikacji</value>
   </data>
   <data name="Settings_AboutDescription.Text" xml:space="preserve">
-    <value>TODO: Replace with your app description.</value>
+    <value>TODO</value>
   </data>
   <data name="SettingsPage_PrivacyTermsLink.Content" xml:space="preserve">
-    <value>Privacy Statement</value>
+    <value>Polityka Prywatności</value>
   </data>
   <data name="SettingsPage_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
@@ -169,5 +169,74 @@
     &lt;action content="Settings" arguments="action=Settings"/&gt;
   &lt;/actions&gt;
 &lt;/toast&gt;</value>
+  </data>
+  <data name="Cancel.Label" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="CheckAll.Content" xml:space="preserve">
+    <value>Zaznacz wszystkie</value>
+  </data>
+  <data name="ClientList_Menu_Add.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj nowego klienta</value>
+  </data>
+  <data name="ClientList_Menu_Details.Label" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="ClientList_Menu_Refresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież listę klientów</value>
+  </data>
+  <data name="Client_AgreementMarketing.Content" xml:space="preserve">
+    <value>Zgoda marketingowa</value>
+  </data>
+  <data name="Client_AgreementPromo.Content" xml:space="preserve">
+    <value>Zgoda wizerunkowa - materiały promocyjne</value>
+  </data>
+  <data name="Client_AgreementSocials.Content" xml:space="preserve">
+    <value>Zgoda wizerunkowa - media społecznościowe</value>
+  </data>
+  <data name="Client_AgreementWww.Content" xml:space="preserve">
+    <value>Zgoda wizerunkowa - WWW</value>
+  </data>
+  <data name="Client_Email.Header" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Client_FirstName.Header" xml:space="preserve">
+    <value>Imię</value>
+  </data>
+  <data name="Client_LastName.Header" xml:space="preserve">
+    <value>Nazwisko</value>
+  </data>
+  <data name="Client_Menu_RegisterEntry.Label" xml:space="preserve">
+    <value>Zarejestruj wejście</value>
+  </data>
+  <data name="Client_Menu_SellPass.Label" xml:space="preserve">
+    <value>Sprzedaj karnet</value>
+  </data>
+  <data name="Client_Phone.Header" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Client_Subtitle_AgreementsDetails.Text" xml:space="preserve">
+    <value>Zgody</value>
+  </data>
+  <data name="Client_Subtitle_CommentDetails.Text" xml:space="preserve">
+    <value>Notatki</value>
+  </data>
+  <data name="Client_Subtitle_ContactDetails.Text" xml:space="preserve">
+    <value>Dane kontakowe</value>
+  </data>
+  <data name="Client_Subtitle_PassDetails.Text" xml:space="preserve">
+    <value>Karnet</value>
+  </data>
+  <data name="Client_Subtitle_PersonDetails.Text" xml:space="preserve">
+    <value>Dane osobowe</value>
+  </data>
+  <data name="Delete.Label" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Edit.Label" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="Save.Label" xml:space="preserve">
+    <value>Zapisz</value>
   </data>
 </root>
