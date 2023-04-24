@@ -39,64 +39,60 @@
         </VisualStateManager.VisualStateGroups>
 
         <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-            <AppBarButton
+            <AppBarButton x:Uid="ClientList_Menu_Details"
                 Click="ViewClient_Click"
                 Icon="Contact"
-                Label="Szczegóły klienta"
                 IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
             <AppBarSeparator />
-            <AppBarButton
+            <AppBarButton x:Uid="Client_Menu_SellPass"
                 Click="SellPass_Click"
                 Icon="Shop" 
-                Label="Sprzedaj karnet"
                 IsEnabled="False"/>
-            <AppBarButton
+            <AppBarButton x:Uid="Client_Menu_RegisterEntry"
                 Click="RegisterTraining_Click"
-                Label="Zarejestruj wejscie"
                 IsEnabled="False">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
             <AppBarSeparator />
-            <AppBarButton
+            <AppBarButton x:Uid="ClientList_Menu_Add"
                 Click="NewClient_Click"
-                Icon="Add" 
-                ToolTipService.ToolTip="Dodaj klienta" 
+                Icon="Add"
                 LabelPosition="Collapsed"/>
-            <AppBarButton
+            <AppBarButton x:Uid="ClientList_Menu_Refresh"
                 Click="{x:Bind ViewModel.Refresh}"
                 Icon="Refresh"
-                ToolTipService.ToolTip="Odśwież" 
                 LabelPosition="Collapsed"/>
         </CommandBar>
         <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
-        <controls:DataGrid Grid.Row="1"
-                AutoGenerateColumns="False"
-                GridLinesVisibility="Horizontal"
-                ItemsSource="{x:Bind ViewModel.Clients}"
-                SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"
-                SelectionMode="Single">
+        <controls:DataGrid 
+            Grid.Row="1"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="Horizontal"
+            ItemsSource="{x:Bind ViewModel.Clients}"
+            SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"
+            SelectionMode="Single">
+
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
             </controls:DataGrid.Resources>
+
             <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn
-                    Header="Imię"
+
+                <controls:DataGridTextColumn x:Uid="Client_FirstName"
                     Tag="FirstName"
                     Binding="{Binding FirstName}" />
-                <controls:DataGridTextColumn
-                    Header="Nazwisko"
+                <controls:DataGridTextColumn x:Uid="Client_LastName"
                     Tag="LastName"
                     Binding="{Binding LastName}" />
-                <controls:DataGridTextColumn
-                    Header="Telefon"
+                <controls:DataGridTextColumn x:Uid="Client_Phone"
                     Tag="Phone"
                     Binding="{Binding Phone}" />
-                <controls:DataGridTextColumn
-                    Header="Email"
+                <controls:DataGridTextColumn x:Uid="Client_Email"
                     Tag="Email"
                     Binding="{Binding Email}" />
 
             </controls:DataGrid.Columns>
+
         </controls:DataGrid>
     </Grid>
 </Page>
