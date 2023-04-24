@@ -1,7 +1,7 @@
-﻿using VipFit.Core.Models;
-
-namespace VipFit.Tests.MSTest.ModelsTests
+﻿namespace VipFit.Tests.MSTest.ModelsTests
 {
+    using VipFit.Core.Models;
+
     [TestClass]
     public class ClientTests
     {
