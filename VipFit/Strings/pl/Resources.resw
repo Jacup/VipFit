@@ -239,4 +239,67 @@
   <data name="Save.Label" xml:space="preserve">
     <value>Zapisz</value>
   </data>
+  <data name="Shell_PassTemplate.Content" xml:space="preserve">
+    <value>Karnety</value>
+  </data>
+  <data name="Shell_PassTemplateList.Content" xml:space="preserve">
+    <value>Rodzaje karnetów</value>
+  </data>
+  <data name="PassTemplateList_Menu_Add.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stwórz nowy rodzaj karnetu</value>
+  </data>
+  <data name="PassTemplateList_Menu_Details.Label" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="PassTemplateList_Menu_Refresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież listę</value>
+  </data>
+  <data name="PassTemplate_Duration.Header" xml:space="preserve">
+    <value>Czas trwania</value>
+  </data>
+  <data name="PassTemplate_Entries.Header" xml:space="preserve">
+    <value>Ilość wejść</value>
+  </data>
+  <data name="PassTemplate_MonthsDuration.Header" xml:space="preserve">
+    <value>Czas trwania w miesiącach</value>
+  </data>
+  <data name="PassTemplate_PassCode.Header" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="PassTemplate_Type.Header" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Shell_PassList.Content" xml:space="preserve">
+    <value>Lista karnetów</value>
+  </data>
+  <data name="PassTemplateList_Menu_Edit.Label" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="PassTemplateList_Menu_Edit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="PassTemplatePage_Duration.Text" xml:space="preserve">
+    <value>Czas trwania</value>
+  </data>
+  <data name="PassTemplatePage_Duration_Desc.Text" xml:space="preserve">
+    <value>Wybierz czas trwania karnetu.</value>
+  </data>
+  <data name="PassTemplatePage_Entries.Text" xml:space="preserve">
+    <value>Ilość wejść</value>
+  </data>
+  <data name="PassTemplatePage_MonthsDuration.Text" xml:space="preserve">
+    <value>Czas trwania w miesiącach</value>
+  </data>
+  <data name="PassTemplatePage_Price.Text" xml:space="preserve">
+    <value>Cena</value>
+  </data>
+  <data name="PassTemplatePage_Price_Desc.Text" xml:space="preserve">
+    <value>Cena karnetu za cały okres trwania</value>
+  </data>
+  <data name="PassTemplatePage_Type.Text" xml:space="preserve">
+    <value>Typ karnetu</value>
+  </data>
+  <data name="PassTemplatePage_Type_Desc.Text" xml:space="preserve">
+    <value>Typ karnetu wpływa na ilość wejść w tygodniu.</value>
+  </data>
 </root>

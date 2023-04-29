@@ -3,9 +3,9 @@ namespace VipFit.ViewModels
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml;
+    using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
-    using VipFit.DataAccessLayer;
 
     /// <summary>
     /// Client VM.

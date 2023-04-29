@@ -6,15 +6,15 @@ namespace VipFit.Core.Models
     /// <summary>
     /// Represents a model for a pass.
     /// </summary>
-    public class PassModel : DbObject
+    public class PassTemplate : DbObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PassModel"/> class.
+        /// Initializes a new instance of the <see cref="PassTemplate"/> class.
         /// </summary>
         /// <param name="type">Pass type.</param>
         /// <param name="duration">Pass duration.</param>
         /// <param name="price">Price of pass.</param>
-        public PassModel(PassType type, PassDuration duration, decimal price)
+        public PassTemplate(PassType type, PassDuration duration, decimal price)
         {
             Type = type;
             Duration = duration;
@@ -22,9 +22,9 @@ namespace VipFit.Core.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PassModel"/> class.
+        /// Initializes a new instance of the <see cref="PassTemplate"/> class.
         /// </summary>
-        public PassModel()
+        public PassTemplate()
         {
         }
 
@@ -73,11 +73,6 @@ namespace VipFit.Core.Models
             _ => throw new NotImplementedException(),
         };
 
-        internal static byte GetTotalEntries(byte months, PassType type) => type switch
-        {
-            PassType.Standard => (byte)(months * 4),
-            PassType.Pro => (byte)(months * 8),
-            _ => throw new NotImplementedException(),
-        };
+        internal static byte GetTotalEntries(byte months, PassType type) => (byte)(months * (byte)type);
     }
 }

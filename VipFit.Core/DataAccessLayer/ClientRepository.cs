@@ -1,4 +1,4 @@
-﻿namespace VipFit.DataAccessLayer
+﻿namespace VipFit.Core.DataAccessLayer
 {
     using Microsoft.EntityFrameworkCore;
     using VipFit.Core.Models;

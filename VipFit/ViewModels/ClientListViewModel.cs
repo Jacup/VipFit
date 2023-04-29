@@ -4,7 +4,7 @@
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer;
 
     /// <summary>
     /// ViewModel for ClientList.

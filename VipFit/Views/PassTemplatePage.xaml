@@ -1,0 +1,191 @@
+<Page
+    x:Class="VipFit.Views.PassTemplatePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VipFit.Views"
+    xmlns:f="using:Windows.Globalization.NumberFormatting"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:helpers="using:VipFit.Helpers"
+    xmlns:models="using:VipFit.Core.Models"
+    xmlns:behaviors="using:VipFit.Behaviors"
+    xmlns:viewmodels="using:VipFit.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:PassTemplateViewModel}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <f:DecimalFormatter x:Key="DecimalFormatter" SignificantDigits="5"/>
+        <helpers:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
+    </Page.Resources>
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate  x:DataType="helpers:HeaderHelper">
+            <TextBlock Text="{x:Bind Text, Mode=OneWay}" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+
+    <Grid x:Name="ContentArea">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <CommandBar
+            Grid.Row="0" 
+            Background="Transparent" 
+            IsOpen="False" 
+            DefaultLabelPosition="Right">
+
+            <AppBarButton 
+                x:Uid="Save"
+                Click="{x:Bind SaveButton_Click}"
+                Icon="Save"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
+                IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"/>
+            <AppBarButton 
+                x:Uid="Cancel"
+                Click="{x:Bind CancelButton_Click}"
+                Icon="Cancel"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+            <AppBarButton 
+                x:Uid="Delete"
+                Click="{x:Bind DeleteButton_Click}"
+                Icon="Delete"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+
+        </CommandBar>
+
+        <ScrollViewer IsTabStop="True" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <StackPanel x:Name="Content">
+                <StackPanel x:Name="propertiesGroup1" HorizontalAlignment="Stretch">
+                    <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Width="Auto">
+                        <FontIcon
+                        x:Name="TypeIcon"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xE97C;"/>
+                        <TextBlock
+                        x:Uid="PassTemplatePage_Type"
+                        x:Name="TypeTitle"
+                        RelativePanel.RightOf="TypeIcon"
+                        Margin="8,16,16,1"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock 
+                        x:Uid="PassTemplatePage_Type_Desc"
+                        x:Name="TypeDesc"
+                        RelativePanel.RightOf="TypeIcon"
+                        RelativePanel.Below="TypeTitle"
+                        Margin="8,1,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <ComboBox
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        ItemsSource="{x:Bind ViewModel.AvailablePassTypes, Mode=OneWay}" 
+                        SelectedItem="{x:Bind ViewModel.Type.ToString(), BindBack=ViewModel.SetType, Mode=TwoWay}" />
+                    </RelativePanel>
+                    <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                        <FontIcon
+                        x:Name="DurationIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xEC92;"/>
+                        <TextBlock
+                        x:Uid="PassTemplatePage_Duration"
+                        x:Name="DurationTitle"
+                        RelativePanel.RightOf="DurationIcon"
+                        Margin="8,16,16,2"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock 
+                        x:Uid="PassTemplatePage_Duration_Desc"
+                        x:Name="DurationDesc"
+                        RelativePanel.RightOf="DurationIcon"
+                        RelativePanel.Below="DurationTitle"
+                        Margin="8,2,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <ComboBox
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        ItemsSource="{x:Bind ViewModel.AvailablePassDurations, Mode=OneWay}" 
+                        SelectedItem="{x:Bind ViewModel.Duration.ToString(), BindBack=ViewModel.SetDuration, Mode=TwoWay}" />
+                    </RelativePanel>
+                    <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                        <FontIcon
+                        x:Name="PriceIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xE7BF;"/>
+                        <TextBlock
+                        x:Uid="PassTemplatePage_Price"
+                        x:Name="PriceTitle"
+                        RelativePanel.RightOf="PriceIcon"
+                        Margin="8,16,16,1"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock 
+                        x:Uid="PassTemplatePage_Price_Desc"
+                        x:Name="PriceDesc"
+                        RelativePanel.RightOf="PriceIcon"
+                        RelativePanel.Below="PriceTitle"
+                        Margin="8,1,16,16"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <NumberBox
+                            x:Uid="PassTemplate_Price"
+                            MinWidth="140"
+                            Margin="16,8"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            AcceptsExpression="False"
+                            Loaded="NumberBox_Loaded"
+                            Value="{x:Bind ViewModel.Price, Converter={StaticResource DecimalToDoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/> <!-- TODO NIE DZIALA PROPERTYCHANGED-->
+                    </RelativePanel>
+                </StackPanel>
+                
+                <StackPanel x:Name="propertiesGroup2">
+                    <StackPanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                        <TextBlock 
+                            Style="{ThemeResource BodyTextBlockStyle}" 
+                            x:Uid="PassTemplatePage_MonthsDuration"
+                            Margin="8,16,16,1"/>
+                        <TextBlock 
+                            Style="{ThemeResource CaptionTextBlockStyle}" 
+                            Text="{x:Bind ViewModel.MonthsDuration, Mode=OneWay}"
+                            Margin="8,1,16,16"/>
+                    </StackPanel>
+
+                    <StackPanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                        <TextBlock 
+                            Style="{ThemeResource BodyTextBlockStyle}" 
+                            x:Uid="PassTemplatePage_Entries"
+                            Margin="8,16,16,1"/>
+                        <TextBlock 
+                            Style="{ThemeResource CaptionTextBlockStyle}" 
+                            Text="{x:Bind ViewModel.Entries, Mode=OneWay}" 
+                            Margin="8,1,16,16"/>
+                    </StackPanel>
+
+                </StackPanel>
+                
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

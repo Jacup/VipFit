@@ -74,7 +74,6 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
                 <RelativePanel x:Name="ClientData" Grid.Column="0">
                     <TextBlock x:Name="PersonDetalis"
                                x:Uid="Client_Subtitle_PersonDetails"

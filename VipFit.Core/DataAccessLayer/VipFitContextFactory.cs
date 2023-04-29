@@ -2,7 +2,6 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
-    using VipFit.DataAccessLayer;
 
     /// <summary>
     /// Context factory.

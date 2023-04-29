@@ -4,7 +4,7 @@
     using VipFit.Core.Models;
 
     [TestClass]
-    public class PassModelTests
+    public class PassTemplateTests
     {
         #region GetTotalEntries
 
@@ -18,7 +18,7 @@
             byte expectedEntries = 12;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -34,7 +34,7 @@
             byte expectedEntries = 24;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -50,7 +50,7 @@
             byte expectedEntries = 48;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -66,7 +66,7 @@
             byte expectedEntries = 8;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -82,7 +82,7 @@
             byte expectedEntries = 24;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -98,7 +98,7 @@
             byte expectedEntries = 80;
 
             // Act
-            byte actualEntries = PassModel.GetTotalEntries(months, type);
+            byte actualEntries = PassTemplate.GetTotalEntries(months, type);
 
             // Assert
             Assert.AreEqual(expectedEntries, actualEntries);
@@ -118,7 +118,7 @@
             byte expectedMonths = 3;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -134,7 +134,7 @@
             byte expectedMonths = 6;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -150,7 +150,7 @@
             byte expectedMonths = 12;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -166,7 +166,7 @@
             byte expectedMonths = 1;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -182,7 +182,7 @@
             byte expectedMonths = 3;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -198,7 +198,7 @@
             byte expectedMonths = 10;
 
             // Act
-            byte months = PassModel.GetMonths(type, duration);
+            byte months = PassTemplate.GetMonths(type, duration);
 
             // Assert
             Assert.AreEqual(expectedMonths, months);
@@ -212,7 +212,7 @@
         public void ToString_3mPro_ShouldReturnValidString()
         {
             // Arrange
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
             string expectedString = "VF-3M-Standard";
 
             // Act
@@ -226,7 +226,7 @@
         public void ToString_10mPro_ShouldReturnValidString()
         {
             // Arrange
-            var model = new PassModel(PassType.Pro, PassDuration.Long, 500m);
+            var model = new PassTemplate(PassType.Pro, PassDuration.Long, 500m);
             string expectedString = "VF-10M-Pro";
 
             // Act
@@ -241,90 +241,90 @@
         #region Model
 
         [TestMethod]
-        public void PassModel_StandardShort_TypeShouldMatch()
+        public void PassTemplate_StandardShort_TypeShouldMatch()
         {
             // Arrange
             PassType expectedType = PassType.Standard;
             PassDuration expectedDuration = PassDuration.Short;
 
             // Act
-            var model = new PassModel(expectedType, expectedDuration, 500m);
+            var model = new PassTemplate(expectedType, expectedDuration, 500m);
 
             // Assert
             Assert.AreEqual(expectedType, model.Type);
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_DurationShouldMatch()
+        public void PassTemplate_StandardShort_DurationShouldMatch()
         {
             // Arrange
             PassType expectedType = PassType.Standard;
             PassDuration expectedDuration = PassDuration.Short;
 
             // Act
-            var model = new PassModel(expectedType, expectedDuration, 500m);
+            var model = new PassTemplate(expectedType, expectedDuration, 500m);
 
             // Assert
             Assert.AreEqual(expectedDuration, model.Duration);
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_StringShouldMatch()
+        public void PassTemplate_StandardShort_StringShouldMatch()
         {
             // Arrange
             string expectedString = "VF-3M-Standard";
 
             // Act
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
 
             // Assert
             Assert.AreEqual(expectedString, model.ToString());
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_PassCodeShouldMatch()
+        public void PassTemplate_StandardShort_PassCodeShouldMatch()
         {
             // Arrange
             string expectedPassCode = "VF-3M-Standard";
 
             // Act
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
 
             // Assert
             Assert.AreEqual(expectedPassCode, model.PassCode);
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_PassCodeShouldBeEqualWithToString()
+        public void PassTemplate_StandardShort_PassCodeShouldBeEqualWithToString()
         {
             // Act
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
 
             // Assert
             Assert.AreEqual(model.ToString(), model.PassCode);
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_MonthsShouldMatch()
+        public void PassTemplate_StandardShort_MonthsShouldMatch()
         {
             // Arrange
             byte expectedMonths = 3;
 
             // Act
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
 
             // Assert
             Assert.AreEqual(expectedMonths, model.MonthsDuration);
         }
 
         [TestMethod]
-        public void PassModel_StandardShort_EntriesShouldMatch()
+        public void PassTemplate_StandardShort_EntriesShouldMatch()
         {
             // Arrange
             byte expectedEntries = 12;
 
             // Act
-            var model = new PassModel(PassType.Standard, PassDuration.Short, 500m);
+            var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
 
             // Assert
             Assert.AreEqual(expectedEntries, model.Entries);

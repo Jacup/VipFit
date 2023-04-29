@@ -19,6 +19,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\DeleteDialog.xaml" />
+	  <None Remove="Views\PassTemplatePage.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -51,6 +52,12 @@
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<Page Update="Views\PassTemplatePage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\PassTemplateListPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Views\DeleteDialog.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
