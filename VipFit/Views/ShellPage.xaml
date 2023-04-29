@@ -43,16 +43,35 @@
                 TODO: Update item icons by updating FontIcon.Glyph properties.
                 https://docs.microsoft.com/windows/apps/design/style/segoe-fluent-icons-font#icon-list
                 -->
+
                 <NavigationViewItem x:Uid="Shell_Main" helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.MainViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
                 <NavigationViewItem x:Uid="Shell_ClientList" helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.ClientListViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <NavigationViewItem x:Uid="Shell_PassTemplate">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C4;"/>
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+
+                        <NavigationViewItem x:Uid="Shell_PassTemplateList"
+                                            Icon="Tag"
+                                            helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.PassTemplateListViewModel"/>
+                        <NavigationViewItem x:Uid="Shell_PassList"
+                                            Icon="Library"
+                                            IsEnabled="False"/>
+
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate>

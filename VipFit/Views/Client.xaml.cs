@@ -3,8 +3,6 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
-    using System.ComponentModel;
-    using VipFit.DataAccessLayer;
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;

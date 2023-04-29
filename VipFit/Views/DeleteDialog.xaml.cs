@@ -8,7 +8,17 @@ namespace VipFit.Views
     /// </summary>
     public sealed partial class DeleteDialog : ContentDialog
     {
-        public DeleteDialog() => InitializeComponent();
+        public DeleteDialog()
+        {
+            InitializeComponent();
+
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("Dialogs");
+
+            Title = resourceLoader.GetString("DeleteDialog/Title");
+            Content = resourceLoader.GetString("DeleteDialog/Content");
+            PrimaryButtonText = resourceLoader.GetString("DeleteDialog/PrimaryButtonText");
+            CloseButtonText = resourceLoader.GetString("DeleteDialog/CloseButtonText");
+        }
 
         public bool DeleteConfirmed { get; private set; } = false;
 

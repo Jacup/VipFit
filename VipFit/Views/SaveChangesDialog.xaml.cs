@@ -1,6 +1,7 @@
 namespace VipFit.Views
 {
     using Microsoft.UI.Xaml.Controls;
+    using Windows.UI.Core;
 
     /// <summary>
     /// Creates a dialog that gives the users a chance to save changes, discard them, 
@@ -8,7 +9,18 @@ namespace VipFit.Views
     /// </summary>
     public sealed partial class SaveChangesDialog : ContentDialog
     {
-        public SaveChangesDialog() => InitializeComponent();
+        public SaveChangesDialog()
+        {
+            InitializeComponent();
+
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("Dialogs");
+            Title = resourceLoader.GetString("SaveChanges/Title");
+            Content = resourceLoader.GetString("SaveChanges/Content");
+            PrimaryButtonText = resourceLoader.GetString("SaveChanges/PrimaryButtonText");
+            SecondaryButtonText = resourceLoader.GetString("SaveChanges/SecondaryButtonText");
+            CloseButtonText = resourceLoader.GetString("SaveChanges/CloseButtonText");
+
+        }
 
         /// <summary>
         /// Gets or sets the user's choice. 

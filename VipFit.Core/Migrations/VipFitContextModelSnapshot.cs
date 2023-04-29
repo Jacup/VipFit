@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VipFit.DataAccessLayer;
+using VipFit.Core.DataAccessLayer;
 
 #nullable disable
 
@@ -70,6 +70,26 @@ namespace VipFit.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Client", (string)null);
+                });
+
+            modelBuilder.Entity("VipFit.Core.Models.PassTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PassTemplate", (string)null);
                 });
 #pragma warning restore 612, 618
         }

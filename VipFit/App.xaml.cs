@@ -8,8 +8,8 @@
     using VipFit.Activation;
     using VipFit.Contracts.Services;
     using VipFit.Core.Contracts.Services;
+    using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Services;
-    using VipFit.DataAccessLayer;
     using VipFit.Models;
     using VipFit.Notifications;
     using VipFit.Services;
@@ -76,6 +76,7 @@
                         options => options.UseSqlite($@"Data Source=C:\Users\jacub\vipfit\db\mydb.db;"));
 
                     services.AddSingleton<IClientRepository, ClientRepository>();
+                    services.AddSingleton<IPassTemplateRepository, PassTemplateRepository>();
 
                     // Core Services
                     services.AddSingleton<IFileService, FileService>();
@@ -83,10 +84,16 @@
                     // Views and ViewModels
                     services.AddTransient<SettingsViewModel>();
                     services.AddTransient<SettingsPage>();
+                    
                     services.AddSingleton<ClientListViewModel>();
                     services.AddTransient<ClientListPage>();
+                    
+                    services.AddSingleton<PassTemplateListViewModel>();
+                    services.AddTransient<PassTemplateListPage>();
+
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();
+                    
                     services.AddTransient<ShellPage>();
                     services.AddTransient<ShellViewModel>();
 

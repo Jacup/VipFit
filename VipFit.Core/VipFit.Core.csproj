@@ -26,4 +26,8 @@
 			<_Parameter1>VipFit.Tests.MSTest</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 </Project>
