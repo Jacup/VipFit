@@ -1,7 +1,7 @@
 ﻿namespace VipFit.Core.DataAccessLayer
 {
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using System.ComponentModel.DataAnnotations;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
@@ -30,6 +30,11 @@
         public DbSet<PassTemplate> PassTemplates { get; set; }
 
         /// <summary>
+        /// Gets or sets the Pass DbSet.
+        /// </summary>
+        public DbSet<Pass> Passes { get; set; }
+
+        /// <summary>
         /// Initializes base db.
         /// </summary>
         public void Initialize()
@@ -38,6 +43,18 @@
 
             SeedClients();
             SeedPassTemplates();
+            SeedPasses();
+        }
+
+        /// <summary>
+        /// Initializes on creating db model.
+        /// </summary>
+        /// <param name="modelBuilder">ModelBuilder.</param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Client>().ToTable(nameof(Client));
+            modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
+            modelBuilder.Entity<Pass>().ToTable(nameof(Pass));
         }
 
         private void SeedClients()
@@ -78,14 +95,24 @@
             SaveChanges();
         }
 
-        /// <summary>
-        /// Initializes on creating db model.
-        /// </summary>
-        /// <param name="modelBuilder">ModelBuilder.</param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        private void SeedPasses()
         {
-            modelBuilder.Entity<Client>().ToTable(nameof(Client));
-            modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
+            if (Passes.Any() || !Clients.Any())
+                return;
+
+            var startingDate = DateOnly.Parse("01.06.2023");
+            var now = DateTime.Now;
+            var client = Clients.FirstOrDefault();
+
+            var passes = new Pass[]
+            {
+                new Pass(true, startingDate, startingDate.AddMonths(3), now, now, client.Id, client),
+            };
+
+            foreach (var p in passes)
+                Passes.Add(p);
+
+            SaveChanges();
         }
     }
 }

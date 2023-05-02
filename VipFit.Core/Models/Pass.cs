@@ -2,27 +2,35 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Represents pass entity.
     /// </summary>
-    internal class Pass : DbObject
+    public class Pass : DbObject
     {
         /// <summary>
-        /// Gets or sets pass template.
+        /// Initializes a new instance of the <see cref="Pass"/> class.
         /// </summary>
-        public PassTemplate PassTemplate { get; set; }
+        public Pass()
+        {
+        }
+
+        public Pass(bool isActive, DateOnly startDate, DateOnly endDate, DateTime createdAt, DateTime modifiedAt, Guid clientId, Client client)
+        {
+            IsActive = isActive;
+            StartDate = startDate;
+            EndDate = endDate;
+            CreatedAt = createdAt;
+            ModifiedAt = modifiedAt;
+            ClientId = clientId;
+            Client = client;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether pass is active.
         /// </summary>
         public bool IsActive { get; set; }
-
-        /// <summary>
-        /// Gets or sets a collection of entries to the gym.
-        /// </summary>
-        [DataType(DataType.Date)]
-        public IEnumerable<DateOnly> Entries { get; set; }
 
         /// <summary>
         /// Gets or sets the pass's start date.
@@ -48,6 +56,31 @@
         [DataType(DataType.DateTime)]
         public DateTime ModifiedAt { get; set; }
 
-        // public IEnumerable<Payment> Payments { get; set; } // Module3
+        #region Foreign keys
+
+        /// <summary>
+        /// Gets or sets the associated client's ID.
+        /// </summary>
+        public Guid ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated Client.
+        /// </summary>
+        public Client Client { get; set; } = null!;
+
+        #endregion
+
+        /// <summary>
+        /// Gets or sets pass template.
+        /// </summary>
+        //public PassTemplate PassTemplate { get; set; }
+
+        ///// <summary>
+        ///// Gets or sets a collection of entries to the gym.
+        ///// </summary>
+        //[InverseProperty("Pass")]
+        //public virtual ICollection<PassEntry> Entries { get; set; }
+
+        // public IEnumerable<Payment> Payments { get; set; } // Module 3
     }
 }

@@ -1,8 +1,10 @@
 namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml;
+    using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
@@ -19,6 +21,7 @@ namespace VipFit.ViewModels
         private bool isLoading;
         private bool isNewClient;
         private bool isInEdit = false;
+        private Pass selectedPass;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientViewModel"/> class.
@@ -42,6 +45,7 @@ namespace VipFit.ViewModels
                 if (model != value)
                 {
                     model = value;
+                    RefreshPasses();
 
                     // Raise the PropertyChanged event for all properties
                     OnPropertyChanged(string.Empty);
@@ -82,6 +86,15 @@ namespace VipFit.ViewModels
         {
             get => isInEdit;
             set => SetProperty(ref isInEdit, value);
+        }
+
+        public ObservableCollection<Pass> Passes { get; } = new();
+
+
+        public Pass SelectedPass
+        {
+            get => selectedPass;
+            set => SetProperty(ref selectedPass, value);
         }
 
         #region Model's Properties
@@ -404,6 +417,7 @@ namespace VipFit.ViewModels
         /// </summary>
         public async Task RefreshClientAsync()
         {
+            RefreshPasses();
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
         }
 
@@ -417,5 +431,31 @@ namespace VipFit.ViewModels
         /// </summary>
         public async void EndEdit() => await SaveAsync();
 
+        /// <summary>
+        /// Resets the customer detail fields to the current values.
+        /// </summary>
+        public void RefreshPasses() => Task.Run(LoadPassesAsync);
+
+        /// <summary>
+        /// Loads the order data for the customer.
+        /// </summary>
+        public async Task LoadPassesAsync()
+        {
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                IsLoading = true;
+            });
+
+            var passes = await App.GetService<IPassRepository>().GetForClientAsync(Model.Id);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Passes.Clear();
+                foreach (var p in passes)
+                    Passes.Add(p);
+
+                IsLoading = false;
+            });
+        }
     }
 }

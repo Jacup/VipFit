@@ -74,6 +74,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                
                 <RelativePanel x:Name="ClientData" Grid.Column="0">
                     <TextBlock x:Name="PersonDetalis"
                                x:Uid="Client_Subtitle_PersonDetails"
@@ -179,6 +180,15 @@
                                RelativePanel.AlignTopWithPanel="True"
                                Margin="0,0,0,8"
                                Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <ListView
+                        x:Name="PassList"
+                        ItemsSource="{x:Bind ViewModel.Passes}"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                        Width="200"
+                        Height="400"
+                        HorizontalAlignment="Left"/>
+
                 </RelativePanel>
 
             </Grid>

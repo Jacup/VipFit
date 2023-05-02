@@ -77,6 +77,7 @@
 
                     services.AddSingleton<IClientRepository, ClientRepository>();
                     services.AddSingleton<IPassTemplateRepository, PassTemplateRepository>();
+                    services.AddSingleton<IPassRepository, PassRepository>();
 
                     // Core Services
                     services.AddSingleton<IFileService, FileService>();
