@@ -17,35 +17,23 @@
     using VipFit.Views;
     using Windows.Storage;
 
-    // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
+    /// <summary>
+    /// App class.
+    /// </summary>
     public partial class App : Application
     {
-        private static readonly string dbName = "vipfit_sqlite.db";
-        private static readonly string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, dbName);
+        private static readonly string DbName = "vipfit_sqlite.db";
+        private static readonly string Dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, DbName);
 
         // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
         // https://docs.microsoft.com/dotnet/core/extensions/generic-host
         // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
         // https://docs.microsoft.com/dotnet/core/extensions/configuration
         // https://docs.microsoft.com/dotnet/core/extensions/logging
-        public IHost Host
-        {
-            get;
-        }
 
-        public static T GetService<T>()
-            where T : class
-        {
-            if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
-            {
-                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
-            }
-
-            return service;
-        }
-
-        public static WindowEx MainWindow { get; } = new MainWindow();
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class.
+        /// </summary>
         public App()
         {
             InitializeComponent();
@@ -85,16 +73,19 @@
                     // Views and ViewModels
                     services.AddTransient<SettingsViewModel>();
                     services.AddTransient<SettingsPage>();
-                    
+
                     services.AddSingleton<ClientListViewModel>();
                     services.AddTransient<ClientListPage>();
-                    
+
                     services.AddSingleton<PassTemplateListViewModel>();
                     services.AddTransient<PassTemplateListPage>();
 
+                    services.AddSingleton<PassListViewModel>();
+                    services.AddTransient<PassListPage>();
+
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();
-                    
+
                     services.AddTransient<ShellPage>();
                     services.AddTransient<ShellViewModel>();
 
@@ -103,25 +94,54 @@
                 })
                 .Build();
 
-            App.GetService<IAppNotificationService>().Initialize();
-            App.GetService<VipFitContext>().Initialize();
+            GetService<IAppNotificationService>().Initialize();
+            GetService<VipFitContext>().Initialize();
 
             UnhandledException += App_UnhandledException;
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        /// <summary>
+        /// Gets the MainWindow.
+        /// </summary>
+        public static WindowEx MainWindow { get; } = new MainWindow();
+
+        /// <summary>
+        /// Gets the host value.
+        /// </summary>
+        public IHost Host { get; }
+
+        /// <summary>
+        /// Gets the specified serviee.
+        /// </summary>
+        /// <typeparam name="T">Type of service.</typeparam>
+        /// <returns>Service.</returns>
+        /// <exception cref="ArgumentException">Thrown if service is not registered in App.</exception>
+        public static T GetService<T>()
+            where T : class
         {
-            // TODO: Log and handle exceptions as appropriate.
-            // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+            if ((Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+
+            return service;
         }
 
+        /// <summary>
+        /// Invokes on application launch.
+        /// </summary>
+        /// <param name="args">Launch args.</param>
         protected async override void OnLaunched(LaunchActivatedEventArgs args)
         {
             base.OnLaunched(args);
 
             //App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
 
-            await App.GetService<IActivationService>().ActivateAsync(args);
+            await GetService<IActivationService>().ActivateAsync(args);
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            // TODO: Log and handle exceptions as appropriate.
+            // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
         }
     }
 }

@@ -39,26 +39,31 @@
         </VisualStateManager.VisualStateGroups>
 
         <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-            <AppBarButton x:Uid="ClientList_Menu_Details"
+            <AppBarButton
+                x:Uid="ClientList_Menu_Details"
                 Click="ViewClient_Click"
                 Icon="Contact"
                 IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
             <AppBarSeparator />
-            <AppBarButton x:Uid="Client_Menu_SellPass"
+            <AppBarButton 
+                x:Uid="Client_Menu_SellPass"
                 Click="SellPass_Click"
-                Icon="Shop" 
-                IsEnabled="False"/>
-            <AppBarButton x:Uid="Client_Menu_RegisterEntry"
+                Icon="Shop"
+                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedClient), Mode=OneWay}"/>
+            <AppBarButton
+                x:Uid="Client_Menu_RegisterEntry"
                 Click="RegisterTraining_Click"
                 IsEnabled="False">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
             <AppBarSeparator />
-            <AppBarButton x:Uid="ClientList_Menu_Add"
+            <AppBarButton
+                x:Uid="ClientList_Menu_Add"
                 Click="NewClient_Click"
                 Icon="Add"
                 LabelPosition="Collapsed"/>
-            <AppBarButton x:Uid="ClientList_Menu_Refresh"
+            <AppBarButton
+                x:Uid="ClientList_Menu_Refresh"
                 Click="{x:Bind ViewModel.Refresh}"
                 Icon="Refresh"
                 LabelPosition="Collapsed"/>

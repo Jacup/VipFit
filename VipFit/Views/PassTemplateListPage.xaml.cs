@@ -29,7 +29,6 @@ namespace VipFit.Views
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(PassTemplatePage), null, new DrillInNavigationTransitionInfo());
-
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -48,15 +47,11 @@ namespace VipFit.Views
                 return;
 
             await ViewModel.SelectedPassTemplate.DeleteAsync();
-
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Refresh();
-
         }
-
-
     }
 }

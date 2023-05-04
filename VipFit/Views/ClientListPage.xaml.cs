@@ -77,9 +77,6 @@
             }
         }
 
-        /// <summary>
-        /// Menu flyout click control for selecting a customer and displaying details.
-        /// </summary>
         private void ViewClient_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.SelectedClient != null)
@@ -96,7 +93,11 @@
 
         private void SellPass_Click(object sender, RoutedEventArgs e)
         {
-
+            if (ViewModel.SelectedClient != null)
+            {
+                Frame.Navigate(typeof(PassPage), ViewModel.SelectedClient.Model,
+                    new DrillInNavigationTransitionInfo());
+            }
         }
     }
 }

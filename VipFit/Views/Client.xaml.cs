@@ -2,6 +2,7 @@ namespace VipFit.Views
 {
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Media.Animation;
     using Microsoft.UI.Xaml.Navigation;
     using VipFit.Helpers;
     using VipFit.Interfaces;
@@ -13,22 +14,24 @@ namespace VipFit.Views
     public sealed partial class Client : Page, IHeaderChanger
     {
         /// <summary>
-        /// Client ViewModel.
+        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// </summary>
+        public Client() => InitializeComponent();
+
+        /// <summary>
+        /// Gets or sets the Client ViewModel.
         /// </summary>
         public ClientViewModel ViewModel { get; set; }
 
+        /// <summary>
+        /// Gets header.
+        /// </summary>
         public HeaderHelper Header { get; private set; } = new();
-
 
         /// <summary>
         /// Navigate to the previous page when the user cancels the creation of a new customer record.
         /// </summary>
         private void AddNewClientCanceled(object sender, EventArgs e) => Frame.GoBack();
-
-        /// <summary>
-        /// Initialize the Client Page.
-        /// </summary>
-        public Client() => InitializeComponent();
 
         #region INavigation
 
@@ -40,16 +43,17 @@ namespace VipFit.Views
                 ViewModel = new ClientViewModel
                 {
                     IsNewClient = true,
-                    IsInEdit = true
+                    IsInEdit = true,
                 };
                 VisualStateManager.GoToState(this, "NewCustomer", false);
             }
             else
             {
-                var vm = App.GetService<ClientListViewModel>();
-                var clients = App.GetService<ClientListViewModel>().Clients;
-                ViewModel = App.GetService<ClientListViewModel>().Clients.Where(
-                    c => c.Model.Id == (Guid)e.Parameter).First();
+                ViewModel =
+                    App.GetService<ClientListViewModel>()
+                    .Clients
+                    .Where(c => c.Model.Id == (Guid)e.Parameter)
+                    .First();
 
             }
             Header.Text = ViewModel.Name;
@@ -178,18 +182,19 @@ namespace VipFit.Views
 
             bool result = deleteDialog.DeleteConfirmed;
 
-            if (result)
-            {
-                if (ViewModel != null)
-                {
-                    await ViewModel.DeleteAsync();
-                    Frame.GoBack();
-                }
-            }
-            else
-            {
+            if (!result)
                 return;
+
+            if (ViewModel != null)
+            {
+                await ViewModel.DeleteAsync();
+                Frame.GoBack();
             }
+        }
+
+        private void SellPassButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(PassPage), ViewModel.Model, new DrillInNavigationTransitionInfo());
         }
 
         #endregion
