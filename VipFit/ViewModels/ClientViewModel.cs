@@ -3,7 +3,6 @@ namespace VipFit.ViewModels
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
-    using Microsoft.UI.Xaml;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Enums;
@@ -17,11 +16,11 @@ namespace VipFit.ViewModels
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Client model;
+        private Pass selectedPass;
 
         private bool isLoading;
         private bool isNewClient;
         private bool isInEdit = false;
-        private Pass selectedPass;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientViewModel"/> class.
@@ -42,19 +41,19 @@ namespace VipFit.ViewModels
             get => model;
             set
             {
-                if (model != value)
-                {
-                    model = value;
-                    RefreshPasses();
+                if (model == value)
+                    return;
 
-                    // Raise the PropertyChanged event for all properties
-                    OnPropertyChanged(string.Empty);
-                }
+                model = value;
+                RefreshPasses();
+
+                // Raise the PropertyChanged event for all properties
+                OnPropertyChanged(string.Empty);
             }
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the underlying model has been modified. 
+        /// Gets or sets a value indicating whether the underlying model has been modified. 
         /// </summary>
         /// <remarks>
         /// Used when syncing with the server to reduce load and only upload the models that have changed.
@@ -62,7 +61,7 @@ namespace VipFit.ViewModels
         public bool IsModified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to show a progress bar. 
+        /// Gets or sets a value indicating whether to show a progress bar. 
         /// </summary>
         public bool IsLoading
         {
@@ -71,7 +70,7 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether this is new client.
+        /// Gets or sets a value indicating whether this is new client.
         /// </summary>
         public bool IsNewClient
         {
@@ -89,7 +88,6 @@ namespace VipFit.ViewModels
         }
 
         public ObservableCollection<Pass> Passes { get; } = new();
-
 
         public Pass SelectedPass
         {
@@ -392,6 +390,13 @@ namespace VipFit.ViewModels
         public async Task RevertChangesAsync()
         {
             IsInEdit = false;
+
+            if (isNewClient)
+            {
+                IsModified = false;
+                return;
+            }
+
             if (IsModified)
             {
                 await RefreshClientAsync();
@@ -417,8 +422,16 @@ namespace VipFit.ViewModels
         /// </summary>
         public async Task RefreshClientAsync()
         {
-            RefreshPasses();
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
+
+            var newPasses = await App.GetService<IPassRepository>().GetForClientAsync(Model.Id);
+
+            if (!newPasses.Any())
+                return;
+
+            Passes.Clear();
+            foreach (var p in newPasses)
+                Passes.Add(p);
         }
 
         /// <summary>

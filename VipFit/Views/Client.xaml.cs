@@ -33,13 +33,12 @@ namespace VipFit.Views
         /// </summary>
         private void AddNewClientCanceled(object sender, EventArgs e) => Frame.GoBack();
 
-        #region INavigation
+        #region INavigation Implementations
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter == null)
             {
-
                 ViewModel = new ClientViewModel
                 {
                     IsNewClient = true,
@@ -54,7 +53,6 @@ namespace VipFit.Views
                     .Clients
                     .Where(c => c.Model.Id == (Guid)e.Parameter)
                     .First();
-
             }
             Header.Text = ViewModel.Name;
             ViewModel.AddNewClientCanceled += AddNewClientCanceled;
