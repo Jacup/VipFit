@@ -42,9 +42,12 @@ namespace VipFit.Views
             }
             else
             {
+                var guid = (Guid)e.Parameter;
+                var client = App.GetService<ClientListViewModel>().Clients.FirstOrDefault(c => c.Model.Id == guid) ?? throw new NotImplementedException("Exception thrown when user tried to create order and NON-VALID clientID was provided.");
+
                 ViewModel = new PassViewModel
                 {
-                    SelectedClient = (Core.Models.Client)e.Parameter,
+                    Client = client.Model,
                     IsNewPass = true,
                     IsInEdit = true,
                 };
@@ -52,8 +55,6 @@ namespace VipFit.Views
 
             ViewModel.RefreshAvailableClientList();
 
-            // TODO: will be added in future to pre-fill form.
-            // SelectedClient = (Core.Models.Client)e.Parameter;
             ViewModel.AddNewPassCanceled += AddNewPassCanceled;
             base.OnNavigatedTo(e);
         }

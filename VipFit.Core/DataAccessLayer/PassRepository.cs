@@ -56,6 +56,7 @@
         {
             var current = await db.Passes.FirstOrDefaultAsync(p => p.Id == pass.Id);
 
+           
             if (current == null)
                 db.Add(pass);
             else

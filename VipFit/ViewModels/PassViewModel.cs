@@ -3,6 +3,7 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
+    using Microsoft.UI.Windowing;
     using Microsoft.UI.Xaml.Media.Animation;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer;
@@ -16,7 +17,7 @@
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Pass model;
-        private Client selectedClient;
+        private Client client;
 
         private bool isLoading;
         private bool isNewPass;
@@ -26,7 +27,15 @@
         /// Initializes a new instance of the <see cref="PassViewModel"/> class.
         /// </summary>
         /// <param name="model">Pass model.</param>
-        public PassViewModel(Pass? model = null) => Model = model ?? new Pass();
+        public PassViewModel(Pass? model = null)
+        {
+            Model = model ?? new Pass();
+
+            //if (Model.Client != null)
+            //    return;
+
+            //Task.Run(() => LoadClient(Model.ClientId));
+        }
 
         /// <summary>
         /// Raised when the user cancels the changes they've made to the Pass data.
@@ -58,14 +67,15 @@
         /// <summary>
         /// Gets or sets the selected client.
         /// </summary>
-        public Client SelectedClient
+        public Client Client
         {
-            get => Model.Client;
+            get => client;
             set
             {
-                if (value != Model.Client)
+                if (value != client)
                 {
-                    Model.Client = value;
+                    client = value;
+                    Model.ClientId = value.Id;
                     IsModified = true;
                     OnPropertyChanged();
                 }
@@ -215,7 +225,7 @@
         /// <summary>
         /// Refresh available client list.
         /// </summary>
-        public void RefreshAvailableClientList() => Task.Run(GetClientListAsync);
+        public void RefreshAvailableClientList() => Task.Run(GetAvailableClientListAsync);
 
         /// <summary>
         /// Refresh available pass template list.
@@ -246,6 +256,7 @@
         /// <summary>
         /// Cancels any in progress edits.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task CancelEditsAsync()
         {
             if (IsNewPass)
@@ -286,7 +297,17 @@
         /// </summary>
         public void StartEdit() => IsInEdit = true;
 
-        private async Task GetClientListAsync()
+        private async void LoadClient(Guid clientId)
+        {
+            var client = await App.GetService<IClientRepository>().GetAsync(clientId);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Client = client;
+            });
+        }
+
+        private async Task GetAvailableClientListAsync()
         {
             await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
 

@@ -70,7 +70,7 @@
                         RelativePanel.AlignVerticalCenterWithPanel="True"
                         Loaded="{x:Bind ViewModel.RefreshAvailableClientList}"
                         ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
-                        SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
                 </RelativePanel>
 
                 <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
@@ -101,8 +101,8 @@
                             Margin="16,8"
                             RelativePanel.AlignRightWithPanel="True"
                             RelativePanel.AlignVerticalCenterWithPanel="True"
-                            ItemsSource="{x:Bind ViewModel.AvailablePasses, Mode=OneWay}" 
-                            SelectedItem="{x:Bind ViewModel.SelectedPass, BindBack=ViewModel.SetPass, Mode=TwoWay}" />-->
+                            ItemsSource="{x:Bind ViewModel.AvailablePassTemplates, Mode=OneWay}" 
+                            SelectedItem="{x:Bind ViewModel.selectedPassTemplate, Mode=TwoWay}" />-->
                 </RelativePanel>
             </StackPanel>
         </ScrollViewer>
