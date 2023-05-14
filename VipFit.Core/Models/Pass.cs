@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Represents pass entity.
@@ -16,7 +15,7 @@
         {
         }
 
-        public Pass(bool isActive, DateOnly startDate, DateOnly endDate, DateTime createdAt, DateTime modifiedAt, Guid clientId, Client client)
+        public Pass(bool isActive, DateOnly startDate, DateOnly endDate, DateTime createdAt, DateTime modifiedAt, Guid clientId, Guid passTemplateId)
         {
             IsActive = isActive;
             StartDate = startDate;
@@ -24,7 +23,7 @@
             CreatedAt = createdAt;
             ModifiedAt = modifiedAt;
             ClientId = clientId;
-            Client = client;
+            PassTemplateId = passTemplateId;
         }
 
         /// <summary>
@@ -64,16 +63,21 @@
         public Guid ClientId { get; set; }
 
         /// <summary>
-        /// Gets or sets the associated Client.
+        /// Gets or sets the associated client.
         /// </summary>
-        public Client Client { get; set; } = null!;
-
-        #endregion
+        public Client Client { get; set; }
 
         /// <summary>
-        /// Gets or sets pass template.
+        /// Gets or sets the associated Pass Template's ID.
         /// </summary>
-        //public PassTemplate PassTemplate { get; set; }
+        public Guid PassTemplateId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated PassTemplate.
+        /// </summary>
+        public PassTemplate PassTemplate { get; set; }
+
+        #endregion
 
         ///// <summary>
         ///// Gets or sets a collection of entries to the gym.

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VipFit.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class ClientPassRelation : Migration
+    public partial class UpdatePasses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,8 +59,8 @@ namespace VipFit.Core.Migrations
                     EndDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PassTemplateId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ClientId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ClientId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PassTemplateId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,7 +75,8 @@ namespace VipFit.Core.Migrations
                         name: "FK_Pass_PassTemplate_PassTemplateId",
                         column: x => x.PassTemplateId,
                         principalTable: "PassTemplate",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

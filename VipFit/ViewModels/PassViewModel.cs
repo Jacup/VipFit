@@ -3,8 +3,6 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
-    using Microsoft.UI.Windowing;
-    using Microsoft.UI.Xaml.Media.Animation;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Models;
@@ -18,6 +16,7 @@
 
         private Pass model;
         private Client client;
+        private PassTemplate passTemplate;
 
         private bool isLoading;
         private bool isNewPass;
@@ -76,6 +75,24 @@
                 {
                     client = value;
                     Model.ClientId = value.Id;
+                    IsModified = true;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected client.
+        /// </summary>
+        public PassTemplate PassTemplate
+        {
+            get => passTemplate;
+            set
+            {
+                if (value != passTemplate)
+                {
+                    passTemplate = value;
+                    Model.PassTemplateId = value.Id;
                     IsModified = true;
                     OnPropertyChanged();
                 }

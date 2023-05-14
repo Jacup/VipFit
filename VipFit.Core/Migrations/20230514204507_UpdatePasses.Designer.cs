@@ -11,8 +11,8 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    [Migration("20230502163040_ClientPassRelation")]
-    partial class ClientPassRelation
+    [Migration("20230514204507_UpdatePasses")]
+    partial class UpdatePasses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,7 +96,7 @@ namespace VipFit.Core.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PassTemplateId")
+                    b.Property<Guid>("PassTemplateId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("StartDate")
@@ -134,23 +134,20 @@ namespace VipFit.Core.Migrations
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
                 {
                     b.HasOne("VipFit.Core.Models.Client", "Client")
-                        .WithMany("Passes")
+                        .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VipFit.Core.Models.PassTemplate", "PassTemplate")
                         .WithMany()
-                        .HasForeignKey("PassTemplateId");
+                        .HasForeignKey("PassTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Client");
 
                     b.Navigation("PassTemplate");
-                });
-
-            modelBuilder.Entity("VipFit.Core.Models.Client", b =>
-                {
-                    b.Navigation("Passes");
                 });
 #pragma warning restore 612, 618
         }

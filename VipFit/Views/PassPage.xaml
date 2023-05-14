@@ -68,7 +68,6 @@
                         Margin="16,8"
                         RelativePanel.AlignRightWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Loaded="{x:Bind ViewModel.RefreshAvailableClientList}"
                         ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
                         SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
                 </RelativePanel>
@@ -96,13 +95,13 @@
                             Margin="8,2,16,16"
                             TextWrapping="WrapWholeWords"
                             Style="{ThemeResource CaptionTextBlockStyle}"/>
-                    <!--<ComboBox
+                    <ComboBox
                             MinWidth="140"
                             Margin="16,8"
                             RelativePanel.AlignRightWithPanel="True"
                             RelativePanel.AlignVerticalCenterWithPanel="True"
                             ItemsSource="{x:Bind ViewModel.AvailablePassTemplates, Mode=OneWay}" 
-                            SelectedItem="{x:Bind ViewModel.selectedPassTemplate, Mode=TwoWay}" />-->
+                            SelectedItem="{x:Bind ViewModel.PassTemplate, Mode=TwoWay}" />
                 </RelativePanel>
             </StackPanel>
         </ScrollViewer>

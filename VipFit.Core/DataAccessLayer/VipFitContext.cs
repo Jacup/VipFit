@@ -102,11 +102,13 @@
 
             var startingDate = DateOnly.Parse("01.06.2023");
             var now = DateTime.Now;
-            var client = Clients.FirstOrDefault();
+
+            var clientId = Clients.FirstOrDefault().Id;
+            var passTemplateId = PassTemplates.FirstOrDefault().Id;
 
             var passes = new Pass[]
             {
-                new Pass(true, startingDate, startingDate.AddMonths(3), now, now, client.Id, client),
+                new Pass(true, startingDate, startingDate.AddMonths(3), now, now, clientId, passTemplateId),
             };
 
             foreach (var p in passes)
