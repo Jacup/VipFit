@@ -68,8 +68,9 @@
                         Margin="16,8"
                         RelativePanel.AlignRightWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Loaded="{x:Bind ViewModel.RefreshAvailableClientList}"
                         ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
-                        SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.SelectedClient, Mode=TwoWay}"/>
                 </RelativePanel>
 
                 <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">

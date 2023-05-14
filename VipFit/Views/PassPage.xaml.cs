@@ -14,7 +14,11 @@ namespace VipFit.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="PassPage"/> class.
         /// </summary>
-        public PassPage() => InitializeComponent();
+        public PassPage()
+        {
+            InitializeComponent();
+            DataContext = ViewModel;
+        }
 
         public PassViewModel ViewModel { get; set; }
 
@@ -25,10 +29,31 @@ namespace VipFit.Views
 
         #region INavigation Implementations
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <inheritdoc/>
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel = new PassViewModel { IsNewPass = true, Client = (Core.Models.Client)e.Parameter, };
+            if (e.Parameter == null)
+            {
+                ViewModel = new PassViewModel
+                {
+                    IsNewPass = true,
+                    IsInEdit = true,
+                };
+            }
+            else
+            {
+                ViewModel = new PassViewModel
+                {
+                    SelectedClient = (Core.Models.Client)e.Parameter,
+                    IsNewPass = true,
+                    IsInEdit = true,
+                };
+            }
 
+            ViewModel.RefreshAvailableClientList();
+
+            // TODO: will be added in future to pre-fill form.
+            // SelectedClient = (Core.Models.Client)e.Parameter;
             ViewModel.AddNewPassCanceled += AddNewPassCanceled;
             base.OnNavigatedTo(e);
         }
@@ -51,12 +76,10 @@ namespace VipFit.Views
                         Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
                 }
 
-                SaveChangesDialog saveDialog = new()
-                {
-                    XamlRoot = Content.XamlRoot
-                };
-
+                var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+                saveDialog.XamlRoot = this.Content.XamlRoot;
                 await saveDialog.ShowAsync();
+                SaveChangesDialogResult result = saveDialog.Result;
 
                 switch (saveDialog.Result)
                 {
@@ -65,8 +88,7 @@ namespace VipFit.Views
                         resumeNavigation();
                         break;
                     case SaveChangesDialogResult.DontSave:
-                        if (!ViewModel.IsNewPass)
-                            await ViewModel.RevertChangesAsync();
+                        await ViewModel.RevertChangesAsync();
                         resumeNavigation();
                         break;
                     case SaveChangesDialogResult.Cancel:
@@ -78,7 +100,7 @@ namespace VipFit.Views
         }
 
         /// <summary>
-        /// Disconnects the AddNewPassCanceled event handler from the ViewModel 
+        /// Disconnects the AddNewPassCanceled event handler from the ViewModel
         /// when the parent frame navigates to a different page.
         /// </summary>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -101,6 +123,7 @@ namespace VipFit.Views
             if (!ViewModel.IsModified)
             {
                 await ViewModel.RevertChangesAsync();
+
                 return;
             }
 
@@ -115,12 +138,12 @@ namespace VipFit.Views
             {
                 case SaveChangesDialogResult.Save:
                     await ViewModel.SaveAsync();
+
                     // TODO: Show Save confirmation dialog
                     Frame.GoBack();
                     break;
                 case SaveChangesDialogResult.DontSave:
-                    if (!ViewModel.IsNewPass)
-                        await ViewModel.RevertChangesAsync();
+                    await ViewModel.RevertChangesAsync();
                     Frame.GoBack();
                     break;
                 case SaveChangesDialogResult.Cancel:

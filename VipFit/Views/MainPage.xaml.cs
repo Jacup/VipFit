@@ -1,29 +1,32 @@
 ﻿namespace VipFit.Views
 {
+    using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
-    using System.ComponentModel;
-    using VipFit.Helpers;
-    using VipFit.Interfaces;
+    using Microsoft.UI.Xaml.Media.Animation;
     using VipFit.ViewModels;
 
-    public sealed partial class MainPage : Page, INotifyPropertyChanged, IHeaderChanger
+    /// <summary>
+    /// Main VIP FIT Page with basic controls.
+    /// </summary>
+    public sealed partial class MainPage : Page
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainPage"/> class.
+        /// </summary>
+        public MainPage()
+        {
+            ViewModel = App.GetService<MainViewModel>();
+            InitializeComponent();
+        }
+
         public MainViewModel ViewModel
         {
             get;
         }
 
-        public HeaderHelper Header { get; private set; } = new();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
-        public MainPage()
+        private void SellPassButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel = App.GetService<MainViewModel>();
-            InitializeComponent();
-
-            Header.Text = "test Header";
+            Frame.Navigate(typeof(PassPage), null, new DrillInNavigationTransitionInfo());
         }
     }
 }

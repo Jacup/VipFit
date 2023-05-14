@@ -3,9 +3,8 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
+    using Microsoft.UI.Xaml.Media.Animation;
     using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.Xml.Linq;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Models;
 
@@ -17,6 +16,7 @@
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Pass model;
+        private Client selectedClient;
 
         private bool isLoading;
         private bool isNewPass;
@@ -26,11 +26,7 @@
         /// Initializes a new instance of the <see cref="PassViewModel"/> class.
         /// </summary>
         /// <param name="model">Pass model.</param>
-
-        public PassViewModel(Pass? model = null)
-        {
-            Model = model ?? new Pass();
-        }
+        public PassViewModel(Pass? model = null) => Model = model ?? new Pass();
 
         /// <summary>
         /// Raised when the user cancels the changes they've made to the Pass data.
@@ -50,8 +46,8 @@
 
                 model = value;
 
-                Task.Run(GetClientListAsync);
-                //Task.Run(GetPassTemplateListAsync);
+                RefreshAvailableClientList();
+                RefreshAvailablePassTemplateList();
 
                 OnPropertyChanged(string.Empty);
             }
@@ -59,12 +55,15 @@
 
         #region Model's Properties
 
-        public Client Client
+        /// <summary>
+        /// Gets or sets the selected client.
+        /// </summary>
+        public Client SelectedClient
         {
             get => Model.Client;
             set
             {
-                if (IsNewPass && Model.Client != value)
+                if (value != Model.Client)
                 {
                     Model.Client = value;
                     IsModified = true;
@@ -110,7 +109,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the value indicating wheter pass is active.
+        /// Gets or sets a value indicating whether pass is active.
         /// </summary>
         public new bool IsActive
         {
@@ -169,10 +168,13 @@
 
         #region Miscellaneous Properties
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the underlying model has been modified.
+        /// </summary>
         public bool IsModified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to show a progress bar. 
+        /// Gets or sets a value indicating whether the underlying model is being loaded. Used to show a progress bar.
         /// </summary>
         public bool IsLoading
         {
@@ -181,7 +183,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether this is new pass object.
+        /// Gets or sets a value indicating whether this is new pass object.
         /// </summary>
         public bool IsNewPass
         {
@@ -201,14 +203,89 @@
         #endregion
 
         /// <summary>
-        /// Collection of clients in the list.
+        /// Gets collection of clients in the list.
         /// </summary>
         public ObservableCollection<Client> AvailableClients { get; } = new();
 
         /// <summary>
-        /// Gets the list of clients from database.
+        /// Gets collection of pass templates in the list.
         /// </summary>
-        /// <returns>List of clients.</returns>
+        public ObservableCollection<PassTemplate> AvailablePassTemplates { get; } = new();
+
+        /// <summary>
+        /// Refresh available client list.
+        /// </summary>
+        public void RefreshAvailableClientList() => Task.Run(GetClientListAsync);
+
+        /// <summary>
+        /// Refresh available pass template list.
+        /// </summary>
+        public void RefreshAvailablePassTemplateList() => Task.Run(GetPassTemplateListAsync);
+
+        /// <summary>
+        /// Insert new Pass (if new) and save changes to database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        public async Task SaveAsync()
+        {
+            isInEdit = false;
+            IsModified = false;
+            var dateTime = DateTime.Now;
+
+            if (IsNewPass)
+            {
+                IsNewPass = false;
+                Model.CreatedAt = dateTime;
+                App.GetService<PassListViewModel>().Passes.Add(this);
+            }
+
+            Model.ModifiedAt = dateTime;
+            await App.GetService<IPassRepository>().UpsertAsync(Model);
+        }
+
+        /// <summary>
+        /// Cancels any in progress edits.
+        /// </summary>
+        public async Task CancelEditsAsync()
+        {
+            if (IsNewPass)
+                AddNewPassCanceled?.Invoke(this, EventArgs.Empty);
+            else
+                await RevertChangesAsync();
+        }
+
+        /// <summary>
+        /// Discards any edits that have been made, restoring the original values.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RevertChangesAsync()
+        {
+            IsInEdit = false;
+
+            if (IsNewPass)
+            {
+                IsModified = false;
+                return;
+            }
+
+            if (IsModified)
+            {
+                await RefreshPassAsync();
+                IsModified = false;
+            }
+        }
+
+        /// <summary>
+        /// Reloads all of the pass data.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RefreshPassAsync() => Model = await App.GetService<IPassRepository>().GetAsync(Model.Id);
+
+        /// <summary>
+        /// Enables edit mode.
+        /// </summary>
+        public void StartEdit() => IsInEdit = true;
+
         private async Task GetClientListAsync()
         {
             await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
@@ -229,58 +306,24 @@
             });
         }
 
-        /// <summary>
-        /// Insert new Pass (if new) and save changes to database.
-        /// </summary>
-        public async Task SaveAsync()
+        private async Task GetPassTemplateListAsync()
         {
-            isInEdit = false;
-            IsModified = false;
+            await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
 
-            if (IsNewPass)
+            var passTemplates = await App.GetService<IPassTemplateRepository>().GetAsync();
+
+            if (passTemplates == null)
+                return;
+
+            await dispatcherQueue.EnqueueAsync(() =>
             {
-                IsNewPass = false;
-                CreatedAt = DateTime.Now;
-                App.GetService<PassListViewModel>().Passes.Add(this);
-            }
+                AvailablePassTemplates.Clear();
 
-            ModifiedAt = DateTime.Now;
-            await App.GetService<IPassRepository>().UpsertAsync(Model);
+                foreach (var pt in passTemplates)
+                    AvailablePassTemplates.Add(pt);
+
+                IsLoading = false;
+            });
         }
-
-        /// <summary>
-        /// Cancels any in progress edits.
-        /// </summary>
-        public async Task CancelEditsAsync()
-        {
-            if (IsNewPass)
-                AddNewPassCanceled?.Invoke(this, EventArgs.Empty);
-            else
-                await RevertChangesAsync();
-        }
-
-        /// <summary>
-        /// Discards any edits that have been made, restoring the original values.
-        /// </summary>
-        public async Task RevertChangesAsync()
-        {
-            IsInEdit = false;
-
-            if (IsModified)
-            {
-                await RefreshPassAsync();
-                IsModified = false;
-            }
-        }
-
-        /// <summary>
-        /// Reloads all of the pass data.
-        /// </summary>
-        public async Task RefreshPassAsync() => Model = await App.GetService<IPassRepository>().GetAsync(Model.Id);
-
-        /// <summary>
-        /// Enables edit mode.
-        /// </summary>
-        public void StartEdit() => IsInEdit = true;
     }
 }
