@@ -29,10 +29,9 @@
         public PassViewModel(Pass? model = null)
         {
             Model = model ?? new Pass();
-            //if (Model.Client != null)
-            //    return;
 
-            //Task.Run(() => LoadClient(Model.ClientId));
+            StartDate = DateOnly.FromDateTime(DateTime.Now);
+            EndDate = null;
         }
 
         /// <summary>
@@ -91,6 +90,10 @@
                     Model.PassTemplateId = value.Id;
                     IsModified = true;
                     OnPropertyChanged();
+
+                    var date = CalculatePassDuration();
+                    if (date != null)
+                        EndDate = (DateOnly)date;
                 }
             }
         }
@@ -98,35 +101,56 @@
         /// <summary>
         /// Gets or sets the Pass starting date.
         /// </summary>
-        public DateOnly StartDate
+        public DateOnly? StartDate
         {
             get => Model.StartDate;
             set
             {
-                if (value != Model.StartDate)
+                // TODO: Validation if set in the past. some dialog would be nice.
+
+                if (value is not null && value != Model.StartDate)
                 {
-                    Model.StartDate = value;
+                    Model.StartDate = (DateOnly)value;
+
                     IsModified = true;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(EndDate));
+
+                    var date = CalculatePassDuration();
+                    if (date != null)
+                        EndDate = (DateOnly)date;
                 }
             }
+        }
+
+        private DateOnly? CalculatePassDuration()
+        {
+            if (PassTemplate == null || StartDate == null)
+                return null;
+
+            var date = (DateOnly)StartDate;
+            return date.AddMonths(PassTemplate.MonthsDuration);
         }
 
         /// <summary>
         /// Gets or sets the Pass ending date.
         /// </summary>
-        public DateOnly EndDate
+        public DateOnly? EndDate
         {
-            get => Model.EndDate;
+            get
+            {
+                if (PassTemplate == null || StartDate == null)
+                    return null;
+
+                return Model.EndDate;
+            }
+
             set
             {
-                if (value != Model.EndDate)
+                if (value is not null && value != Model.EndDate)
                 {
-                    Model.EndDate = value;
+                    Model.EndDate = (DateOnly)value;
                     IsModified = true;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(StartDate));
                 }
             }
         }

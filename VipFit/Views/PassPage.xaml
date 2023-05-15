@@ -10,6 +10,10 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:PassViewModel}">
 
+    <Page.Resources>
+        <helpers:DateOnlyConverter x:Key="DateOnlyConverter" />
+    </Page.Resources>
+
     <Grid x:Name="ContentArea">
 
         <Grid.RowDefinitions>
@@ -105,6 +109,77 @@
                         ItemsSource="{x:Bind ViewModel.AvailablePassTemplates, Mode=OneWay}" 
                         SelectedItem="{x:Bind ViewModel.PassTemplate, Mode=TwoWay}" />
                 </RelativePanel>
+
+                <RelativePanel
+                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                    CornerRadius="6"
+                    Margin="0,4,0,0">
+                    <FontIcon
+                        x:Name="StartDateIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xE787;"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_StartDate"
+                        x:Name="StartDateTitle"
+                        RelativePanel.RightOf="StartDateIcon"
+                        Margin="8,16,16,2"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_StartDate_Desc"
+                        x:Name="StartDateDesc"
+                        RelativePanel.RightOf="StartDateIcon"
+                        RelativePanel.Below="StartDateTitle"
+                        Margin="8,2,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <CalendarDatePicker
+                        x:Uid="NewPassPage_StartDate_Box"
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, Converter={StaticResource DateOnlyConverter}}"/>
+                </RelativePanel>
+                <RelativePanel
+                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                    CornerRadius="6"
+                    Margin="0,4,0,0">
+                    <FontIcon
+                        x:Name="EndDateIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xED28;"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_EndDate"
+                        x:Name="EndDateTitle"
+                        RelativePanel.RightOf="EndDateIcon"
+                        Margin="8,16,16,2"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_EndDate_Desc"
+                        x:Name="EndDateDesc"
+                        RelativePanel.RightOf="EndDateIcon"
+                        RelativePanel.Below="EndDateTitle"
+                        Margin="8,2,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <CalendarDatePicker
+                        x:Uid="NewPassPage_EndDate_Box"
+                        MinWidth="140"
+                        Margin="16,8"
+                        IsEnabled="False"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Date="{x:Bind ViewModel.EndDate, Mode=OneWay, Converter={StaticResource DateOnlyConverter}}"/>
+                </RelativePanel>
+
             </StackPanel>
         </ScrollViewer>
 
