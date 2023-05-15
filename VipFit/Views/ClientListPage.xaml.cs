@@ -10,19 +10,17 @@
     using Microsoft.UI.Xaml.Navigation;
     using VipFit.ViewModels;
 
-    // TODO: Change the grid as appropriate for your app. Adjust the column definitions on DataGridPage.xaml.
-    // For more details, see the documentation at https://docs.microsoft.com/windows/communitytoolkit/controls/datagrid.
     public sealed partial class ClientListPage : Page
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
-        public ClientListViewModel ViewModel { get; }
 
         public ClientListPage()
         {
             ViewModel = App.GetService<ClientListViewModel>();
             InitializeComponent();
         }
+
+        public ClientListViewModel ViewModel { get; }
 
         private async Task ResetClientList() => await dispatcherQueue.EnqueueAsync(ViewModel.GetClientListAsync);
 
@@ -43,7 +41,7 @@
         }
 
         /// <summary>
-        /// Selects right click the tapped Client. 
+        /// Selects right click the tapped Client.
         /// </summary>
         private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
             ViewModel.SelectedClient = (e.OriginalSource as FrameworkElement).DataContext as ClientViewModel;
@@ -66,15 +64,6 @@
         private void NewClient_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(Client), null, new DrillInNavigationTransitionInfo());
-        }
-
-        private void EditClient_Click(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel.SelectedClient != null)
-            {
-                Frame.Navigate(typeof(Client), ViewModel.SelectedClient.Model.Id,
-                    new DrillInNavigationTransitionInfo());
-            }
         }
 
         private void ViewClient_Click(object sender, RoutedEventArgs e)

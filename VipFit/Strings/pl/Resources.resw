@@ -335,4 +335,19 @@
   <data name="NewPassPage_StartDate_Desc.Text" xml:space="preserve">
     <value>Wybierz datę, od której karnet ma być aktywny.</value>
   </data>
+  <data name="Pass_Client.Header" xml:space="preserve">
+    <value>Klient</value>
+  </data>
+  <data name="Pass_EndDate.Header" xml:space="preserve">
+    <value>Data zakończenia</value>
+  </data>
+  <data name="Pass_IsActive.Header" xml:space="preserve">
+    <value>Aktywny</value>
+  </data>
+  <data name="Pass_PassTemplate.Header" xml:space="preserve">
+    <value>Rodzaj</value>
+  </data>
+  <data name="Pass_StartDate.Header" xml:space="preserve">
+    <value>Data rozpoczęcia</value>
+  </data>
 </root>

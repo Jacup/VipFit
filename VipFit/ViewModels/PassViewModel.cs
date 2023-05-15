@@ -30,6 +30,12 @@
         {
             Model = model ?? new Pass();
 
+            if (!isNewPass)
+            {
+                LoadClient(Model.ClientId);
+                LoadPass(Model.PassTemplateId);
+            }
+
             StartDate = DateOnly.FromDateTime(DateTime.Now);
             EndDate = null;
         }
@@ -120,15 +126,6 @@
                         EndDate = (DateOnly)date;
                 }
             }
-        }
-
-        private DateOnly? CalculatePassDuration()
-        {
-            if (PassTemplate == null || StartDate == null)
-                return null;
-
-            var date = (DateOnly)StartDate;
-            return date.AddMonths(PassTemplate.MonthsDuration);
         }
 
         /// <summary>
@@ -366,12 +363,31 @@
 
         private async void LoadClient(Guid clientId)
         {
-            var client = await App.GetService<IClientRepository>().GetAsync(clientId);
+            var c = await App.GetService<IClientRepository>().GetAsync(clientId);
 
             await dispatcherQueue.EnqueueAsync(() =>
             {
-                Client = client;
+                Client = c;
             });
+        }
+
+        private async void LoadPass(Guid passTemplateId)
+        {
+            var pt = await App.GetService<IPassTemplateRepository>().GetAsync(passTemplateId);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                PassTemplate = pt;
+            });
+        }
+
+        private DateOnly? CalculatePassDuration()
+        {
+            if (PassTemplate == null || StartDate == null)
+                return null;
+
+            var date = (DateOnly)StartDate;
+            return date.AddMonths(PassTemplate.MonthsDuration);
         }
     }
 }
