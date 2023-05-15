@@ -53,9 +53,6 @@ namespace VipFit.Views
                 };
             }
 
-            ViewModel.RefreshAvailableClientList();
-            ViewModel.RefreshAvailablePassTemplateList();
-
             ViewModel.AddNewPassCanceled += AddNewPassCanceled;
             base.OnNavigatedTo(e);
         }

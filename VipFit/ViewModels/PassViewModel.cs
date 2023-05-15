@@ -29,7 +29,6 @@
         public PassViewModel(Pass? model = null)
         {
             Model = model ?? new Pass();
-
             //if (Model.Client != null)
             //    return;
 
@@ -53,9 +52,6 @@
                     return;
 
                 model = value;
-
-                RefreshAvailableClientList();
-                RefreshAvailablePassTemplateList();
 
                 OnPropertyChanged(string.Empty);
             }
@@ -240,16 +236,6 @@
         public ObservableCollection<PassTemplate> AvailablePassTemplates { get; } = new();
 
         /// <summary>
-        /// Refresh available client list.
-        /// </summary>
-        public void RefreshAvailableClientList() => Task.Run(GetAvailableClientListAsync);
-
-        /// <summary>
-        /// Refresh available pass template list.
-        /// </summary>
-        public void RefreshAvailablePassTemplateList() => Task.Run(GetPassTemplateListAsync);
-
-        /// <summary>
         /// Insert new Pass (if new) and save changes to database.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
@@ -314,17 +300,7 @@
         /// </summary>
         public void StartEdit() => IsInEdit = true;
 
-        private async void LoadClient(Guid clientId)
-        {
-            var client = await App.GetService<IClientRepository>().GetAsync(clientId);
-
-            await dispatcherQueue.EnqueueAsync(() =>
-            {
-                Client = client;
-            });
-        }
-
-        private async Task GetAvailableClientListAsync()
+        internal async Task GetAvailableClientListAsync()
         {
             await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
 
@@ -344,7 +320,7 @@
             });
         }
 
-        private async Task GetPassTemplateListAsync()
+        internal async Task GetAvailablePassTemplateListAsync()
         {
             await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
 
@@ -361,6 +337,16 @@
                     AvailablePassTemplates.Add(pt);
 
                 IsLoading = false;
+            });
+        }
+
+        private async void LoadClient(Guid clientId)
+        {
+            var client = await App.GetService<IClientRepository>().GetAsync(clientId);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Client = client;
             });
         }
     }
