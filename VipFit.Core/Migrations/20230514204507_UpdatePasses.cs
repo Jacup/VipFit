@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VipFit.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class ClientAndPassModel : Migration
+    public partial class UpdatePasses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,11 +48,54 @@ namespace VipFit.Core.Migrations
                 {
                     table.PrimaryKey("PK_PassTemplate", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Pass",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ClientId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PassTemplateId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pass", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pass_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Pass_PassTemplate_PassTemplateId",
+                        column: x => x.PassTemplateId,
+                        principalTable: "PassTemplate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pass_ClientId",
+                table: "Pass",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pass_PassTemplateId",
+                table: "Pass",
+                column: "PassTemplateId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Pass");
+
             migrationBuilder.DropTable(
                 name: "Client");
 

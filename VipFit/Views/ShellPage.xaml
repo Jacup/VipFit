@@ -67,7 +67,7 @@
                                             helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.PassTemplateListViewModel"/>
                         <NavigationViewItem x:Uid="Shell_PassList"
                                             Icon="Library"
-                                            IsEnabled="False"/>
+                                            helpers:NavigationHelper.NavigateTo="VipFit.ViewModels.PassListViewModel"/>
 
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>

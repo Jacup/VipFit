@@ -17,7 +17,7 @@
         private bool isLoading = false;
 
         /// <summary>
-        /// Creates a new ClientListViewModel.
+        /// Initializes a new instance of the <see cref="ClientListViewModel"/> class.
         /// </summary>
         public ClientListViewModel() => Task.Run(GetClientListAsync);
 
@@ -27,7 +27,7 @@
         public ObservableCollection<ClientViewModel> Clients { get; } = new ObservableCollection<ClientViewModel>();
 
         /// <summary>
-        /// Gets or sets the selected client, or null if no client is selected. 
+        /// Gets or sets the selected client, or null if no client is selected.
         /// </summary>
         public ClientViewModel? SelectedClient
         {
@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the clients list is currently being updated. 
+        /// Gets or sets a value indicating whether the clients list is currently being updated.
         /// </summary>
         public bool IsLoading
         {

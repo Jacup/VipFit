@@ -1,13 +1,18 @@
 ﻿namespace VipFit.Helpers
 {
     using Microsoft.UI.Xaml;
- 
+
     public static class Converters
     {
         /// <summary>
         /// Returns the reverse of the provided value.
         /// </summary>
         public static bool Not(bool value) => !value;
+
+        /// <summary>
+        /// Returns true if the specified value is null; otherwise, returns false.
+        /// </summary>
+        public static bool IsNull(object value) => value == null;
 
         /// <summary>
         /// Returns true if the specified value is not null; otherwise, returns false.

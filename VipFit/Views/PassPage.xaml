@@ -1,0 +1,188 @@
+<Page
+    x:Class="VipFit.Views.PassPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VipFit.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:VipFit.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:VipFit.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:PassViewModel}">
+
+    <Page.Resources>
+        <helpers:DateOnlyConverter x:Key="DateOnlyConverter" />
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <CommandBar
+            Grid.Row="0" 
+            Background="Transparent" 
+            IsOpen="False" 
+            DefaultLabelPosition="Right">
+
+            <AppBarButton 
+                x:Uid="Save"
+                Click="{x:Bind SaveButton_Click}"
+                Icon="Save"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+            <AppBarButton 
+                x:Uid="Cancel"
+                Click="{x:Bind CancelButton_Click}"
+                Icon="Cancel"
+                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+
+        </CommandBar>
+
+        <ScrollViewer IsTabStop="True" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <StackPanel x:Name="Content">
+                <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Width="Auto">
+                    <FontIcon
+                        x:Name="ClientIcon"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xE77B;"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_Client"
+                        x:Name="ClientTitle"
+                        RelativePanel.RightOf="ClientIcon"
+                        Margin="8,16,16,1"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock 
+                        x:Uid="NewPassPage_Client_Desc"
+                        x:Name="ClientDesc"
+                        RelativePanel.RightOf="ClientIcon"
+                        RelativePanel.Below="ClientTitle"
+                        Margin="8,1,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <ComboBox
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Loaded="{x:Bind ViewModel.GetAvailableClientListAsync}"
+                        ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
+                        SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
+                </RelativePanel>
+
+                <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                    <FontIcon
+                            x:Name="PassIcon"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Margin="18"
+                            FontSize="35"
+                            Glyph="&#xE8EC;"/>
+                    <TextBlock
+                            x:Uid="NewPassPage_Pass"
+                            x:Name="PassTitle"
+                            RelativePanel.RightOf="PassIcon"
+                            Margin="8,16,16,2"
+                            Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock 
+                            x:Uid="NewPassPage_Pass_Desc"
+                            x:Name="PassDesc"
+                            RelativePanel.RightOf="PassIcon"
+                            RelativePanel.Below="PassTitle"
+                            Margin="8,2,16,16"
+                            TextWrapping="WrapWholeWords"
+                            Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <ComboBox
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Loaded="{x:Bind ViewModel.GetAvailablePassTemplateListAsync}"
+                        ItemsSource="{x:Bind ViewModel.AvailablePassTemplates, Mode=OneWay}" 
+                        SelectedItem="{x:Bind ViewModel.PassTemplate, Mode=TwoWay}" />
+                </RelativePanel>
+
+                <RelativePanel
+                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                    CornerRadius="6"
+                    Margin="0,4,0,0">
+                    <FontIcon
+                        x:Name="StartDateIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xE787;"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_StartDate"
+                        x:Name="StartDateTitle"
+                        RelativePanel.RightOf="StartDateIcon"
+                        Margin="8,16,16,2"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_StartDate_Desc"
+                        x:Name="StartDateDesc"
+                        RelativePanel.RightOf="StartDateIcon"
+                        RelativePanel.Below="StartDateTitle"
+                        Margin="8,2,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <CalendarDatePicker
+                        x:Uid="NewPassPage_StartDate_Box"
+                        MinWidth="140"
+                        Margin="16,8"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, Converter={StaticResource DateOnlyConverter}}"/>
+                </RelativePanel>
+                <RelativePanel
+                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                    CornerRadius="6"
+                    Margin="0,4,0,0">
+                    <FontIcon
+                        x:Name="EndDateIcon"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Margin="18"
+                        FontSize="35"
+                        Glyph="&#xED28;"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_EndDate"
+                        x:Name="EndDateTitle"
+                        RelativePanel.RightOf="EndDateIcon"
+                        Margin="8,16,16,2"
+                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock
+                        x:Uid="NewPassPage_EndDate_Desc"
+                        x:Name="EndDateDesc"
+                        RelativePanel.RightOf="EndDateIcon"
+                        RelativePanel.Below="EndDateTitle"
+                        Margin="8,2,16,16"
+                        TextWrapping="WrapWholeWords"
+                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <CalendarDatePicker
+                        x:Uid="NewPassPage_EndDate_Box"
+                        MinWidth="140"
+                        Margin="16,8"
+                        IsEnabled="False"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Date="{x:Bind ViewModel.EndDate, Mode=OneWay, Converter={StaticResource DateOnlyConverter}}"/>
+                </RelativePanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+
+</Page>

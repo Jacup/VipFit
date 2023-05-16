@@ -1,8 +1,9 @@
 namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
-    using Microsoft.UI.Xaml;
+    using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
@@ -15,6 +16,7 @@ namespace VipFit.ViewModels
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Client model;
+        private Pass selectedPass;
 
         private bool isLoading;
         private bool isNewClient;
@@ -39,18 +41,19 @@ namespace VipFit.ViewModels
             get => model;
             set
             {
-                if (model != value)
-                {
-                    model = value;
+                if (model == value)
+                    return;
 
-                    // Raise the PropertyChanged event for all properties
-                    OnPropertyChanged(string.Empty);
-                }
+                model = value;
+                RefreshPasses();
+
+                // Raise the PropertyChanged event for all properties
+                OnPropertyChanged(string.Empty);
             }
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the underlying model has been modified. 
+        /// Gets or sets a value indicating whether the underlying model has been modified. 
         /// </summary>
         /// <remarks>
         /// Used when syncing with the server to reduce load and only upload the models that have changed.
@@ -58,7 +61,7 @@ namespace VipFit.ViewModels
         public bool IsModified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to show a progress bar. 
+        /// Gets or sets a value indicating whether to show a progress bar. 
         /// </summary>
         public bool IsLoading
         {
@@ -67,7 +70,7 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether this is new client.
+        /// Gets or sets a value indicating whether this is new client.
         /// </summary>
         public bool IsNewClient
         {
@@ -82,6 +85,14 @@ namespace VipFit.ViewModels
         {
             get => isInEdit;
             set => SetProperty(ref isInEdit, value);
+        }
+
+        public ObservableCollection<Pass> Passes { get; } = new();
+
+        public Pass SelectedPass
+        {
+            get => selectedPass;
+            set => SetProperty(ref selectedPass, value);
         }
 
         #region Model's Properties
@@ -379,6 +390,13 @@ namespace VipFit.ViewModels
         public async Task RevertChangesAsync()
         {
             IsInEdit = false;
+
+            if (isNewClient)
+            {
+                IsModified = false;
+                return;
+            }
+
             if (IsModified)
             {
                 await RefreshClientAsync();
@@ -405,6 +423,15 @@ namespace VipFit.ViewModels
         public async Task RefreshClientAsync()
         {
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
+
+            var newPasses = await App.GetService<IPassRepository>().GetForClientAsync(Model.Id);
+
+            if (!newPasses.Any())
+                return;
+
+            Passes.Clear();
+            foreach (var p in newPasses)
+                Passes.Add(p);
         }
 
         /// <summary>
@@ -417,5 +444,31 @@ namespace VipFit.ViewModels
         /// </summary>
         public async void EndEdit() => await SaveAsync();
 
+        /// <summary>
+        /// Resets the customer detail fields to the current values.
+        /// </summary>
+        public void RefreshPasses() => Task.Run(LoadPassesAsync);
+
+        /// <summary>
+        /// Loads the order data for the customer.
+        /// </summary>
+        public async Task LoadPassesAsync()
+        {
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                IsLoading = true;
+            });
+
+            var passes = await App.GetService<IPassRepository>().GetForClientAsync(Model.Id);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Passes.Clear();
+                foreach (var p in passes)
+                    Passes.Add(p);
+
+                IsLoading = false;
+            });
+        }
     }
 }

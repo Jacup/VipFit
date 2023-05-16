@@ -16,6 +16,7 @@ public class PageService : IPageService
     {
         Configure<MainViewModel, MainPage>();
         Configure<ClientListViewModel, ClientListPage>();
+        Configure<PassListViewModel, PassListPage>();
         Configure<PassTemplateListViewModel, PassTemplateListPage>();
         Configure<SettingsViewModel, SettingsPage>();
     }
