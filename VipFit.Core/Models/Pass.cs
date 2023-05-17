@@ -15,21 +15,33 @@
         {
         }
 
-        public Pass(bool isActive, DateOnly startDate, DateOnly endDate, DateTime createdAt, DateTime modifiedAt, Guid clientId, Guid passTemplateId)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pass"/> class.
+        /// </summary>
+        /// <param name="startDate">StartDate.</param>
+        /// <param name="endDate">EndDate.</param>
+        /// <param name="createdAt">Created date.</param>
+        /// <param name="modifiedAt">Last modification date.</param>
+        /// <param name="clientId">Associated client ID.</param>
+        /// <param name="passTemplateId">Associated Pass ID</param>
+        /// <param name="entries">Array of associated entries.</param>
+        public Pass(
+            DateOnly startDate,
+            DateOnly endDate,
+            DateTime createdAt,
+            DateTime modifiedAt,
+            Guid clientId,
+            Guid passTemplateId,
+            Entry[] entries)
         {
-            IsActive = isActive;
             StartDate = startDate;
             EndDate = endDate;
             CreatedAt = createdAt;
             ModifiedAt = modifiedAt;
             ClientId = clientId;
             PassTemplateId = passTemplateId;
+            Entries = entries;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pass is active.
-        /// </summary>
-        public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets the pass's start date.
@@ -77,13 +89,12 @@
         /// </summary>
         public PassTemplate PassTemplate { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the array of entries.
+        /// </summary>
+        public Entry[] Entries { get; set; } // Collection navigation containing dependents
 
-        ///// <summary>
-        ///// Gets or sets a collection of entries to the gym.
-        ///// </summary>
-        //[InverseProperty("Pass")]
-        //public virtual ICollection<PassEntry> Entries { get; set; }
+        #endregion
 
         // public IEnumerable<Payment> Payments { get; set; } // Module 3
     }

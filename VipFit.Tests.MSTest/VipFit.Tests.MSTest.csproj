@@ -23,4 +23,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\VipFit\VipFit.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="BusinessLogicTests\PassTests\" />
+	</ItemGroup>
 </Project>

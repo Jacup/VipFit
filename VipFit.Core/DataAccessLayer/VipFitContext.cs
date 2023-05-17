@@ -35,6 +35,11 @@
         public DbSet<Pass> Passes { get; set; }
 
         /// <summary>
+        /// Gets or sets the Entry DbSet.
+        /// </summary>
+        public DbSet<Entry> Entries { get; set; }
+
+        /// <summary>
         /// Initializes base db.
         /// </summary>
         public void Initialize()
@@ -54,7 +59,16 @@
         {
             modelBuilder.Entity<Client>().ToTable(nameof(Client));
             modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
-            modelBuilder.Entity<Pass>().ToTable(nameof(Pass));
+            modelBuilder.Entity<Pass>()
+                .HasMany(e => e.Entries)
+                .WithOne(e => e.Pass)
+                .HasForeignKey(e => e.PassId)
+                .IsRequired();
+            modelBuilder.Entity<Entry>()
+                .HasOne(e => e.Pass)
+                .WithMany(e => e.Entries)
+                .HasForeignKey(e => e.PassId)
+                .IsRequired();
         }
 
         private void SeedClients()
@@ -104,11 +118,11 @@
             var now = DateTime.Now;
 
             var clientId = Clients.FirstOrDefault().Id;
-            var passTemplateId = PassTemplates.FirstOrDefault().Id;
+            var pt = PassTemplates.FirstOrDefault();
 
             var passes = new Pass[]
             {
-                new Pass(true, startingDate, startingDate.AddMonths(3), now, now, clientId, passTemplateId),
+                new Pass(startingDate, startingDate.AddMonths(pt.MonthsDuration), now, now, clientId,pt.Id, new Entry[pt.Entries]),
             };
 
             foreach (var p in passes)
