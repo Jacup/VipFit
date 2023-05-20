@@ -9,6 +9,7 @@
     using VipFit.Contracts.Services;
     using VipFit.Core.Contracts.Services;
     using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Services;
     using VipFit.Models;
     using VipFit.Notifications;
@@ -66,6 +67,7 @@
                     services.AddSingleton<IClientRepository, ClientRepository>();
                     services.AddSingleton<IPassTemplateRepository, PassTemplateRepository>();
                     services.AddSingleton<IPassRepository, PassRepository>();
+                    services.AddSingleton<IEntryRepository, EntryRepository>();
 
                     // Core Services
                     services.AddSingleton<IFileService, FileService>();
@@ -82,6 +84,9 @@
 
                     services.AddSingleton<PassListViewModel>();
                     services.AddTransient<PassListPage>();
+
+                    services.AddSingleton<EntryListViewModel>();
+                    services.AddTransient<EntryListPage>();
 
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();

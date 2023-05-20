@@ -11,8 +11,8 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    [Migration("20230517192443_PassEntry1")]
-    partial class PassEntry1
+    [Migration("20230518203615_PassEntry2")]
+    partial class PassEntry2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,7 +94,7 @@ namespace VipFit.Core.Migrations
 
                     b.HasIndex("PassId");
 
-                    b.ToTable("Entries");
+                    b.ToTable("Entry", (string)null);
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
@@ -127,7 +127,7 @@ namespace VipFit.Core.Migrations
 
                     b.HasIndex("PassTemplateId");
 
-                    b.ToTable("Passes");
+                    b.ToTable("Pass", (string)null);
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.PassTemplate", b =>

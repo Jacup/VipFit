@@ -11,8 +11,8 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    [Migration("20230517175308_PassEntry")]
-    partial class PassEntry
+    [Migration("20230520193824_PassEntry7")]
+    partial class PassEntry7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,7 @@ namespace VipFit.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Client", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Entry", b =>
@@ -94,7 +94,7 @@ namespace VipFit.Core.Migrations
 
                     b.HasIndex("PassId");
 
-                    b.ToTable("Entry");
+                    b.ToTable("Entries");
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
@@ -147,7 +147,7 @@ namespace VipFit.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PassTemplate", (string)null);
+                    b.ToTable("PassTemplates");
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Entry", b =>
@@ -164,7 +164,7 @@ namespace VipFit.Core.Migrations
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
                 {
                     b.HasOne("VipFit.Core.Models.Client", "Client")
-                        .WithMany()
+                        .WithMany("Passes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -178,6 +178,11 @@ namespace VipFit.Core.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("PassTemplate");
+                });
+
+            modelBuilder.Entity("VipFit.Core.Models.Client", b =>
+                {
+                    b.Navigation("Passes");
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>

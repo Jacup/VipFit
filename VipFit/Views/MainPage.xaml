@@ -12,7 +12,18 @@
 
     <Grid x:Name="ContentArea">
 
-        <Button x:Uid="Main_SellPass" Click="SellPassButton_Click" />
-
+        <RelativePanel>
+            <Button
+                x:Name="SellPassButton"
+                x:Uid="Main_SellPass"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True"
+                Click="SellPassButton_Click"/>
+            <Button
+                x:Name="RegisterEntryButton"
+                x:Uid="Main_RegisterEntry"
+                RelativePanel.RightOf="SellPassButton"
+                Click="RegisterEntryButton_Click" />
+        </RelativePanel>
     </Grid>
 </Page>

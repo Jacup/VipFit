@@ -45,7 +45,6 @@
             <AppBarButton x:Uid="Edit"
                 Click="{x:Bind ViewModel.StartEdit}"
                 IsEnabled="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                 Icon="Edit"/>
 
             <AppBarButton x:Uid="Save"

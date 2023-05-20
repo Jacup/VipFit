@@ -24,8 +24,7 @@
                 DateTime.Now,
                 DateTime.Now,
                 client.Id,
-                pt.Id,
-                new Entry[pt.Entries]);
+                pt.Id);
         }
     }
 }

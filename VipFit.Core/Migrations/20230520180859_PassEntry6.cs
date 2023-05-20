@@ -5,7 +5,7 @@
 namespace VipFit.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class PassEntry1 : Migration
+    public partial class PassEntry6 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,9 +14,21 @@ namespace VipFit.Core.Migrations
                 name: "FK_Entry_Passes_PassId",
                 table: "Entry");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_Passes_PassTemplate_PassTemplateId",
+                table: "Passes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_PassTemplate",
+                table: "PassTemplate");
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Entry",
                 table: "Entry");
+
+            migrationBuilder.RenameTable(
+                name: "PassTemplate",
+                newName: "PassTemplates");
 
             migrationBuilder.RenameTable(
                 name: "Entry",
@@ -26,6 +38,11 @@ namespace VipFit.Core.Migrations
                 name: "IX_Entry_PassId",
                 table: "Entries",
                 newName: "IX_Entries_PassId");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_PassTemplates",
+                table: "PassTemplates",
+                column: "Id");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Entries",
@@ -39,6 +56,14 @@ namespace VipFit.Core.Migrations
                 principalTable: "Passes",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Passes_PassTemplates_PassTemplateId",
+                table: "Passes",
+                column: "PassTemplateId",
+                principalTable: "PassTemplates",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
@@ -48,9 +73,21 @@ namespace VipFit.Core.Migrations
                 name: "FK_Entries_Passes_PassId",
                 table: "Entries");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_Passes_PassTemplates_PassTemplateId",
+                table: "Passes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_PassTemplates",
+                table: "PassTemplates");
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Entries",
                 table: "Entries");
+
+            migrationBuilder.RenameTable(
+                name: "PassTemplates",
+                newName: "PassTemplate");
 
             migrationBuilder.RenameTable(
                 name: "Entries",
@@ -62,6 +99,11 @@ namespace VipFit.Core.Migrations
                 newName: "IX_Entry_PassId");
 
             migrationBuilder.AddPrimaryKey(
+                name: "PK_PassTemplate",
+                table: "PassTemplate",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
                 name: "PK_Entry",
                 table: "Entry",
                 column: "Id");
@@ -71,6 +113,14 @@ namespace VipFit.Core.Migrations
                 table: "Entry",
                 column: "PassId",
                 principalTable: "Passes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Passes_PassTemplate_PassTemplateId",
+                table: "Passes",
+                column: "PassTemplateId",
+                principalTable: "PassTemplate",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }

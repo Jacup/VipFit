@@ -28,5 +28,10 @@
         {
             Frame.Navigate(typeof(PassPage), null, new DrillInNavigationTransitionInfo());
         }
+
+        private void RegisterEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(EntryPage), null, new DrillInNavigationTransitionInfo());
+        }
     }
 }
