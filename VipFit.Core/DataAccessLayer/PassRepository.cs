@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
 
     /// <summary>
@@ -33,21 +34,12 @@
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Pass>> GetAsync()
-        {
-            return await db.Passes
-            .AsNoTracking()
-            .Include(p => p.PassTemplate)
-            .Include(p => p.Client)
-            .ToListAsync();
-        }
+        public async Task<IEnumerable<Pass>> GetAsync() => await db.Passes.AsNoTracking().ToListAsync();
 
         /// <inheritdoc/>
         public async Task<Pass> GetAsync(Guid id) =>
             await db.Passes
             .AsNoTracking()
-            .Include(p => p.PassTemplate)
-            .Include(p => p.Client)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         /// <inheritdoc/>
@@ -55,8 +47,6 @@
             await db.Passes
             .Where(p => p.ClientId == clientId)
             .AsNoTracking()
-            .Include(p => p.PassTemplate)
-            .Include(p => p.Client)
             .ToListAsync();
 
         /// <inheritdoc/>

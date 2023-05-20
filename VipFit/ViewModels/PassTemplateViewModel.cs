@@ -1,15 +1,12 @@
 ﻿namespace VipFit.ViewModels
 {
     using CommunityToolkit.Mvvm.ComponentModel;
-    using Microsoft.UI.Dispatching;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
     public class PassTemplateViewModel : ObservableRecipient
     {
-        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
         private PassTemplate model;
 
         private bool isLoading;
@@ -38,23 +35,18 @@
                 if (model != value)
                 {
                     model = value;
-
-                    // Raise the PropertyChanged event for all properties
                     OnPropertyChanged(string.Empty);
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the underlying model has been modified. 
+        /// Gets or sets a value indicating whether the underlying model has been modified.
         /// </summary>
-        /// <remarks>
-        /// Used when syncing with the server to reduce load and only upload the models that have changed.
-        /// </remarks>
         public bool IsModified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to show a progress bar. 
+        /// Gets or sets a value indicating whether show a progress bar.
         /// </summary>
         public bool IsLoading
         {
@@ -63,7 +55,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether this is new PassTemplate.
+        /// Gets or sets a value indicating whether this is new PassTemplate.
         /// </summary>
         public bool IsNew
         {
@@ -90,26 +82,16 @@
             get => Model.Type;
             set
             {
-                if (value != Model.Type)
-                {
-                    Model.Type = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsModified));
-                    OnPropertyChanged(nameof(MonthsDuration));
-                    OnPropertyChanged(nameof(Entries));
-                }
+                if (value == Model.Type)
+                    return;
+
+                Model.Type = value;
+                IsModified = true;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsModified));
+                OnPropertyChanged(nameof(MonthsDuration));
+                OnPropertyChanged(nameof(Entries));
             }
-        }
-
-        public List<string> AvailablePassTypes = Enum.GetNames(typeof(PassType)).ToList();
-
-        public void SetType(object value)
-        {
-            if (value == null)
-                return;
-
-            Type = (PassType)Enum.Parse(typeof(PassType), value as string);
         }
 
         /// <summary>
@@ -120,26 +102,16 @@
             get => Model.Duration;
             set
             {
-                if (value != Model.Duration)
-                {
-                    Model.Duration = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsModified));
-                    OnPropertyChanged(nameof(MonthsDuration));
-                    OnPropertyChanged(nameof(Entries));
-                }
+                if (value == Model.Duration)
+                    return;
+
+                Model.Duration = value;
+                IsModified = true;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsModified));
+                OnPropertyChanged(nameof(MonthsDuration));
+                OnPropertyChanged(nameof(Entries));
             }
-        }
-
-        public List<string> AvailablePassDurations = Enum.GetNames(typeof(PassDuration)).ToList();
-
-        public void SetDuration(object value)
-        {
-            if (value == null)
-                return;
-
-            Duration = (PassDuration)Enum.Parse(typeof(PassDuration), value as string);
         }
 
         /// <summary>
@@ -150,18 +122,15 @@
             get => Model.Price;
             set
             {
-                if (value != Model.Price)
-                {
-                    Model.Price = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsModified));
-                }
+                if (value == Model.Price)
+                    return;
+
+                Model.Price = value;
+                IsModified = true;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsModified));
             }
         }
-
-        public void SetPrice(double value) => Price = Convert.ToDecimal(value);
-
 
         /// <summary>
         /// Gets the PassTemplate duration in months.
@@ -174,11 +143,39 @@
         public byte Entries => Model.Entries;
 
         /// <summary>
-        /// Gets the PassTemplate total entries to the gym.
+        /// Gets the PassCode.
         /// </summary>
         public string PassCode => Model.PassCode;
 
+        /// <summary>
+        /// Gets collection of available pass types.
+        /// </summary>
+        public List<string> AvailablePassTypes => Enum.GetNames(typeof(PassType)).ToList();
+
+        /// <summary>
+        /// Gets collection of available pass durations.
+        /// </summary>
+        public List<string> AvailablePassDurations => Enum.GetNames(typeof(PassDuration)).ToList();
+
         #endregion
+
+        public void SetType(object value)
+        {
+            if (value == null)
+                return;
+
+            Type = (PassType)Enum.Parse(typeof(PassType), (string)value);
+        }
+
+        public void SetDuration(object value)
+        {
+            if (value == null)
+                return;
+
+            Duration = (PassDuration)Enum.Parse(typeof(PassDuration), (string)value);
+        }
+
+        public void SetPrice(double value) => Price = Convert.ToDecimal(value);
 
         public async Task SaveAsync()
         {
@@ -197,6 +194,7 @@
         /// <summary>
         /// Cancels any in progress edits.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task CancelEditsAsync()
         {
             if (IsNew)
@@ -208,7 +206,7 @@
         /// <summary>
         /// Deletes user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DeleteAsync()
         {
             if (Model != null)
@@ -222,6 +220,7 @@
         /// <summary>
         /// Discards any edits that have been made, restoring the original values.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RevertChangesAsync()
         {
             IsInEdit = false;
@@ -238,30 +237,9 @@
         public void StartEdit() => IsInEdit = true;
 
         /// <summary>
-        /// Called when a bound DataGrid control causes the PassTemplate to enter edit mode.
-        /// </summary>
-        public void BeginEdit()
-        {
-            // Not used.
-        }
-
-        /// <summary>
         /// Reloads all of the PassTemplate data.
         /// </summary>
-        public async Task RefreshPassTemplateAsync()
-        {
-            Model = await App.GetService<IPassTemplateRepository>().GetAsync(Model.Id);
-        }
-
-        /// <summary>
-        /// Called when a bound DataGrid control cancels the edits that have been made to a PassTemplate.
-        /// </summary>
-        public async void CancelEdit() => await CancelEditsAsync();
-
-        /// <summary>
-        /// Called when a bound DataGrid control commits the edits that have been made to a PassTemplate.
-        /// </summary>
-        public async void EndEdit() => await SaveAsync();
-
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RefreshPassTemplateAsync() => Model = await App.GetService<IPassTemplateRepository>().GetAsync(Model.Id);
     }
 }

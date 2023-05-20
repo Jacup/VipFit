@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
 
     /// <summary>

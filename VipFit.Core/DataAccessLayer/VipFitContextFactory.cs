@@ -17,7 +17,6 @@
         {
             var optionsBuilder = new DbContextOptionsBuilder<VipFitContext>();
             optionsBuilder.UseSqlite($@"Data Source=C:\Users\jacub\vipfit\db\mydb.db;");
-
             return new VipFitContext(optionsBuilder.Options);
         }
     }

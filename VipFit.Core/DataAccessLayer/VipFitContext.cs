@@ -1,7 +1,6 @@
 ﻿namespace VipFit.Core.DataAccessLayer
 {
     using Microsoft.EntityFrameworkCore;
-    using System.ComponentModel.DataAnnotations;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
@@ -57,10 +56,9 @@
         /// <param name="modelBuilder">ModelBuilder.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Client>().ToTable(nameof(Client));
-            modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
-            modelBuilder.Entity<Pass>().ToTable(nameof(Pass));
-            modelBuilder.Entity<Entry>().ToTable(nameof(Models.Entry));
+            modelBuilder.Entity<Client>().Navigation(c => c.Passes).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.PassTemplate).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.Entries).AutoInclude();
         }
 
         private void SeedClients()

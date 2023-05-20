@@ -4,7 +4,7 @@
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
 
     /// <summary>
     /// ViewModel for ClientList.
@@ -77,7 +77,7 @@
             {
                 foreach (var modifiedClient in Clients.Where(client => client.IsModified).Select(client => client.Model))
                     await App.GetService<IClientRepository>().UpsertAsync(modifiedClient);
-                
+
                 IsLoading = true;
                 await GetClientListAsync();
                 await Task.Delay(TimeSpan.FromSeconds(2));

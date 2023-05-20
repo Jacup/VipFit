@@ -34,24 +34,10 @@
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Entry>> GetAsync() =>
-            await db.Entries
-            .AsNoTracking()
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.PassTemplate)
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.Client)
-            .ToListAsync();
+        public async Task<IEnumerable<Entry>> GetAsync() => await db.Entries.AsNoTracking().ToListAsync();
 
         /// <inheritdoc/>
-        public async Task<Entry> GetAsync(Guid id) =>
-            await db.Entries
-            .AsNoTracking()
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.PassTemplate)
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.Client)
-            .FirstOrDefaultAsync(e => e.Id == id);
+        public async Task<Entry> GetAsync(Guid id) => await db.Entries.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc/>
         /// It could be optimized I guess.
@@ -71,15 +57,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Entry>> GetForPassAsync(Guid passId) =>
-            await db.Entries
-            .Where(e => e.PassId == passId)
-            .AsNoTracking()
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.PassTemplate)
-            .Include(e => e.Pass)
-            .ThenInclude(p => p.Client)
-            .ToListAsync();
+        public async Task<IEnumerable<Entry>> GetForPassAsync(Guid passId) => await db.Entries .Where(e => e.PassId == passId).ToListAsync();
 
         /// <inheritdoc/>
         public async Task<Entry> UpsertAsync(Entry entry)

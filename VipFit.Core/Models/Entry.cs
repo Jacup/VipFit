@@ -1,6 +1,7 @@
 ﻿namespace VipFit.Core.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Model representing client's entries to the gym.
@@ -26,12 +27,14 @@
         /// <summary>
         /// Gets or sets the associated PassId.
         /// </summary>
-        public Guid PassId { get; set; } // Required foreign key property
+        [Required]
+        public Guid PassId { get; set; }
 
         /// <summary>
         /// Gets or sets the associated Pass.
         /// </summary>
-        public Pass Pass { get; set; } = null!; // Required reference navigation to principal
+        [ForeignKey(nameof(PassId))]
+        public Pass Pass { get; set; }
 
         #endregion
     }

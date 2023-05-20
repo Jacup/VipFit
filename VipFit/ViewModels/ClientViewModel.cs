@@ -4,7 +4,7 @@ namespace VipFit.ViewModels
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
@@ -410,16 +410,9 @@ namespace VipFit.ViewModels
         public void StartEdit() => IsInEdit = true;
 
         /// <summary>
-        /// Called when a bound DataGrid control causes the client to enter edit mode.
-        /// </summary>
-        public void BeginEdit()
-        {
-            // Not used.
-        }
-
-        /// <summary>
         /// Reloads all of the client data.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RefreshClientAsync()
         {
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
@@ -435,16 +428,6 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Called when a bound DataGrid control cancels the edits that have been made to a client.
-        /// </summary>
-        public async void CancelEdit() => await CancelEditsAsync();
-
-        /// <summary>
-        /// Called when a bound DataGrid control commits the edits that have been made to a client.
-        /// </summary>
-        public async void EndEdit() => await SaveAsync();
-
-        /// <summary>
         /// Resets the customer detail fields to the current values.
         /// </summary>
         public void RefreshPasses() => Task.Run(LoadPassesAsync);
@@ -452,6 +435,7 @@ namespace VipFit.ViewModels
         /// <summary>
         /// Loads the order data for the customer.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task LoadPassesAsync()
         {
             await dispatcherQueue.EnqueueAsync(() =>

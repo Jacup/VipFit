@@ -1,6 +1,7 @@
 ﻿namespace VipFit.Core.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using VipFit.Core.Enums;
 
     /// <summary>
@@ -118,6 +119,13 @@
         /// Gets or sets a value indicating whether client is removed and is in "bin".
         /// </summary>
         public bool Trash { get; set; }
+
+        #endregion
+
+        #region Relationships
+
+        [InverseProperty("Client")]
+        public ICollection<Pass> Passes { get; set; }
 
         #endregion
 
