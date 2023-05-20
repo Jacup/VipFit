@@ -4,7 +4,7 @@
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
 
     /// <summary>
@@ -12,7 +12,7 @@
     /// </summary>
     public class PassViewModel : ObservableRecipient
     {
-        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Pass model;
         private Client client;
@@ -97,9 +97,7 @@
                     IsModified = true;
                     OnPropertyChanged();
 
-                    var date = CalculatePassDuration();
-                    if (date != null)
-                        EndDate = (DateOnly)date;
+                    SetDependentOptions();
                 }
             }
         }
@@ -152,21 +150,17 @@
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether pass is active.
-        /// </summary>
-        public new bool IsActive
+        public ICollection<Entry> Entries
         {
-            get => Model.IsActive;
+            get => Model.Entries;
             set
             {
-                if (value != Model.IsActive)
-                {
-                    Model.IsActive = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(StartDate));
-                }
+                if (Model.Entries == value)
+                    return;
+
+                IsModified = true;
+                Model.Entries = value;
+                OnPropertyChanged();
             }
         }
 
@@ -259,7 +253,7 @@
         /// <summary>
         /// Insert new Pass (if new) and save changes to database.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task SaveAsync()
         {
             isInEdit = false;
@@ -388,6 +382,24 @@
 
             var date = (DateOnly)StartDate;
             return date.AddMonths(PassTemplate.MonthsDuration);
+        }
+
+        private void SetDependentOptions()
+        {
+            SetPassDuration();
+            SetEntriesArray();
+        }
+
+        private void SetEntriesArray()
+        {
+            Entries = new List<Entry>();
+        }
+
+        private void SetPassDuration()
+        {
+            var date = CalculatePassDuration();
+            if (date != null)
+                EndDate = (DateOnly)date;
         }
     }
 }

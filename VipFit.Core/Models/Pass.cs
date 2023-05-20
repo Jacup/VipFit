@@ -98,7 +98,7 @@
 
         #region Overrides
 
-        public override string ToString() => $"{PassTemplate}: {StartDate:dd:MM:rrrr} -> {EndDate:dd:MM:rrrr}";
+        public override string ToString() => $"{PassTemplate.PassCode}: {StartDate.ToShortDateString()} -> {EndDate.ToShortDateString()}";
 
         #endregion
 
