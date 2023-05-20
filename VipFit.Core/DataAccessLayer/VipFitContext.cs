@@ -59,16 +59,8 @@
         {
             modelBuilder.Entity<Client>().ToTable(nameof(Client));
             modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
-            modelBuilder.Entity<Pass>()
-                .HasMany(e => e.Entries)
-                .WithOne(e => e.Pass)
-                .HasForeignKey(e => e.PassId)
-                .IsRequired();
-            modelBuilder.Entity<Entry>()
-                .HasOne(e => e.Pass)
-                .WithMany(e => e.Entries)
-                .HasForeignKey(e => e.PassId)
-                .IsRequired();
+            modelBuilder.Entity<Pass>().ToTable(nameof(Pass));
+            modelBuilder.Entity<Entry>().ToTable(nameof(Models.Entry));
         }
 
         private void SeedClients()
@@ -122,7 +114,7 @@
 
             var passes = new Pass[]
             {
-                new Pass(startingDate, startingDate.AddMonths(pt.MonthsDuration), now, now, clientId,pt.Id, new Entry[pt.Entries]),
+                new Pass(startingDate, startingDate.AddMonths(pt.MonthsDuration), now, now, clientId, pt.Id),
             };
 
             foreach (var p in passes)

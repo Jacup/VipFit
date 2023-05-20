@@ -33,10 +33,16 @@
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<PassTemplate>> GetAsync() => await db.PassTemplates.AsNoTracking().ToListAsync();
+        public async Task<IEnumerable<PassTemplate>> GetAsync() =>
+            await db.PassTemplates
+            .AsNoTracking()
+            .ToListAsync();
 
         /// <inheritdoc/>
-        public async Task<PassTemplate> GetAsync(Guid id) => await db.PassTemplates.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        public async Task<PassTemplate> GetAsync(Guid id) =>
+            await db.PassTemplates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         /// <inheritdoc/>
         public async Task<PassTemplate> UpsertAsync(PassTemplate passTemplate)

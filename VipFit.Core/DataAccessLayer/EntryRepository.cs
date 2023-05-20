@@ -37,15 +37,24 @@
         public async Task<IEnumerable<Entry>> GetAsync() =>
             await db.Entries
             .AsNoTracking()
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.PassTemplate)
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.Client)
             .ToListAsync();
 
         /// <inheritdoc/>
         public async Task<Entry> GetAsync(Guid id) =>
             await db.Entries
             .AsNoTracking()
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.PassTemplate)
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.Client)
             .FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc/>
+        /// It could be optimized I guess.
         public async Task<IEnumerable<Entry>> GetForClientAsync(Guid clientId)
         {
             var passes = await db.Passes
@@ -66,6 +75,10 @@
             await db.Entries
             .Where(e => e.PassId == passId)
             .AsNoTracking()
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.PassTemplate)
+            .Include(e => e.Pass)
+            .ThenInclude(p => p.Client)
             .ToListAsync();
 
         /// <inheritdoc/>
