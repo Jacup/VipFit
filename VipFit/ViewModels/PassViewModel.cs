@@ -150,7 +150,7 @@
             }
         }
 
-        public ICollection<Entry> Entries
+        public IList<Entry> Entries
         {
             get => Model.Entries;
             set

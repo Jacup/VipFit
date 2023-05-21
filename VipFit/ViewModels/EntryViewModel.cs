@@ -5,6 +5,7 @@
     using Microsoft.UI.Dispatching;
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using VipFit.Core.DataAccessLayer;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
@@ -75,11 +76,7 @@
 
                 RefreshCounters();
 
-                //var position = CalculatePosition(pass);
-                //if (position == null)
-                //    return;
-
-                //PositionInPass = position;
+                PositionInPass = Convert.ToByte(ThisEntryCounter);
             }
         }
 
@@ -175,13 +172,6 @@
 
         public int? ThisEntryCounter => UsedEntriesCounter == null ? null : UsedEntriesCounter + 1;
 
-        private void RefreshCounters()
-        {
-            OnPropertyChanged(nameof(UsedEntriesCounter));
-            OnPropertyChanged(nameof(LeftEntriesCounter));
-            OnPropertyChanged(nameof(ThisEntryCounter));
-        }
-
         /// <summary>
         /// Insert new Entry (if new) and save changes to database.
         /// </summary>
@@ -198,16 +188,6 @@
         /// Cancels any in progress edits.
         /// </summary>
         public void CancelEdits() => AddNewEntryCanceled?.Invoke(this, EventArgs.Empty);
-
-
-        public static byte? CalculatePosition(Pass p)
-        {
-            if (p == null)
-                return null;
-
-
-            return Convert.ToByte(p.Entries.Count(s => s != null));
-        }
 
         /// <summary>
         /// Gets all clients.
@@ -256,6 +236,13 @@
 
                 IsLoading = false;
             });
+        }
+
+        private void RefreshCounters()
+        {
+            OnPropertyChanged(nameof(UsedEntriesCounter));
+            OnPropertyChanged(nameof(LeftEntriesCounter));
+            OnPropertyChanged(nameof(ThisEntryCounter));
         }
     }
 }

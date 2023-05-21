@@ -92,7 +92,7 @@
         public PassTemplate PassTemplate { get; set; }
 
         [InverseProperty("Pass")]
-        public ICollection<Entry> Entries { get; set; }
+        public IList<Entry> Entries { get; set; }
 
         #endregion
 
