@@ -11,8 +11,8 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    [Migration("20230514204507_UpdatePasses")]
-    partial class UpdatePasses
+    [Migration("20230520174835_PassEntry3")]
+    partial class PassEntry3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,29 @@ namespace VipFit.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Client", (string)null);
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("VipFit.Core.Models.Entry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PassId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("PositionInPass")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PassId");
+
+                    b.ToTable("Entry", (string)null);
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
@@ -89,9 +111,6 @@ namespace VipFit.Core.Migrations
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("TEXT");
@@ -131,10 +150,21 @@ namespace VipFit.Core.Migrations
                     b.ToTable("PassTemplate", (string)null);
                 });
 
+            modelBuilder.Entity("VipFit.Core.Models.Entry", b =>
+                {
+                    b.HasOne("VipFit.Core.Models.Pass", "Pass")
+                        .WithMany()
+                        .HasForeignKey("PassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pass");
+                });
+
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
                 {
                     b.HasOne("VipFit.Core.Models.Client", "Client")
-                        .WithMany()
+                        .WithMany("Passes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -148,6 +178,11 @@ namespace VipFit.Core.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("PassTemplate");
+                });
+
+            modelBuilder.Entity("VipFit.Core.Models.Client", b =>
+                {
+                    b.Navigation("Passes");
                 });
 #pragma warning restore 612, 618
         }

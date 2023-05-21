@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Represents pass entity.
@@ -15,9 +16,23 @@
         {
         }
 
-        public Pass(bool isActive, DateOnly startDate, DateOnly endDate, DateTime createdAt, DateTime modifiedAt, Guid clientId, Guid passTemplateId)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pass"/> class.
+        /// </summary>
+        /// <param name="startDate">StartDate.</param>
+        /// <param name="endDate">EndDate.</param>
+        /// <param name="createdAt">Created date.</param>
+        /// <param name="modifiedAt">Last modification date.</param>
+        /// <param name="clientId">Associated client ID.</param>
+        /// <param name="passTemplateId">Associated Pass ID</param>
+        public Pass(
+            DateOnly startDate,
+            DateOnly endDate,
+            DateTime createdAt,
+            DateTime modifiedAt,
+            Guid clientId,
+            Guid passTemplateId)
         {
-            IsActive = isActive;
             StartDate = startDate;
             EndDate = endDate;
             CreatedAt = createdAt;
@@ -25,11 +40,6 @@
             ClientId = clientId;
             PassTemplateId = passTemplateId;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pass is active.
-        /// </summary>
-        public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets the pass's start date.
@@ -55,35 +65,42 @@
         [DataType(DataType.DateTime)]
         public DateTime ModifiedAt { get; set; }
 
-        #region Foreign keys
+        #region Relationships
 
         /// <summary>
         /// Gets or sets the associated client's ID.
         /// </summary>
+        [Required]
         public Guid ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the associated client.
         /// </summary>
+        [ForeignKey(nameof(ClientId))]
         public Client Client { get; set; }
 
         /// <summary>
         /// Gets or sets the associated Pass Template's ID.
         /// </summary>
+        [Required]
         public Guid PassTemplateId { get; set; }
 
         /// <summary>
         /// Gets or sets the associated PassTemplate.
         /// </summary>
+        [ForeignKey(nameof(PassTemplateId))]
         public PassTemplate PassTemplate { get; set; }
+
+        [InverseProperty("Pass")]
+        public IList<Entry> Entries { get; set; }
 
         #endregion
 
-        ///// <summary>
-        ///// Gets or sets a collection of entries to the gym.
-        ///// </summary>
-        //[InverseProperty("Pass")]
-        //public virtual ICollection<PassEntry> Entries { get; set; }
+        #region Overrides
+
+        public override string ToString() => $"{PassTemplate.PassCode}: {StartDate.ToShortDateString()} -> {EndDate.ToShortDateString()}";
+
+        #endregion
 
         // public IEnumerable<Payment> Payments { get; set; } // Module 3
     }

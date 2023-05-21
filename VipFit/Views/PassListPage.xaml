@@ -32,6 +32,7 @@
                 x:Uid="PassList_Menu_Edit"
                 Click="EditPassButton_Click"
                 Icon="Edit"
+                IsEnabled="False"
                 LabelPosition="Collapsed"/>
         </CommandBar>
 

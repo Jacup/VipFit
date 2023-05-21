@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipFit.Core.DataAccessLayer;
 
@@ -10,9 +11,11 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    partial class VipFitContextModelSnapshot : ModelSnapshot
+    [Migration("20230520180859_PassEntry6")]
+    partial class PassEntry6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");

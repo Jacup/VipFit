@@ -4,7 +4,7 @@ namespace VipFit.ViewModels
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
@@ -13,7 +13,7 @@ namespace VipFit.ViewModels
     /// </summary>
     public class ClientViewModel : ObservableRecipient
     {
-        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private Client model;
         private Pass selectedPass;
@@ -26,7 +26,10 @@ namespace VipFit.ViewModels
         /// Initializes a new instance of the <see cref="ClientViewModel"/> class.
         /// </summary>
         /// <param name="model">Client view model.</param>
-        public ClientViewModel(Client? model = null) => Model = model ?? new Client();
+        public ClientViewModel(Client? model = null)
+        {
+            Model = model ?? new Client();
+        }
 
         /// <summary>
         /// Raised when the user cancels the changes they've made to the client data.
@@ -34,7 +37,7 @@ namespace VipFit.ViewModels
         public event EventHandler AddNewClientCanceled;
 
         /// <summary>
-        /// Gets or sets the underlying Customer object.
+        /// Gets or sets the underlying Client object.
         /// </summary>
         public Client Model
         {
@@ -47,13 +50,12 @@ namespace VipFit.ViewModels
                 model = value;
                 RefreshPasses();
 
-                // Raise the PropertyChanged event for all properties
                 OnPropertyChanged(string.Empty);
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the underlying model has been modified. 
+        /// Gets or sets a value indicating whether the underlying model has been modified.
         /// </summary>
         /// <remarks>
         /// Used when syncing with the server to reduce load and only upload the models that have changed.
@@ -61,7 +63,7 @@ namespace VipFit.ViewModels
         public bool IsModified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show a progress bar. 
+        /// Gets or sets a value indicating whether to show a progress bar.
         /// </summary>
         public bool IsLoading
         {
@@ -89,10 +91,16 @@ namespace VipFit.ViewModels
 
         public ObservableCollection<Pass> Passes { get; } = new();
 
+        public ObservableCollection<Entry> Entries { get; } = new();
+
         public Pass SelectedPass
         {
             get => selectedPass;
-            set => SetProperty(ref selectedPass, value);
+            set
+            {
+                SetProperty(ref selectedPass, value);
+                RefreshEntries();
+            }
         }
 
         #region Model's Properties
@@ -196,7 +204,8 @@ namespace VipFit.ViewModels
 
             set
             {
-                if (value == null) { return; }
+                if (value == null)
+                    return;
                 AgreementMarketing = (bool)value;
                 OnPropertyChanged(nameof(AgreementMarketing));
                 AgreementPromoImage = (bool)value;
@@ -220,7 +229,6 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementMarketing = value;
                     IsModified = true;
-                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(AgreementsAll));
                 }
@@ -239,7 +247,6 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementPromoImage = value;
                     IsModified = true;
-                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(AgreementsAll));
                 }
@@ -258,7 +265,6 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementWebsiteImage = value;
                     IsModified = true;
-                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(AgreementsAll));
                 }
@@ -277,7 +283,6 @@ namespace VipFit.ViewModels
                 {
                     Model.AgreementSocialsImage = value;
                     IsModified = true;
-                    model.ModifiedAt = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(AgreementsAll));
                 }
@@ -373,7 +378,7 @@ namespace VipFit.ViewModels
         /// <summary>
         /// Deletes user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DeleteAsync()
         {
             if (Model != null)
@@ -387,6 +392,7 @@ namespace VipFit.ViewModels
         /// <summary>
         /// Discards any edits that have been made, restoring the original values.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RevertChangesAsync()
         {
             IsInEdit = false;
@@ -410,16 +416,9 @@ namespace VipFit.ViewModels
         public void StartEdit() => IsInEdit = true;
 
         /// <summary>
-        /// Called when a bound DataGrid control causes the client to enter edit mode.
-        /// </summary>
-        public void BeginEdit()
-        {
-            // Not used.
-        }
-
-        /// <summary>
         /// Reloads all of the client data.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RefreshClientAsync()
         {
             Model = await App.GetService<IClientRepository>().GetAsync(Model.Id);
@@ -435,23 +434,25 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Called when a bound DataGrid control cancels the edits that have been made to a client.
+        /// Resets the customer detail fields to the current values.
         /// </summary>
-        public async void CancelEdit() => await CancelEditsAsync();
-
-        /// <summary>
-        /// Called when a bound DataGrid control commits the edits that have been made to a client.
-        /// </summary>
-        public async void EndEdit() => await SaveAsync();
+        public async void RefreshPasses()
+        {
+            await LoadPassesAsync();
+        }
 
         /// <summary>
         /// Resets the customer detail fields to the current values.
         /// </summary>
-        public void RefreshPasses() => Task.Run(LoadPassesAsync);
+        public async void RefreshEntries()
+        {
+            await LoadEntriesAsync();
+        }
 
         /// <summary>
-        /// Loads the order data for the customer.
+        /// Loads the entries for client.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task LoadPassesAsync()
         {
             await dispatcherQueue.EnqueueAsync(() =>
@@ -466,6 +467,29 @@ namespace VipFit.ViewModels
                 Passes.Clear();
                 foreach (var p in passes)
                     Passes.Add(p);
+
+                IsLoading = false;
+            });
+        }
+
+        /// <summary>
+        /// Loads the client's entries.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task LoadEntriesAsync()
+        {
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                IsLoading = true;
+            });
+
+            var entries = await App.GetService<IEntryRepository>().GetForPassAsync(SelectedPass.Id);
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                Entries.Clear();
+                foreach (var e in entries)
+                    Entries.Add(e);
 
                 IsLoading = false;
             });

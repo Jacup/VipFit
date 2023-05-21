@@ -350,4 +350,40 @@
   <data name="Pass_StartDate.Header" xml:space="preserve">
     <value>Data rozpoczęcia</value>
   </data>
+  <data name="Main_RegisterEntry.Content" xml:space="preserve">
+    <value>Zarejestruj wejście</value>
+  </data>
+  <data name="EntryPage_Client.Text" xml:space="preserve">
+    <value>Klient</value>
+  </data>
+  <data name="EntryPage_Client_Desc.Text" xml:space="preserve">
+    <value>Wybierz klienta, dla którego chcesz zarejestrować wejście.</value>
+  </data>
+  <data name="Entry_ChoosePass.Text" xml:space="preserve">
+    <value>Karnet</value>
+  </data>
+  <data name="Entry_ChoosePass_Desc.Text" xml:space="preserve">
+    <value>Wybierz karnet, na który ma wejść klient.</value>
+  </data>
+  <data name="Entry_Date.Text" xml:space="preserve">
+    <value>Data wejścia</value>
+  </data>
+  <data name="Entry_Date_Desc.Text" xml:space="preserve">
+    <value>Data wejścia na zajęcia. Domyślnie - teraz.</value>
+  </data>
+  <data name="Entry_EntriesHistory.Text" xml:space="preserve">
+    <value>Historia wejść</value>
+  </data>
+  <data name="Entry_LeftEntriesCounter.Text" xml:space="preserve">
+    <value>Ilość pozostałych wejść:</value>
+  </data>
+  <data name="Entry_ThisEntryCounter.Text" xml:space="preserve">
+    <value>Bieżące wejście:</value>
+  </data>
+  <data name="Entry_UsedEntriesCounter.Text" xml:space="preserve">
+    <value>Ilość wykorzystanych wejść:</value>
+  </data>
+  <data name="Client_Subtitle_Entries.Text" xml:space="preserve">
+    <value>Wejścia dla karnetu</value>
+  </data>
 </root>

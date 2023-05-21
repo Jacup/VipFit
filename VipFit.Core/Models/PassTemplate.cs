@@ -58,7 +58,7 @@ namespace VipFit.Core.Models
         /// <summary>
         /// Gets code represantation of pass.
         /// </summary>
-        public string PassCode => $"VF-{MonthsDuration}M-{Type}";
+        public string PassCode => $"VF-{Type}-{MonthsDuration}M";
 
         #endregion
 

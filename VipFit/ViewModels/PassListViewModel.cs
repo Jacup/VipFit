@@ -4,7 +4,7 @@
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
 
     /// <summary>
     /// Pass list ViewModel.

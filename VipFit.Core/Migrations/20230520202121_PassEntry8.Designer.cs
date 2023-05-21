@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipFit.Core.DataAccessLayer;
 
@@ -10,9 +11,11 @@ using VipFit.Core.DataAccessLayer;
 namespace VipFit.Core.Migrations
 {
     [DbContext(typeof(VipFitContext))]
-    partial class VipFitContextModelSnapshot : ModelSnapshot
+    [Migration("20230520202121_PassEntry8")]
+    partial class PassEntry8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
@@ -149,18 +152,16 @@ namespace VipFit.Core.Migrations
 
             modelBuilder.Entity("VipFit.Core.Models.Entry", b =>
                 {
-                    b.HasOne("VipFit.Core.Models.Pass", "Pass")
+                    b.HasOne("VipFit.Core.Models.Pass", null)
                         .WithMany("Entries")
                         .HasForeignKey("PassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Pass");
                 });
 
             modelBuilder.Entity("VipFit.Core.Models.Pass", b =>
                 {
-                    b.HasOne("VipFit.Core.Models.Client", "Client")
+                    b.HasOne("VipFit.Core.Models.Client", null)
                         .WithMany("Passes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,8 +172,6 @@ namespace VipFit.Core.Migrations
                         .HasForeignKey("PassTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
 
                     b.Navigation("PassTemplate");
                 });

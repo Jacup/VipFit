@@ -1,7 +1,6 @@
 ﻿namespace VipFit.Core.DataAccessLayer
 {
     using Microsoft.EntityFrameworkCore;
-    using System.ComponentModel.DataAnnotations;
     using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
@@ -35,6 +34,11 @@
         public DbSet<Pass> Passes { get; set; }
 
         /// <summary>
+        /// Gets or sets the Entry DbSet.
+        /// </summary>
+        public DbSet<Entry> Entries { get; set; }
+
+        /// <summary>
         /// Initializes base db.
         /// </summary>
         public void Initialize()
@@ -52,9 +56,10 @@
         /// <param name="modelBuilder">ModelBuilder.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Client>().ToTable(nameof(Client));
-            modelBuilder.Entity<PassTemplate>().ToTable(nameof(PassTemplate));
-            modelBuilder.Entity<Pass>().ToTable(nameof(Pass));
+            modelBuilder.Entity<Client>().Navigation(c => c.Passes).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.PassTemplate).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.Entries).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.Client).AutoInclude();
         }
 
         private void SeedClients()
@@ -104,11 +109,11 @@
             var now = DateTime.Now;
 
             var clientId = Clients.FirstOrDefault().Id;
-            var passTemplateId = PassTemplates.FirstOrDefault().Id;
+            var pt = PassTemplates.FirstOrDefault();
 
             var passes = new Pass[]
             {
-                new Pass(true, startingDate, startingDate.AddMonths(3), now, now, clientId, passTemplateId),
+                new Pass(startingDate, startingDate.AddMonths(pt.MonthsDuration), now, now, clientId, pt.Id),
             };
 
             foreach (var p in passes)

@@ -4,27 +4,24 @@
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
-    using VipFit.Core.DataAccessLayer;
+    using VipFit.Core.DataAccessLayer.Interfaces;
 
     public class PassTemplateListViewModel : ObservableRecipient
     {
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         private PassTemplateViewModel? selectedPassTemplate;
 
-        private bool isLoading = false;
+        private bool isLoading;
 
-        /// <summary>
-        /// Creates a new PassTemplateListViewModel.
-        /// </summary>
         public PassTemplateListViewModel() => Task.Run(GetPassTemplateListAsync);
 
         /// <summary>
-        /// Collection of PassTemplates in the list.
+        /// Gets the collection of PassTemplates in the list.
         /// </summary>
         public ObservableCollection<PassTemplateViewModel> PassTemplates { get; } = new ObservableCollection<PassTemplateViewModel>();
 
         /// <summary>
-        /// Gets or sets the selected PassTemplate, or null if no PassTemplate is selected. 
+        /// Gets or sets the selected PassTemplate, or null if no PassTemplate is selected.
         /// </summary>
         public PassTemplateViewModel? SelectedPassTemplate
         {
@@ -33,14 +30,13 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the clients list is currently being updated. 
+        /// Gets or sets a value indicating whether the clients list is currently being updated.
         /// </summary>
         public bool IsLoading
         {
             get => isLoading;
             set => SetProperty(ref isLoading, value);
         }
-
 
         /// <summary>
         /// Gets the list of PassTemplates from database.

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VipFit.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatePasses : Migration
+    public partial class PassEntry : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,7 +54,6 @@ namespace VipFit.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -79,6 +78,31 @@ namespace VipFit.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Entry",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PositionInPass = table.Column<byte>(type: "INTEGER", nullable: false),
+                    PassId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Entry", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Entry_Pass_PassId",
+                        column: x => x.PassId,
+                        principalTable: "Pass",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Entry_PassId",
+                table: "Entry",
+                column: "PassId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Pass_ClientId",
                 table: "Pass",
@@ -93,6 +117,9 @@ namespace VipFit.Core.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Entry");
+
             migrationBuilder.DropTable(
                 name: "Pass");
 

@@ -1,9 +1,10 @@
 ﻿namespace VipFit.Core.DataAccessLayer
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
+    using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
 
     /// <summary>
@@ -33,10 +34,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Pass>> GetAsync() =>
-            await db.Passes
-            .AsNoTracking()
-            .ToListAsync();
+        public async Task<IEnumerable<Pass>> GetAsync() => await db.Passes.AsNoTracking().ToListAsync();
 
         /// <inheritdoc/>
         public async Task<Pass> GetAsync(Guid id) =>
@@ -55,8 +53,6 @@
         public async Task<Pass> UpsertAsync(Pass pass)
         {
             var current = await db.Passes.FirstOrDefaultAsync(p => p.Id == pass.Id);
-
-           
             if (current == null)
                 db.Add(pass);
             else
