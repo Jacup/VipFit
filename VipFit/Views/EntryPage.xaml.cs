@@ -82,7 +82,7 @@ namespace VipFit.Views
             switch (saveDialog.Result)
             {
                 case SaveChangesDialogResult.Save:
-                    await ViewModel.SaveAsync();
+                    await ViewModel.TryToSaveAsync();
                     ResumeNavigation();
                     break;
                 case SaveChangesDialogResult.DontSave:
@@ -110,7 +110,16 @@ namespace VipFit.Views
 
         public async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.SaveAsync();
+            try
+            {
+                await ViewModel.TryToSaveAsync();
+            }
+            catch (Exception)
+            {
+                // ShowDialog with errors
+                return;
+            }
+
             Frame.GoBack();
         }
 
@@ -132,7 +141,7 @@ namespace VipFit.Views
             switch (saveDialog.Result)
             {
                 case SaveChangesDialogResult.Save:
-                    await ViewModel.SaveAsync();
+                    await ViewModel.TryToSaveAsync();
                     Frame.GoBack();
                     break;
                 case SaveChangesDialogResult.DontSave:

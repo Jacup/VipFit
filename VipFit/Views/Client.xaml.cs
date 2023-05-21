@@ -197,7 +197,7 @@ namespace VipFit.Views
 
         private async void RegisterEntryButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(EntryPage), ViewModel.Model, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(EntryPage), ViewModel.SelectedPass, new DrillInNavigationTransitionInfo());
         }
 
         #endregion

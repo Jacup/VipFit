@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
+    using Microsoft.Extensions.Options;
     using Microsoft.UI.Dispatching;
     using System;
     using System.Collections.ObjectModel;
@@ -17,7 +18,7 @@
 
         private bool isLoading;
         private Entry model;
-        private Pass pass;
+        private Pass? pass;
         private Client client;
         private ObservableCollection<Pass> passList = new();
 
@@ -31,7 +32,7 @@
         public EntryViewModel()
         {
             Model = new Entry();
-            Init();
+            LoadClients();
             Date = DateTime.Now;
         }
 
@@ -40,7 +41,7 @@
             Model = new Entry();
             Date = DateTime.Now;
 
-            Init();
+            LoadClients();
 
             var matchedClientFromList = AvailableClients.FirstOrDefault(c => c.Id == client.Id);
 
@@ -52,18 +53,38 @@
         }
 
 
-        private async void Init()
+        private async void LoadClients()
         {
             await GetAvailableClientListAsync();
         }
+
+        private async void LoadPassesForClient(Client client)
+        {
+            await GetPassesForClientAsync(client);
+        }
+
         public EntryViewModel(Pass pass)
         {
             Model = new Entry();
             Date = DateTime.Now;
-            Pass = pass;
+
+            if (pass == null || pass.Client == null)
+                return;
+
+            LoadClients();
+            var matchedClientFromList = AvailableClients.FirstOrDefault(c => c.Id == pass.Client.Id);
+
+            LoadPassesForClient(pass.Client);
+            var matchedPassFromList = AvailablePasses.FirstOrDefault(p => p.Id == pass.Id);
+
+            if (matchedClientFromList == null || matchedPassFromList == null)
+                return;
 
             isClientReadOnly = true;
             isPassReadOnly = true;
+
+            Client = matchedClientFromList;
+            Pass = matchedPassFromList;
         }
 
         /// <summary>
@@ -90,7 +111,7 @@
         /// <summary>
         /// Gets or sets selected pass.
         /// </summary>
-        public Pass Pass
+        public Pass? Pass
         {
             get => pass;
             set
@@ -100,14 +121,9 @@
 
                 IsModified = true;
                 pass = value;
-                Model.PassId = value.Id;
                 OnPropertyChanged();
 
-                if (pass == null)
-                    return;
-
                 RefreshCounters();
-
                 PositionInPass = Convert.ToByte(ThisEntryCounter);
             }
         }
@@ -179,13 +195,9 @@
                 client = value;
                 OnPropertyChanged();
 
-                InitPasses(value);
+                if (!IsPassReadOnly)
+                    LoadPassesForClient(value);
             }
-        }
-
-        private async void InitPasses(Client client)
-        {
-            await GetPassesForClient(client);
         }
 
         /// <summary>
@@ -216,15 +228,34 @@
         /// Insert new Entry (if new) and save changes to database.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SaveAsync()
+        public async Task TryToSaveAsync()
         {
             if (!IsModified)
                 return;
+
+            try
+            {
+                Validate();
+            }
+            catch (ArgumentException e)
+            {
+                throw e;
+            }
 
             IsModified = false;
 
             App.GetService<EntryListViewModel>().Entries.Add(this);
             await App.GetService<IEntryRepository>().UpsertAsync(Model);
+        }
+
+        private void Validate()
+        {
+            if (Pass == null)
+                throw new ArgumentNullException(nameof(Pass));
+            Model.PassId = Pass.Id;
+
+            if (LeftEntriesCounter < 1)
+                throw new ArgumentException("All entries has been used.");
         }
 
         /// <summary>
@@ -261,7 +292,7 @@
         /// </summary>
         /// <param name="client">Client with passes.</param>
         /// <returns>Client's passes.</returns>
-        internal async Task GetPassesForClient(Client client)
+        internal async Task GetPassesForClientAsync(Client client)
         {
             await dispatcherQueue.EnqueueAsync(() => isLoading = true);
 

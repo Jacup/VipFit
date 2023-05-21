@@ -381,6 +381,9 @@
     <value>Bieżące wejście:</value>
   </data>
   <data name="Entry_UsedEntriesCounter.Text" xml:space="preserve">
-    <value>Ilość zużytych wejść:</value>
+    <value>Ilość wykorzystanych wejść:</value>
+  </data>
+  <data name="Client_Subtitle_Entries.Text" xml:space="preserve">
+    <value>Wejścia dla karnetu</value>
   </data>
 </root>

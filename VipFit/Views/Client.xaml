@@ -39,7 +39,7 @@
                 Click="{x:Bind SellPassButton_Click}"/>
             <AppBarButton 
                 x:Uid="Client_Menu_RegisterEntry"
-                IsEnabled="True"
+                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPass), Mode=OneWay}"
                 Click="RegisterEntryButton_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
@@ -75,7 +75,8 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 
                 <RelativePanel x:Name="ClientData" Grid.Column="0">
@@ -176,24 +177,54 @@
                              Width="400" MinHeight="200" MaxHeight="500"/>
                 </RelativePanel>
 
-                <RelativePanel x:Name="PassData" Grid.Column="1">
-                    <TextBlock x:Name="PassDetails"
-                               x:Uid="Client_Subtitle_PassDetails"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.AlignTopWithPanel="True"
-                               Margin="0,0,0,8"
-                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <RelativePanel x:Name="PassData" Grid.Column="1" HorizontalAlignment="Stretch">
+                    <TextBlock 
+                        x:Name="PassDetails"
+                        x:Uid="Client_Subtitle_PassDetails"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        Margin="0,0,0,8"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
                     <ListView
                         x:Name="PassList"
                         ItemsSource="{x:Bind ViewModel.Passes}"
+                        RelativePanel.Below="PassDetails"
                         BorderThickness="1"
                         BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                        Width="200"
+                        Width="Auto"
                         Height="400"
+                        SelectedItem="{x:Bind ViewModel.SelectedPass, Mode=TwoWay}"
                         HorizontalAlignment="Left"/>
-
                 </RelativePanel>
 
+                <RelativePanel x:Name="EntriesData" Grid.Column="2" HorizontalAlignment="Stretch">
+                    <TextBlock 
+                        x:Name="EntriesDetails"
+                        x:Uid="Client_Subtitle_Entries"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        Margin="0,0,0,8"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <ListView
+                        x:Name="EntriesList"
+                        RelativePanel.Below="EntriesDetails"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                        Width="250"
+                        Height="400"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{x:Bind ViewModel.Entries}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Entry">
+                                <StackPanel>
+                                    <TextBlock Text="{x:Bind PositionInPass}"/>
+                                    <TextBlock Text="{x:Bind Date}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    
+                </RelativePanel>
             </Grid>
 
         </ScrollViewer>

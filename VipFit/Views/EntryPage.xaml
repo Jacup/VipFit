@@ -111,6 +111,7 @@
                                 MinWidth="140"
                                 Margin="16,8"
                                 Visibility="{x:Bind helpers:Converters.CollapsedIfNull(ViewModel.Client), Mode=OneWay}"
+                                IsEnabled="{x:Bind helpers:Converters.Not(ViewModel.IsPassReadOnly), Mode=OneWay}"
                                 RelativePanel.AlignRightWithPanel="True"
                                 RelativePanel.AlignVerticalCenterWithPanel="True"
                                 ItemsSource="{x:Bind ViewModel.AvailablePasses, Mode=OneWay}" 
@@ -139,7 +140,7 @@
                                 RelativePanel.RightOf="LeftEntriesCounterDesc"
                                 Text="{x:Bind ViewModel.LeftEntriesCounter, Mode=OneWay}"/>
 
-                            <TextBlock
+                            <!--<TextBlock
                                 x:Uid="Entry_ThisEntryCounter"
                                 x:Name="ThisEntryCounterDesc"
                                 RelativePanel.Below="LeftEntriesCounterDesc"
@@ -148,7 +149,7 @@
                                 x:Name="ThisEntryCounterValue"
                                 RelativePanel.Below="LeftEntriesValue"
                                 RelativePanel.RightOf="ThisEntryCounterDesc"
-                                Text="{x:Bind ViewModel.ThisEntryCounter, Mode=OneWay}"/>
+                                Text="{x:Bind ViewModel.ThisEntryCounter, Mode=OneWay}"/>-->
 
                         </RelativePanel>
                     </Expander.Content>

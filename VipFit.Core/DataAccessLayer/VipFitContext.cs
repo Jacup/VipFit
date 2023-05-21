@@ -59,6 +59,7 @@
             modelBuilder.Entity<Client>().Navigation(c => c.Passes).AutoInclude();
             modelBuilder.Entity<Pass>().Navigation(p => p.PassTemplate).AutoInclude();
             modelBuilder.Entity<Pass>().Navigation(p => p.Entries).AutoInclude();
+            modelBuilder.Entity<Pass>().Navigation(p => p.Client).AutoInclude();
         }
 
         private void SeedClients()
