@@ -35,21 +35,16 @@ namespace VipFit.Views
         {
             if (e.Parameter == null)
             {
-                ViewModel = new EntryViewModel();
+                ViewModel = new();
             }
             else
             {
-                throw new NotImplementedException();
-                //var passId = (Guid)e.Parameter;
-                //var pass = App.GetService<PassListViewModel>().Passes.FirstOrDefault(p => p.Model.Id == passId)
-                //    ?? throw new NotImplementedException("Exception thrown when user tried to create order and NON-VALID passID was provided.");
-
-                //ViewModel = new EntryViewModel
-                //{
-                //    Pass = pass.Model,
-
-
-                //};
+                ViewModel = e.Parameter switch
+                {
+                    Core.Models.Client client => new(client),
+                    Core.Models.Pass pass => new(pass),
+                    _ => throw new NotImplementedException(),
+                };
             }
 
             ViewModel.AddNewEntryCanceled += AddNewEntryCanceled;
@@ -61,36 +56,41 @@ namespace VipFit.Views
         /// </summary>
         protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if (ViewModel.IsModified)
+            if (!ViewModel.IsModified)
             {
-                // Cancel the navigation immediately, otherwise it will continue at the await call. 
-                e.Cancel = true;
+                base.OnNavigatingFrom(e);
+                return;
+            }
 
-                void ResumeNavigation()
-                {
-                    if (e.NavigationMode == NavigationMode.Back)
-                        Frame.GoBack();
-                    else
-                        Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
-                }
+            // Cancel the navigation immediately, otherwise it will continue at the await call.
+            e.Cancel = true;
 
-                var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
-                saveDialog.XamlRoot = this.Content.XamlRoot;
-                await saveDialog.ShowAsync();
-                SaveChangesDialogResult result = saveDialog.Result;
+            void ResumeNavigation()
+            {
+                if (e.NavigationMode == NavigationMode.Back)
+                    Frame.GoBack();
+                else
+                    Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
+            }
 
-                switch (saveDialog.Result)
-                {
-                    case SaveChangesDialogResult.Save:
-                        await ViewModel.SaveAsync();
-                        ResumeNavigation();
-                        break;
-                    case SaveChangesDialogResult.DontSave:
-                        ResumeNavigation();
-                        break;
-                    case SaveChangesDialogResult.Cancel:
-                        break;
-                }
+            SaveChangesDialog saveDialog = new()
+            {
+                XamlRoot = Content.XamlRoot,
+            };
+            await saveDialog.ShowAsync();
+
+            switch (saveDialog.Result)
+            {
+                case SaveChangesDialogResult.Save:
+                    await ViewModel.SaveAsync();
+                    ResumeNavigation();
+                    break;
+                case SaveChangesDialogResult.DontSave:
+                    ViewModel.IsModified = false;
+                    ResumeNavigation();
+                    break;
+                case SaveChangesDialogResult.Cancel:
+                    break;
             }
 
             base.OnNavigatingFrom(e);
@@ -111,12 +111,37 @@ namespace VipFit.Views
         public async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.SaveAsync();
+            Frame.GoBack();
         }
 
         public async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!ViewModel.IsModified)
+            {
+                Frame.GoBack();
+                return;
+            }
 
+            SaveChangesDialog saveDialog = new()
+            {
+                XamlRoot = Content.XamlRoot,
+            };
+
+            await saveDialog.ShowAsync();
+
+            switch (saveDialog.Result)
+            {
+                case SaveChangesDialogResult.Save:
+                    await ViewModel.SaveAsync();
+                    Frame.GoBack();
+                    break;
+                case SaveChangesDialogResult.DontSave:
+                    ViewModel.IsModified = false;
+                    Frame.GoBack();
+                    break;
+                case SaveChangesDialogResult.Cancel:
+                    break;
+            }
         }
-
     }
 }

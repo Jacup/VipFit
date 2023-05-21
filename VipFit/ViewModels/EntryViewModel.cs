@@ -5,8 +5,6 @@
     using Microsoft.UI.Dispatching;
     using System;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using VipFit.Core.DataAccessLayer;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
 
@@ -23,15 +21,49 @@
         private Client client;
         private ObservableCollection<Pass> passList = new();
 
+        private readonly bool isClientReadOnly;
+        private readonly bool isPassReadOnly;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EntryViewModel"/> class.
         /// </summary>
         /// <param name="model">Entry model.</param>
-        public EntryViewModel(Entry? model = null)
+        public EntryViewModel()
         {
-            Model = model ?? new Entry();
-
+            Model = new Entry();
+            Init();
             Date = DateTime.Now;
+        }
+
+        public EntryViewModel(Client client)
+        {
+            Model = new Entry();
+            Date = DateTime.Now;
+
+            Init();
+
+            var matchedClientFromList = AvailableClients.FirstOrDefault(c => c.Id == client.Id);
+
+            if (matchedClientFromList == null)
+                return;
+
+            Client = matchedClientFromList;
+            isClientReadOnly = true;
+        }
+
+
+        private async void Init()
+        {
+            await GetAvailableClientListAsync();
+        }
+        public EntryViewModel(Pass pass)
+        {
+            Model = new Entry();
+            Date = DateTime.Now;
+            Pass = pass;
+
+            isClientReadOnly = true;
+            isPassReadOnly = true;
         }
 
         /// <summary>
@@ -91,7 +123,6 @@
                 if (Model.Date == value)
                     return;
 
-                IsModified = true;
                 Model.Date = value;
                 OnPropertyChanged();
             }
@@ -148,8 +179,13 @@
                 client = value;
                 OnPropertyChanged();
 
-                Task.Run(() => GetPassesForClient(Client));
+                InitPasses(value);
             }
+        }
+
+        private async void InitPasses(Client client)
+        {
+            await GetPassesForClient(client);
         }
 
         /// <summary>
@@ -172,12 +208,19 @@
 
         public int? ThisEntryCounter => UsedEntriesCounter == null ? null : UsedEntriesCounter + 1;
 
+        public bool IsClientReadOnly => isClientReadOnly;
+
+        public bool IsPassReadOnly => isPassReadOnly;
+
         /// <summary>
         /// Insert new Entry (if new) and save changes to database.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task SaveAsync()
         {
+            if (!IsModified)
+                return;
+
             IsModified = false;
 
             App.GetService<EntryListViewModel>().Entries.Add(this);

@@ -37,8 +37,10 @@
                 Icon="Shop" 
                 IsEnabled="False"
                 Click="{x:Bind SellPassButton_Click}"/>
-            <AppBarButton x:Uid="Client_Menu_RegisterEntry"
-                IsEnabled="False">
+            <AppBarButton 
+                x:Uid="Client_Menu_RegisterEntry"
+                IsEnabled="True"
+                Click="RegisterEntryButton_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
             <AppBarSeparator Visibility="Visible"/>
