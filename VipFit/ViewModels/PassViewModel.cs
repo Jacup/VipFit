@@ -3,9 +3,12 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.Windows.ApplicationModel.DynamicDependency;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
+    using VipFit.Managers;
 
     /// <summary>
     /// Pass ViewModel.
@@ -93,6 +96,7 @@
                 if (value != passTemplate)
                 {
                     passTemplate = value;
+                    model.PassTemplate = value;
                     Model.PassTemplateId = value.Id;
                     IsModified = true;
                     OnPropertyChanged();
@@ -200,6 +204,8 @@
             }
         }
 
+        public ObservableCollection<Payment> Payments { get; set; }
+
         #endregion
 
         #endregion
@@ -264,11 +270,24 @@
             {
                 IsNewPass = false;
                 Model.CreatedAt = dateTime;
+
+                Payments = new(PaymentManager.CreatePaymentList(Model));
+
                 App.GetService<PassListViewModel>().Passes.Add(this);
             }
 
             Model.ModifiedAt = dateTime;
             await App.GetService<IPassRepository>().UpsertAsync(Model);
+
+            await SavePaymentsAsync();
+        }
+
+        public async Task SavePaymentsAsync()
+        {
+            foreach (var payment in Payments)
+            {
+                await App.GetService<IPaymentRepository>().UpsertAsync(payment);
+            }
         }
 
         /// <summary>

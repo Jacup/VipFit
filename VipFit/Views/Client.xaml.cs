@@ -200,6 +200,13 @@ namespace VipFit.Views
             Frame.Navigate(typeof(EntryPage), ViewModel.SelectedPass, new DrillInNavigationTransitionInfo());
         }
 
+        private void ShowPaymentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ClientPaymentsPage), ViewModel.SelectedPass, new DrillInNavigationTransitionInfo());
+        }
+
         #endregion
+
+
     }
 }

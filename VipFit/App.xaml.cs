@@ -89,6 +89,9 @@
                     services.AddSingleton<EntryListViewModel>();
                     services.AddTransient<EntryListPage>();
 
+                    services.AddSingleton<PaymentListViewModel>();
+                    services.AddTransient<ClientPaymentsPage>();
+                    
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();
 

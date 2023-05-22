@@ -386,4 +386,19 @@
   <data name="Client_Subtitle_Entries.Text" xml:space="preserve">
     <value>Wejścia dla karnetu</value>
   </data>
+  <data name="Client_Menu_ShowPayments.Label" xml:space="preserve">
+    <value>Pokaż płatności dla karnetu</value>
+  </data>
+  <data name="Payment_Comment.Header" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="Payment_DueDate.Header" xml:space="preserve">
+    <value>Data wymagalności</value>
+  </data>
+  <data name="Payment_Paid.Header" xml:space="preserve">
+    <value>Zapłacono?</value>
+  </data>
+  <data name="Payment_PaymentDate.Header" xml:space="preserve">
+    <value>Data płatności</value>
+  </data>
 </root>

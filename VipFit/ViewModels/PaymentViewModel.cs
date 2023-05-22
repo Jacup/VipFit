@@ -13,12 +13,16 @@
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         private bool isLoading;
-
+        private bool isNew;
         private Payment model;
 
-        public PaymentViewModel(Payment? model = null)
+        public PaymentViewModel(Payment model)
         {
-            Model = model ?? new Payment();
+            Model = model;
+        }
+
+        public PaymentViewModel(Pass pass)
+        {
         }
 
         /// <summary>

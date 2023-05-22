@@ -43,6 +43,14 @@
                 Click="RegisterEntryButton_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
+            <AppBarButton 
+                x:Uid="Client_Menu_ShowPayments"
+                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPass), Mode=OneWay}"
+                Click="ShowPaymentsButton_Click">
+                <AppBarButton.Icon>
+                    <BitmapIcon UriSource="ms-appx:///Assets/Icons/money.png"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
             <AppBarSeparator Visibility="Visible"/>
             <AppBarButton x:Uid="Edit"
                 Click="{x:Bind ViewModel.StartEdit}"
