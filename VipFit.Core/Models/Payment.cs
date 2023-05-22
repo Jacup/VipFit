@@ -7,7 +7,7 @@
     public class Payment : DbObject
     {
         [Required]
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
