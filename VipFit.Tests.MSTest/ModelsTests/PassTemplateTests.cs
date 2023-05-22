@@ -213,7 +213,7 @@
         {
             // Arrange
             var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
-            string expectedString = "VF-3M-Standard";
+            string expectedString = "VF-Standard-3M";
 
             // Act
             var result = model.ToString();
@@ -227,7 +227,7 @@
         {
             // Arrange
             var model = new PassTemplate(PassType.Pro, PassDuration.Long, 500m);
-            string expectedString = "VF-10M-Pro";
+            string expectedString = "VF-Pro-10M";
 
             // Act
             var result = model.ToString();
@@ -272,7 +272,7 @@
         public void PassTemplate_StandardShort_StringShouldMatch()
         {
             // Arrange
-            string expectedString = "VF-3M-Standard";
+            string expectedString = "VF-Standard-3M";
 
             // Act
             var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
@@ -285,7 +285,7 @@
         public void PassTemplate_StandardShort_PassCodeShouldMatch()
         {
             // Arrange
-            string expectedPassCode = "VF-3M-Standard";
+            string expectedPassCode = "VF-Standard-3M";
 
             // Act
             var model = new PassTemplate(PassType.Standard, PassDuration.Short, 500m);
