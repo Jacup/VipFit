@@ -52,6 +52,9 @@
         /// <inheritdoc/>
         public async Task<Pass> UpsertAsync(Pass pass)
         {
+            pass.PassTemplate = null;
+            pass.Client = null;
+
             var current = await db.Passes.FirstOrDefaultAsync(p => p.Id == pass.Id);
             if (current == null)
                 db.Add(pass);
