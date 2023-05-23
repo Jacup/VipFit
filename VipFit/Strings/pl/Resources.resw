@@ -401,4 +401,7 @@
   <data name="Payment_PaymentDate.Header" xml:space="preserve">
     <value>Data płatności</value>
   </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Zapłacono</value>
+  </data>
 </root>

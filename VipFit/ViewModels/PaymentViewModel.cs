@@ -2,8 +2,10 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using Microsoft.UI.Dispatching;
+    using Newtonsoft.Json.Linq;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
+    using Windows.ApplicationModel.Resources;
 
     /// <summary>
     /// Payment ViewModel.
@@ -96,6 +98,20 @@
 
                 Model.Paid = value;
                 OnPropertyChanged();
+
+                if (value)
+                {
+                    PaymentDate = DateTime.Now;
+
+                    var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+                    Comment = resourceLoader == null ? "Paid" : resourceLoader.GetString("Paid");
+                }
+                else
+                {
+                    PaymentDate = null;
+                    Comment = string.Empty;
+                }
+
             }
         }
 

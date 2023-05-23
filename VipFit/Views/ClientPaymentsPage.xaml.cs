@@ -4,6 +4,7 @@ namespace VipFit.Views
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
+    using Newtonsoft.Json.Linq;
     using VipFit.ViewModels;
 
     /// <summary>
@@ -13,14 +14,9 @@ namespace VipFit.Views
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        public ClientPaymentsPage()
-        {
-            ViewModel = App.GetService<PaymentListViewModel>();
+        public ClientPaymentsPage() => InitializeComponent();
 
-            this.InitializeComponent();
-        }
-
-        public PaymentListViewModel ViewModel { get; }
+        public PaymentListViewModel ViewModel { get; set; }
 
         private async Task ResetPaymentList() => await dispatcherQueue.EnqueueAsync(ViewModel.GetPaymentListAsync);
 
@@ -37,7 +33,32 @@ namespace VipFit.Views
         /// </summary>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ResetPaymentList();
+            if (e.Parameter == null)
+            {
+                ViewModel = new();
+            }
+            else
+            {
+                ViewModel = e.Parameter switch
+                {
+                    Core.Models.Client client => new(client),
+                    Core.Models.Pass pass => new(pass),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+
+            base.OnNavigatedTo(e);
         }
+
+        private void CalendarDatePicker_Opened(object sender, object e)
+        {
+            CalendarDatePicker calendarDatePicker = (CalendarDatePicker)sender;
+
+            var dateTimeOffset = (DateTimeOffset)calendarDatePicker.Date;
+
+            if (dateTimeOffset.Year < 1950)
+                calendarDatePicker.Date = DateTime.Today;
+        }
+
     }
 }

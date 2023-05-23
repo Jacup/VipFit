@@ -5,13 +5,22 @@
     xmlns:local="using:VipFit.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:VipFit.Helpers"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
     mc:Ignorable="d"
-    xmlns:viewmodels="using:VipFit.ViewModels" 
+    xmlns:viewmodels="using:VipFit.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:PaymentViewModel}">
 
-    <Grid x:Name="ContentArea">
+    <Page.Resources>
+        <helpers:DateOnlyConverter x:Key="DateOnlyConverter" />
+        <helpers:DateTimeConverter x:Key="DateTimeConverter" />
+    </Page.Resources>
 
+    <Grid x:Name="ContentArea">
+        <Grid.Resources>
+            <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
@@ -52,15 +61,43 @@
 
             <controls:DataGrid.Columns>
 
-                <controls:DataGridTextColumn
+                <controls:DataGridTemplateColumn
                     x:Uid="Payment_DueDate"
-                    Binding="{Binding DueDate}" />
-                <controls:DataGridTextColumn
+                    Tag="DueDate"
+                    IsReadOnly="True">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DueDate}" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <CalendarDatePicker Margin="3,0,0,0" Date="{Binding DueDate, Mode=TwoWay, Converter={StaticResource DateOnlyConverter}}"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+
+                <controls:DataGridTemplateColumn
                     x:Uid="Payment_PaymentDate"
-                    Binding="{Binding PaymentDate}" />
-                <controls:DataGridTextColumn
+                    Tag="PaymentDate">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PaymentDate}" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <CalendarDatePicker
+                                Margin="3,0,0,0"
+                                Date="{Binding PaymentDate, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"
+                                Opened="CalendarDatePicker_Opened"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+
+                <controls:DataGridCheckBoxColumn
                     x:Uid="Payment_Paid"
-                    Binding="{Binding Paid}" />
+                    Binding="{Binding Paid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <controls:DataGridTextColumn
                     x:Uid="Payment_Comment"
                     Binding="{Binding Comment}" />
