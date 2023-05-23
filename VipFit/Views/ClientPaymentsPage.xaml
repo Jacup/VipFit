@@ -21,33 +21,47 @@
         <Grid.Resources>
             <converters:StringFormatConverter x:Key="StringFormatConverter"/>
         </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="LayoutVisualStates">
-                <VisualState x:Name="WideLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState x:Name="NarrowLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TitleTxt.Margin" Value="16,48,16,24" />
-                        <Setter Target="itemGridView.Padding" Value="16,0,16,36" />
-                        <Setter Target="TitleTxt.Style" Value="{StaticResource SubtitleTextBlockStyle}" />
-                        <Setter Target="itemGridView.ItemContainerStyle" Value="{StaticResource GridViewItemStyleSmall}" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        <CommandBar
+            Grid.Row="0" 
+            Background="Transparent" 
+            IsOpen="False" 
+            DefaultLabelPosition="Right">
 
-        <controls:DataGrid 
+            <AppBarButton
+                x:Uid="ClientPayment_Menu_Suspend"
+                Click="SuspendButton_Click"
+                Icon="Pause"
+                IsEnabled="{x:Bind ViewModel.IsAbleToBeSuspended, Mode=OneWay}"/>
+            <AppBarButton
+                x:Uid="ClientPayment_Menu_Resume"
+                Click="ResumeButton_Click"
+                Icon="Pause"
+                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPayment), Mode=OneWay}"/>
+
+            <AppBarSeparator />
+
+            <AppBarButton 
+                x:Uid="ClientPayment_Menu_Save"
+                Click="SaveButton_Click"
+                Icon="Save"
+                LabelPosition="Collapsed"/>
+            <AppBarButton
+                x:Uid="ClientPayment_Menu_Refresh"
+                Click="RefreshButton_Click"
+                Icon="Refresh"
+                LabelPosition="Collapsed"/>
+
+        </CommandBar>
+
+
+        <controls:DataGrid
+            x:Name="ContentDataGrid"
             Grid.Row="1"
             AutoGenerateColumns="False"
             GridLinesVisibility="Horizontal"
@@ -55,12 +69,16 @@
             SelectedItem="{x:Bind ViewModel.SelectedPayment, Mode=TwoWay}"
             SelectionMode="Single">
 
+
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
             </controls:DataGrid.Resources>
 
             <controls:DataGrid.Columns>
 
+                <controls:DataGridTextColumn
+                    x:Uid="Payment_InstallmentAmount"
+                    Binding="{Binding Amount}" />
                 <controls:DataGridTemplateColumn
                     x:Uid="Payment_DueDate"
                     Tag="DueDate"
@@ -101,6 +119,10 @@
                 <controls:DataGridTextColumn
                     x:Uid="Payment_Comment"
                     Binding="{Binding Comment}" />
+                <controls:DataGridCheckBoxColumn
+                    x:Uid="Payment_IsSuspended"
+                    IsReadOnly="True"
+                    Binding="{Binding IsSuspended, Mode=OneWay}" />
 
             </controls:DataGrid.Columns>
 

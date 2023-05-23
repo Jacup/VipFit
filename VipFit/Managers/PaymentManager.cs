@@ -31,5 +31,16 @@
                 };
             }
         }
+
+        internal static Payment CreateNextPayment(Payment lastPayment, Pass pass)
+        {
+            return new()
+            {
+                Amount = lastPayment.Amount,
+                DueDate = lastPayment.DueDate.AddMonths(1),
+                Pass = pass,
+                PassId = pass.Id,
+            };
+        }
     }
 }

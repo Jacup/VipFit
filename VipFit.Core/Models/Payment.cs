@@ -23,6 +23,9 @@
         [MaxLength(100)]
         public string Comment { get; set; }
 
+        [Required]
+        public bool IsSuspended { get; set; }
+
         #region Foreign Keys
 
         [Required]

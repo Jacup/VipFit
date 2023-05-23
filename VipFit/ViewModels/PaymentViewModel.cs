@@ -23,10 +23,6 @@
             Model = model;
         }
 
-        public PaymentViewModel(Pass pass)
-        {
-        }
-
         /// <summary>
         /// Raised when the user cancels the changes they've made to the payment data.
         /// </summary>
@@ -111,7 +107,6 @@
                     PaymentDate = null;
                     Comment = string.Empty;
                 }
-
             }
         }
 
@@ -126,6 +121,43 @@
                 Model.Comment = value;
                 OnPropertyChanged();
             }
+        }
+
+        public decimal Amount
+        {
+            get => Model.Amount;
+            set
+            {
+                if (Model.Amount == value)
+                    return;
+
+                Model.Amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsSuspended
+        {
+            get => Model.IsSuspended;
+            set
+            {
+                if (Model.IsSuspended == value)
+                    return;
+
+                Model.IsSuspended = value;
+                OnPropertyChanged();
+
+                if (value)
+                    ClearAllFields();
+            }
+        }
+
+        private void ClearAllFields()
+        {
+            PaymentDate = null;
+            Paid = false;
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+            Comment = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
         }
 
         /// <summary>

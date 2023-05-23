@@ -3,9 +3,12 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
+    using System;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
+    using VipFit.Managers;
+    using Windows.Foundation;
 
     /// <summary>
     /// Payment ListViewModel.
@@ -15,11 +18,21 @@
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         private PaymentViewModel? selectedPayment;
 
+        private Pass pass;
         private bool isLoading = false;
 
         public PaymentListViewModel(Client client) => Task.Run(() => GetPaymentListForClientAsync(client));
 
-        public PaymentListViewModel(Pass pass) => Task.Run(() => GetPaymentListForPassAsync(pass));
+        public PaymentListViewModel(Pass pass)
+        {
+            this.pass = pass;
+            LoadPayments(pass);
+        }
+
+        private async void LoadPayments(Pass pass)
+        {
+            await GetPaymentListForPassAsync(pass);
+        }
 
         public PaymentListViewModel() => Task.Run(GetPaymentListAsync);
 
@@ -31,7 +44,19 @@
         public PaymentViewModel? SelectedPayment
         {
             get => selectedPayment;
-            set => SetProperty(ref selectedPayment, value);
+            set
+            {
+                SetProperty(ref selectedPayment, value);
+                IsAbleToBeSuspended = selectedPayment != null && !selectedPayment.IsSuspended;
+            }
+        }
+
+        private bool isAbleToBeSuspended;
+
+        public bool IsAbleToBeSuspended
+        {
+            get => isAbleToBeSuspended;
+            set => SetProperty(ref isAbleToBeSuspended, value);
         }
 
         /// <summary>
@@ -131,6 +156,23 @@
 
                 IsLoading = false;
             });
+        }
+
+        internal void SuspendPayment(PaymentViewModel selectedPayment)
+        {
+            SelectedPayment.IsSuspended = true;
+
+            AddNewPayment(pass);
+        }
+
+        private void AddNewPayment(Pass pass)
+        {
+            List<Payment> paymentsList = new();
+            foreach (var p in Payments)
+                paymentsList.Add(p.Model);
+
+            Payment newPayment = PaymentManager.CreateNextPayment(Payments.Last().Model, pass);
+            Payments.Add(new(newPayment));
         }
     }
 }

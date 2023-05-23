@@ -68,7 +68,9 @@
                 Icon="Refresh"
                 LabelPosition="Collapsed"/>
         </CommandBar>
+        
         <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
+        
         <controls:DataGrid 
             Grid.Row="1"
             AutoGenerateColumns="False"

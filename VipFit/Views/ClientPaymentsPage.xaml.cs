@@ -1,8 +1,10 @@
 namespace VipFit.Views
 {
     using CommunityToolkit.WinUI;
+    using CommunityToolkit.WinUI.UI.Controls;
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Input;
     using Microsoft.UI.Xaml.Navigation;
     using Newtonsoft.Json.Linq;
     using VipFit.ViewModels;
@@ -58,6 +60,28 @@ namespace VipFit.Views
 
             if (dateTimeOffset.Year < 1950)
                 calendarDatePicker.Date = DateTime.Today;
+        }
+
+        private void RefreshButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
+        }
+
+        private void SuspendButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
+            ViewModel.SuspendPayment(ViewModel.SelectedPayment);
+            ViewModel.SelectedPayment = null;
+        }
+
+        private void ResumeButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
         }
 
     }
