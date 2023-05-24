@@ -20,6 +20,8 @@
 
         private Pass pass;
         private bool isLoading = false;
+        private bool isAbleToBeSuspended;
+        private bool isAbleToBeResumed;
 
         public PaymentListViewModel(Client client) => Task.Run(() => GetPaymentListForClientAsync(client));
 
@@ -52,15 +54,11 @@
             }
         }
 
-        private bool isAbleToBeSuspended;
-
         public bool IsAbleToBeSuspended
         {
             get => isAbleToBeSuspended;
             set => SetProperty(ref isAbleToBeSuspended, value);
         }
-
-        private bool isAbleToBeResumed;
 
         public bool IsAbleToBeResumed
         {
@@ -145,7 +143,7 @@
         /// <summary>
         /// Gets the list of payments for specific pass from database.
         /// </summary>
-        /// <param name="client">Associated Pass.</param>
+        /// <param name="pass">Associated Pass.</param>
         /// <returns>List of payments.</returns>
         public async Task GetPaymentListForPassAsync(Pass pass)
         {
@@ -167,6 +165,15 @@
             });
         }
 
+        internal void Save()
+        {
+            Task.Run(async () =>
+            {
+                foreach (var modifiedPayment in Payments.Where(p => p.IsModified).Select(p => p.Model))
+                    await App.GetService<IPaymentRepository>().UpsertAsync(modifiedPayment);
+            });
+        }
+
         internal void SuspendPayment(PaymentViewModel selectedPayment)
         {
             if (selectedPayment == null)
@@ -174,6 +181,16 @@
 
             AddNewPayment(pass);
             selectedPayment.IsSuspended = true;
+        }
+
+        internal void ResumePayment(PaymentViewModel? selectedPayment)
+        {
+            if (selectedPayment == null)
+                return;
+
+            selectedPayment.IsSuspended = false;
+
+            RemoveLastPayment(pass);
         }
 
         private void AddNewPayment(Pass pass)
@@ -189,16 +206,6 @@
         private void RemoveLastPayment(Pass pass)
         {
             Payments.RemoveAt(Payments.Count - 1);
-        }
-
-        internal void ResumePayment(PaymentViewModel? selectedPayment)
-        {
-            if (selectedPayment == null)
-                return;
-
-            selectedPayment.IsSuspended = false;
-
-            RemoveLastPayment(pass);
         }
     }
 }

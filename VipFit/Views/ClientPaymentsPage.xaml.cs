@@ -1,12 +1,9 @@
 namespace VipFit.Views
 {
     using CommunityToolkit.WinUI;
-    using CommunityToolkit.WinUI.UI.Controls;
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml.Controls;
-    using Microsoft.UI.Xaml.Input;
     using Microsoft.UI.Xaml.Navigation;
-    using Newtonsoft.Json.Linq;
     using VipFit.ViewModels;
 
     /// <summary>
@@ -64,17 +61,13 @@ namespace VipFit.Views
 
         private void RefreshButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-
+            ViewModel.Refresh();
         }
 
-        private void SaveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-
-        }
+        private void SaveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => ViewModel.Save();
 
         private void SuspendButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-
             ViewModel.SuspendPayment(ViewModel.SelectedPayment);
             ViewModel.SelectedPayment = null;
         }

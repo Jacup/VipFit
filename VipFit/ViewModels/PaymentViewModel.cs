@@ -67,6 +67,7 @@
                 if (Model.DueDate == value)
                     return;
 
+                IsModified = true;
                 Model.DueDate = value;
                 OnPropertyChanged();
             }
@@ -79,7 +80,7 @@
             {
                 if (Model.PaymentDate == value)
                     return;
-
+                IsModified = true;
                 Model.PaymentDate = value;
                 OnPropertyChanged();
             }
@@ -93,6 +94,7 @@
                 if (Model.Paid == value)
                     return;
 
+                IsModified = true;
                 Model.Paid = value;
                 OnPropertyChanged();
 
@@ -118,7 +120,8 @@
             {
                 if (Model.Comment == value)
                     return;
-
+                
+                IsModified = true;
                 Model.Comment = value;
                 OnPropertyChanged();
             }
@@ -132,6 +135,7 @@
                 if (Model.Amount == value)
                     return;
 
+                IsModified = true;
                 Model.Amount = value;
                 OnPropertyChanged();
             }
@@ -145,6 +149,7 @@
                 if (Model.IsSuspended == value)
                     return;
 
+                IsModified = true;
                 Model.IsSuspended = value;
                 OnPropertyChanged();
 
