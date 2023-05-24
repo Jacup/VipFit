@@ -42,5 +42,13 @@
                 PassId = pass.Id,
             };
         }
+
+        internal static decimal GetSinglePaymentAmountForPass(Pass pass)
+        {
+            byte installments = pass.PassTemplate.MonthsDuration;
+            decimal passPrice = pass.PassTemplate.Price;
+            return passPrice / installments;
+        }
+
     }
 }

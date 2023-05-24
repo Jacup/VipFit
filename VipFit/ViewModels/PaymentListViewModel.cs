@@ -48,6 +48,7 @@
             {
                 SetProperty(ref selectedPayment, value);
                 IsAbleToBeSuspended = selectedPayment != null && !selectedPayment.IsSuspended;
+                IsAbleToBeResumed = selectedPayment != null && selectedPayment.IsSuspended;
             }
         }
 
@@ -57,6 +58,14 @@
         {
             get => isAbleToBeSuspended;
             set => SetProperty(ref isAbleToBeSuspended, value);
+        }
+
+        private bool isAbleToBeResumed;
+
+        public bool IsAbleToBeResumed
+        {
+            get => isAbleToBeResumed;
+            set => SetProperty(ref isAbleToBeResumed, value);
         }
 
         /// <summary>
@@ -160,9 +169,11 @@
 
         internal void SuspendPayment(PaymentViewModel selectedPayment)
         {
-            SelectedPayment.IsSuspended = true;
+            if (selectedPayment == null)
+                return;
 
             AddNewPayment(pass);
+            selectedPayment.IsSuspended = true;
         }
 
         private void AddNewPayment(Pass pass)
@@ -173,6 +184,21 @@
 
             Payment newPayment = PaymentManager.CreateNextPayment(Payments.Last().Model, pass);
             Payments.Add(new(newPayment));
+        }
+
+        private void RemoveLastPayment(Pass pass)
+        {
+            Payments.RemoveAt(Payments.Count - 1);
+        }
+
+        internal void ResumePayment(PaymentViewModel? selectedPayment)
+        {
+            if (selectedPayment == null)
+                return;
+
+            selectedPayment.IsSuspended = false;
+
+            RemoveLastPayment(pass);
         }
     }
 }

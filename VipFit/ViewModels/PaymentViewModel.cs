@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
+    using VipFit.Managers;
     using Windows.ApplicationModel.Resources;
 
     /// <summary>
@@ -148,17 +149,34 @@
                 OnPropertyChanged();
 
                 if (value)
-                    ClearAllFields();
+                    Suspend();
+                else
+                    Resume();
             }
         }
 
-        private void ClearAllFields()
+        private void Suspend()
         {
             PaymentDate = null;
             Paid = false;
+            Amount = 0;
             var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
             Comment = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
         }
+
+        private async void Resume()
+        {
+            if (Model.Pass == null)
+                Model.Pass = await GetPassForPaymentAsync(Model);
+
+            Amount = PaymentManager.GetSinglePaymentAmountForPass(Model.Pass);
+
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+            string suspendString = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
+            Comment = Comment.Replace(suspendString, string.Empty);
+        }
+
+        private async Task<Pass> GetPassForPaymentAsync(Payment model) => await App.GetService<IPassRepository>().GetAsync(Model.PassId);
 
         /// <summary>
         /// Saves modified data.

@@ -81,7 +81,8 @@ namespace VipFit.Views
 
         private void ResumeButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-
+            ViewModel.ResumePayment(ViewModel.SelectedPayment);
+            ViewModel.SelectedPayment = null;
         }
 
     }

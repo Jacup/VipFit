@@ -21,7 +21,7 @@
         <Grid.Resources>
             <converters:StringFormatConverter x:Key="StringFormatConverter"/>
         </Grid.Resources>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
@@ -37,12 +37,12 @@
                 x:Uid="ClientPayment_Menu_Suspend"
                 Click="SuspendButton_Click"
                 Icon="Pause"
-                IsEnabled="{x:Bind ViewModel.IsAbleToBeSuspended, Mode=OneWay}"/>
+                Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsAbleToBeSuspended), Mode=OneWay}"/>
             <AppBarButton
                 x:Uid="ClientPayment_Menu_Resume"
                 Click="ResumeButton_Click"
-                Icon="Pause"
-                IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPayment), Mode=OneWay}"/>
+                Icon="Play"
+                Visibility="{x:Bind helpers:Converters.NotCollapsedIf(ViewModel.IsAbleToBeResumed), Mode=OneWay}"/>
 
             <AppBarSeparator />
 
