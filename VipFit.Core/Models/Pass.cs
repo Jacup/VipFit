@@ -94,6 +94,9 @@
         [InverseProperty("Pass")]
         public IList<Entry> Entries { get; set; }
 
+        [InverseProperty("Pass")]
+        public IList<Payment> Payments { get; set; }
+
         #endregion
 
         #region Overrides

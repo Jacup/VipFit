@@ -80,6 +80,7 @@
             // Act & Assert
             Assert.AreEqual(lname, client1.LastName);
         }
+
         [TestMethod]
         public void Properties_TheSamePhoneProvided_ShouldBeTheSame()
         {
@@ -94,6 +95,7 @@
             // Act & Assert
             Assert.AreEqual(phone, client1.Phone);
         }
+
         [TestMethod]
         public void Properties_TheSameEmailProvided_ShouldBeTheSame()
         {
@@ -108,7 +110,6 @@
             // Act & Assert
             Assert.AreEqual(email, client1.Email);
         }
-
 
         private static Client GetBasicClient() => new("Andrzej", "Kowalski", "123456789", "example@example.pl");
     }

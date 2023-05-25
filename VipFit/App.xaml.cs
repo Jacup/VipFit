@@ -64,10 +64,11 @@
                     services.AddDbContext<VipFitContext>(
                         options => options.UseSqlite($@"Data Source=C:\Users\jacub\vipfit\db\mydb.db;"));
 
-                    services.AddSingleton<IClientRepository, ClientRepository>();
-                    services.AddSingleton<IPassTemplateRepository, PassTemplateRepository>();
-                    services.AddSingleton<IPassRepository, PassRepository>();
-                    services.AddSingleton<IEntryRepository, EntryRepository>();
+                    services.AddScoped<IClientRepository, ClientRepository>();
+                    services.AddScoped<IPassTemplateRepository, PassTemplateRepository>();
+                    services.AddScoped<IPassRepository, PassRepository>();
+                    services.AddScoped<IEntryRepository, EntryRepository>();
+                    services.AddScoped<IPaymentRepository, PaymentRepository>();
 
                     // Core Services
                     services.AddSingleton<IFileService, FileService>();
@@ -88,6 +89,9 @@
                     services.AddSingleton<EntryListViewModel>();
                     services.AddTransient<EntryListPage>();
 
+                    services.AddSingleton<PaymentListViewModel>();
+                    services.AddTransient<ClientPaymentsPage>();
+                    
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();
 

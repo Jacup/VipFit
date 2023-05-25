@@ -39,6 +39,11 @@
         public DbSet<Entry> Entries { get; set; }
 
         /// <summary>
+        /// GEts or sets the Payments DbSet.
+        /// </summary>
+        public DbSet<Payment> Payments { get; set; }
+
+        /// <summary>
         /// Initializes base db.
         /// </summary>
         public void Initialize()

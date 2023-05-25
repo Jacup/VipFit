@@ -237,7 +237,7 @@
     <value>Edytuj</value>
   </data>
   <data name="Save.Label" xml:space="preserve">
-    <value>Zapisz</value>
+    <value>Zapisz zmiany</value>
   </data>
   <data name="Shell_PassTemplate.Content" xml:space="preserve">
     <value>Karnety</value>
@@ -385,5 +385,53 @@
   </data>
   <data name="Client_Subtitle_Entries.Text" xml:space="preserve">
     <value>Wejścia dla karnetu</value>
+  </data>
+  <data name="Client_Menu_ShowPayments.Label" xml:space="preserve">
+    <value>Pokaż płatności dla karnetu</value>
+  </data>
+  <data name="Payment_Comment.Header" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="Payment_DueDate.Header" xml:space="preserve">
+    <value>Data wymagalności</value>
+  </data>
+  <data name="Payment_Paid.Header" xml:space="preserve">
+    <value>Zapłacono?</value>
+  </data>
+  <data name="Payment_PaymentDate.Header" xml:space="preserve">
+    <value>Data płatności</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Zapłacono</value>
+  </data>
+  <data name="ClientPayment_Menu_Refresh.Label" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="ClientPayment_Menu_Refresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież listę płatności</value>
+  </data>
+  <data name="ClientPayment_Menu_Resume.Label" xml:space="preserve">
+    <value>Wznów</value>
+  </data>
+  <data name="ClientPayment_Menu_Resume.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wznawia zawieszony karnet.</value>
+  </data>
+  <data name="ClientPayment_Menu_Save.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz zmiany</value>
+  </data>
+  <data name="ClientPayment_Menu_Suspend.Label" xml:space="preserve">
+    <value>Zawieś</value>
+  </data>
+  <data name="ClientPayment_Menu_Suspend.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zawiesza wybraną płatność i opóźnia o miesiąc.</value>
+  </data>
+  <data name="Payment_InstallmentAmount.Header" xml:space="preserve">
+    <value>Wysokość raty</value>
+  </data>
+  <data name="Payment_IsSuspended.Header" xml:space="preserve">
+    <value>Zawieszone? </value>
+  </data>
+  <data name="Suspended" xml:space="preserve">
+    <value>Zawieszone</value>
   </data>
 </root>
