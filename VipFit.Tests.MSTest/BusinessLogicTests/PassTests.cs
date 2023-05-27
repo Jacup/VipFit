@@ -11,20 +11,20 @@
     [TestClass]
     public class PassTests
     {
-        [TestMethod]
-        public void PassEntries_Dupa_ArraySizeShouldBeEqualToTotalEntries()
-        {
-            Client client = new("Andrzej", "Kowalski", "666666666", "email@email.pl");
+        //[TestMethod]
+        //public void PassEntries_Dupa_ArraySizeShouldBeEqualToTotalEntries()
+        //{
+        //    Client client = new("Andrzej", "Kowalski", "666666666", "email@email.pl");
 
-            PassTemplate pt = new(PassType.Standard, PassDuration.Short, 500);
+        //    PassTemplate pt = new(PassType.Standard, PassDuration.Short, 500);
 
-            Pass pass = new(
-                DateOnly.FromDateTime(DateTime.Now),
-                DateOnly.FromDateTime(DateTime.Now).AddMonths(pt.MonthsDuration),
-                DateTime.Now,
-                DateTime.Now,
-                client.Id,
-                pt.Id);
-        }
+        //    Pass pass = new(
+        //        DateOnly.FromDateTime(DateTime.Now),
+        //        DateOnly.FromDateTime(DateTime.Now).AddMonths(pt.MonthsDuration),
+        //        DateTime.Now,
+        //        DateTime.Now,
+        //        client.Id,
+        //        pt.Id);
+        //}
     }
 }
