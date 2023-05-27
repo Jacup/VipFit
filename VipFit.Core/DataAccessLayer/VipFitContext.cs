@@ -1,7 +1,6 @@
 ﻿namespace VipFit.Core.DataAccessLayer
 {
     using Microsoft.EntityFrameworkCore;
-    using VipFit.Core.Enums;
     using VipFit.Core.Models;
 
     /// <summary>
@@ -39,7 +38,7 @@
         public DbSet<Entry> Entries { get; set; }
 
         /// <summary>
-        /// GEts or sets the Payments DbSet.
+        /// Gets or sets the Payments DbSet.
         /// </summary>
         public DbSet<Payment> Payments { get; set; }
 
@@ -48,12 +47,17 @@
         /// </summary>
         public void Initialize()
         {
-            Database.EnsureCreated();
+            CreateApplicationFolder(GetApplicationDirectory());
 
-            SeedClients();
-            SeedPassTemplates();
-            SeedPasses();
+            Database.EnsureCreated();
         }
+
+        /// <summary>
+        /// Gets application folder.
+        /// </summary>
+        /// <returns>Path.</returns>
+        public static string GetApplicationDirectory() =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "VipFit App");
 
         /// <summary>
         /// Initializes on creating db model.
@@ -67,64 +71,12 @@
             modelBuilder.Entity<Pass>().Navigation(p => p.Client).AutoInclude();
         }
 
-        private void SeedClients()
+        private static void CreateApplicationFolder(string path)
         {
-            if (Clients.Any())
+            if (Directory.Exists(path))
                 return;
 
-            var clients = new Client[]
-            {
-                new Client("Janusz", "Kowalski", "12456789", "email@gmail.com"),
-                new Client("Adam", "Kowalski", "12456789", "email2@gmail.com"),
-            };
-
-            foreach (Client c in clients)
-                Clients.Add(c);
-
-            SaveChanges();
-        }
-
-        private void SeedPassTemplates()
-        {
-            if (PassTemplates.Any())
-                return;
-
-            var passTemplates = new PassTemplate[]
-            {
-                new PassTemplate(PassType.Standard, PassDuration.Short, 1500m),
-                new PassTemplate(PassType.Standard, PassDuration.Medium, 2760m),
-                new PassTemplate(PassType.Standard, PassDuration.Long, 4560m),
-                new PassTemplate(PassType.Pro, PassDuration.Short, 920m),
-                new PassTemplate(PassType.Pro, PassDuration.Medium, 2520m),
-                new PassTemplate(PassType.Pro, PassDuration.Long, 7200m),
-            };
-
-            foreach (var p in passTemplates)
-                PassTemplates.Add(p);
-
-            SaveChanges();
-        }
-
-        private void SeedPasses()
-        {
-            if (Passes.Any() || !Clients.Any())
-                return;
-
-            var startingDate = DateOnly.Parse("01.06.2023");
-            var now = DateTime.Now;
-
-            var clientId = Clients.FirstOrDefault().Id;
-            var pt = PassTemplates.FirstOrDefault();
-
-            var passes = new Pass[]
-            {
-                new Pass(startingDate, startingDate.AddMonths(pt.MonthsDuration), now, now, clientId, pt.Id),
-            };
-
-            foreach (var p in passes)
-                Passes.Add(p);
-
-            SaveChanges();
+            Directory.CreateDirectory(path);
         }
     }
 }

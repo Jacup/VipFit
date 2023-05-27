@@ -1,10 +1,13 @@
 ﻿namespace VipFit
 {
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.UI.Xaml;
-
+    
+    using System.Configuration;
+    using System.IO;
     using VipFit.Activation;
     using VipFit.Contracts.Services;
     using VipFit.Core.Contracts.Services;
@@ -61,8 +64,10 @@
                     services.AddSingleton<INavigationService, NavigationService>();
 
                     // Database
+                    string appDirectory = VipFitContext.GetApplicationDirectory();
+
                     services.AddDbContext<VipFitContext>(
-                        options => options.UseSqlite($@"Data Source=C:\Users\jacub\vipfit\db\mydb.db;"));
+                        options => options.UseSqlite($@"Data Source={appDirectory}\vf_db.db;"));
 
                     services.AddScoped<IClientRepository, ClientRepository>();
                     services.AddScoped<IPassTemplateRepository, PassTemplateRepository>();
@@ -91,7 +96,7 @@
 
                     services.AddSingleton<PaymentListViewModel>();
                     services.AddTransient<ClientPaymentsPage>();
-                    
+
                     services.AddTransient<MainViewModel>();
                     services.AddTransient<MainPage>();
 
