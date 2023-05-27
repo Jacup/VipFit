@@ -17,31 +17,6 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Pass"/> class.
-        /// </summary>
-        /// <param name="startDate">StartDate.</param>
-        /// <param name="endDate">EndDate.</param>
-        /// <param name="createdAt">Created date.</param>
-        /// <param name="modifiedAt">Last modification date.</param>
-        /// <param name="clientId">Associated client ID.</param>
-        /// <param name="passTemplateId">Associated Pass ID</param>
-        public Pass(
-            DateOnly startDate,
-            DateOnly endDate,
-            DateTime createdAt,
-            DateTime modifiedAt,
-            Guid clientId,
-            Guid passTemplateId)
-        {
-            StartDate = startDate;
-            EndDate = endDate;
-            CreatedAt = createdAt;
-            ModifiedAt = modifiedAt;
-            ClientId = clientId;
-            PassTemplateId = passTemplateId;
-        }
-
-        /// <summary>
         /// Gets or sets the pass's start date.
         /// </summary>
         [DataType(DataType.Date)]

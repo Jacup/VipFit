@@ -16,6 +16,23 @@
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<DefaultLanguage>pl</DefaultLanguage>
+		<CreateMSIXPackage>True</CreateMSIXPackage>
+		<PackageIcon>logo176_white_trans_withShadow.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Jacup/VipFit</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Authors>Jakub Gramburg</Authors>
+		<AssemblyVersion>0.1.0.0</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
+		<Title>VipFit</Title>
+		<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<AppxBundle>Always</AppxBundle>
+		<AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="Views\DeleteDialog.xaml" />
@@ -52,6 +69,14 @@
 	<ItemGroup>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Assets\logo176_white_trans_withShadow.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<None Update="README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 		<Page Update="Views\EntryListPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>

@@ -115,6 +115,7 @@ namespace VipFit.Views
         public async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.SaveAsync();
+            Frame.GoBack();
         }
 
         public async void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -122,7 +123,6 @@ namespace VipFit.Views
             if (!ViewModel.IsModified)
             {
                 await ViewModel.RevertChangesAsync();
-
                 return;
             }
 

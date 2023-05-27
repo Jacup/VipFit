@@ -78,13 +78,13 @@
 
         private static PassTemplate GetPassTemplate() => new(PassType.Standard, PassDuration.Short, 500);
 
-        private static Pass GetPass(Client client, PassTemplate pt) => new(
-            DateOnly.FromDateTime(DateTime.Now),
-            DateOnly.FromDateTime(DateTime.Now).AddMonths(pt.MonthsDuration),
-            DateTime.Now,
-            DateTime.Now,
-            client.Id,
-            pt.Id);
+        //private static Pass GetPass(Client client, PassTemplate pt) => new(
+        //    DateOnly.FromDateTime(DateTime.Now),
+        //    DateOnly.FromDateTime(DateTime.Now).AddMonths(pt.MonthsDuration),
+        //    DateTime.Now,
+        //    DateTime.Now,
+        //    client.Id,
+        //    pt.Id);
 
         #endregion
     }
