@@ -124,6 +124,9 @@
 
         #region Relationships
 
+        /// <summary>
+        /// Gets or sets collection of Client's Passes.
+        /// </summary>
         [InverseProperty("Client")]
         public ICollection<Pass> Passes { get; set; }
 
