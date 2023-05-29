@@ -111,11 +111,6 @@
         public string Comment { get; set; }
 
         /// <summary>
-        /// Gets or sets client's status.
-        /// </summary>
-        public ClientStatus Status { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether client is removed and is in "bin".
         /// </summary>
         public bool Trash { get; set; }

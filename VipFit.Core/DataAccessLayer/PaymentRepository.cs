@@ -28,7 +28,6 @@
             if (current == null)
                 return;
 
-            // Remove dependencies?
             db.Payments.Remove(current);
             await db.SaveChangesAsync();
         }

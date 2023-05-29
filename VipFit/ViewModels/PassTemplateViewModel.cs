@@ -241,5 +241,15 @@
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RefreshPassTemplateAsync() => Model = await App.GetService<IPassTemplateRepository>().GetAsync(Model.Id);
+        
+        internal static byte GetMonths(PassType type, PassDuration duration) => duration switch
+        {
+            PassDuration.Short => (byte)(type == PassType.Standard ? 3 : 1),
+            PassDuration.Medium => (byte)(type == PassType.Standard ? 6 : 3),
+            PassDuration.Long => (byte)(type == PassType.Standard ? 12 : 10),
+            _ => throw new NotImplementedException(),
+        };
+
+        internal static byte GetTotalEntries(byte months, PassType type) => (byte)(months * (byte)type);
     }
 }

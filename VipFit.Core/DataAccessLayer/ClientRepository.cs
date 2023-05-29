@@ -65,7 +65,6 @@
 
             if (client != null)
             {
-                // Remove dependencies? Passes and Payments.
                 db.Clients.Remove(client);
                 await db.SaveChangesAsync();
             }

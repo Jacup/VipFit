@@ -19,28 +19,30 @@
         /// <summary>
         /// Gets or sets the pass's start date.
         /// </summary>
+        [Required]
         [DataType(DataType.Date)]
-        public DateOnly StartDate { get; set; } // default = today, possible in future, but not past.
+        public DateOnly StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the pass's end date.
         /// </summary>
+        [Required]
         [DataType(DataType.Date)]
-        public DateOnly EndDate { get; set; } // automatically, depends on Pass duration.
+        public DateOnly EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets DateTime of creation.
         /// </summary>
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets last modification date.
         /// </summary>
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime ModifiedAt { get; set; }
-
-        #region Relationships
 
         /// <summary>
         /// Gets or sets the associated client's ID.
@@ -66,20 +68,19 @@
         [ForeignKey(nameof(PassTemplateId))]
         public PassTemplate PassTemplate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of associated entries.
+        /// </summary>
         [InverseProperty("Pass")]
         public IList<Entry> Entries { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of associated payments.
+        /// </summary>
         [InverseProperty("Pass")]
         public IList<Payment> Payments { get; set; }
 
-        #endregion
-
-        #region Overrides
-
+        /// <inheritdoc/>
         public override string ToString() => $"{PassTemplate.PassCode}: {StartDate.ToShortDateString()} -> {EndDate.ToShortDateString()}";
-
-        #endregion
-
-        // public IEnumerable<Payment> Payments { get; set; } // Module 3
     }
 }

@@ -1,0 +1,7 @@
+﻿{
+  "passTemplateNames": [
+    { "name": "Standard" },
+    { "name": "Pro" },
+    { "name": "Open" }
+  ]
+}
