@@ -15,12 +15,6 @@ namespace VipFit.Core.Models
         }
 
         /// <summary>
-        /// Gets or sets the amount of entries per month.
-        /// </summary>
-        [Required]
-        public byte EntriesPerMonth { get; set; }
-
-        /// <summary>
         /// Gets or sets the name of pass.
         /// </summary>
         [Required]
@@ -38,6 +32,22 @@ namespace VipFit.Core.Models
         /// </summary>
         [Required]
         public decimal PricePerMonth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of entries per month.
+        /// </summary>
+        [Required]
+        public byte EntriesPerMonth { get; set; }
+
+        /// <summary>
+        /// Gets total entries. Based on duration and amount of entries per month.
+        /// </summary>
+        public int TotalEntries => EntriesPerMonth * MonthsDuration;
+
+        /// <summary>
+        /// Gets total entries. Based on duration and amount of entries per month.
+        /// </summary>
+        public decimal TotalPrice => PricePerMonth * MonthsDuration;
 
         /// <summary>
         /// Gets code represantation of pass.

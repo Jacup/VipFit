@@ -45,6 +45,35 @@
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether pass is active. Depends on date.
+        /// </summary>
+        public bool IsActive
+        {
+            get
+            {
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                return today >= StartDate && today < EndDate;
+            }
+        }
+
+        // PRZETESTOWAC
+        public bool IsCurrentMonthPaid
+        {
+            get
+            {
+                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+
+                for (int i = 0; i < Payments.Count; i++)
+                {
+                    if (today >= Payments.ElementAt(i).DueDate && today < Payments.ElementAt(i + 1).DueDate)
+                        return Payments.ElementAt(i + 1).Paid;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the associated client's ID.
         /// </summary>
         [Required]

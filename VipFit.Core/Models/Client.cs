@@ -2,7 +2,6 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using VipFit.Core.Enums;
 
     /// <summary>
     /// Represents a client entity.

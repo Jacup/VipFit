@@ -43,13 +43,6 @@
         public DbSet<Payment> Payments { get; set; }
 
         /// <summary>
-        /// Gets application folder.
-        /// </summary>
-        /// <returns>Path.</returns>
-        public static string GetApplicationDirectory() =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "VipFit App");
-
-        /// <summary>
         /// Initializes base db.
         /// </summary>
         public void Initialize()
@@ -58,6 +51,13 @@
 
             Database.EnsureCreated();
         }
+
+        /// <summary>
+        /// Gets application folder.
+        /// </summary>
+        /// <returns>Path.</returns>
+        public static string GetApplicationDirectory() =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "VipFit App");
 
         /// <summary>
         /// Initializes on creating db model.
