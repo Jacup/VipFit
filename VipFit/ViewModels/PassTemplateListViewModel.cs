@@ -6,6 +6,9 @@
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
 
+    /// <summary>
+    /// Pass Template list VM.
+    /// </summary>
     public class PassTemplateListViewModel : ObservableRecipient
     {
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -13,6 +16,9 @@
 
         private bool isLoading;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassTemplateListViewModel"/> class.
+        /// </summary>
         public PassTemplateListViewModel() => Task.Run(GetPassTemplateListAsync);
 
         /// <summary>
