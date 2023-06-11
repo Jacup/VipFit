@@ -40,16 +40,6 @@ namespace VipFit.Core.Models
         public byte EntriesPerMonth { get; set; }
 
         /// <summary>
-        /// Gets total entries. Based on duration and amount of entries per month.
-        /// </summary>
-        public int TotalEntries => EntriesPerMonth * MonthsDuration;
-
-        /// <summary>
-        /// Gets total entries. Based on duration and amount of entries per month.
-        /// </summary>
-        public decimal TotalPrice => PricePerMonth * MonthsDuration;
-
-        /// <summary>
         /// Gets code represantation of pass.
         /// </summary>
         public string PassCode => $"VF-{Name}-{MonthsDuration}M";
