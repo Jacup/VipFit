@@ -1,26 +1,19 @@
 namespace VipFit.ViewModels
 {
-    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
-    using VipFit.Core.Enums;
     using VipFit.Core.Models;
+    using Windows.ApplicationModel.Resources;
 
     /// <summary>
     /// Client VM.
     /// </summary>
-    public class ClientViewModel : ObservableRecipient
+    public class ClientViewModel : BaseViewModel
     {
-        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
         private Client model;
-        private Pass selectedPass;
-
-        private bool isLoading;
-        private bool isNewClient;
-        private bool isInEdit = false;
+        private Pass? selectedPass;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientViewModel"/> class.
@@ -55,45 +48,19 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the underlying model has been modified.
+        /// Gets collection of passes.
         /// </summary>
-        /// <remarks>
-        /// Used when syncing with the server to reduce load and only upload the models that have changed.
-        /// </remarks>
-        public bool IsModified { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show a progress bar.
-        /// </summary>
-        public bool IsLoading
-        {
-            get => isLoading;
-            set => SetProperty(ref isLoading, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this is new client.
-        /// </summary>
-        public bool IsNewClient
-        {
-            get => isNewClient;
-            set => SetProperty(ref isNewClient, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the client data is being edited.
-        /// </summary>
-        public bool IsInEdit
-        {
-            get => isInEdit;
-            set => SetProperty(ref isInEdit, value);
-        }
-
         public ObservableCollection<Pass> Passes { get; } = new();
 
+        /// <summary>
+        /// Gets collection of entries.
+        /// </summary>
         public ObservableCollection<Entry> Entries { get; } = new();
 
-        public Pass SelectedPass
+        /// <summary>
+        /// Gets or sets the selected pass.
+        /// </summary>
+        public Pass? SelectedPass
         {
             get => selectedPass;
             set
@@ -145,10 +112,10 @@ namespace VipFit.ViewModels
         /// Gets the client's full (first + last) name.
         /// </summary>
         public string Name =>
-            IsNewClient &&
+            IsNew &&
             string.IsNullOrEmpty(FirstName) &&
             string.IsNullOrEmpty(LastName) ?
-            "New Client" : $"{FirstName} {LastName}";
+            ResourceLoader.GetForViewIndependentUse("Resources").GetString("NewClient") : $"{FirstName} {LastName}";
 
         /// <summary>
         /// Gets or sets the client's phone number.
@@ -311,23 +278,6 @@ namespace VipFit.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets client's status.
-        /// </summary>
-        public ClientStatus Status
-        {
-            get => Model.Status;
-            set
-            {
-                if (value != Model.Status)
-                {
-                    Model.Status = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether client is removed and is in "bin".
         /// </summary>
         public bool Trash
@@ -348,14 +298,15 @@ namespace VipFit.ViewModels
 
         #endregion
 
-        public async Task SaveAsync()
+        /// <inheritdoc/>
+        public override async Task SaveAsync()
         {
             IsInEdit = false;
             IsModified = false;
 
-            if (IsNewClient)
+            if (IsNew)
             {
-                IsNewClient = false;
+                IsNew = false;
                 Model.CreatedAt = DateTime.Now;
                 App.GetService<ClientListViewModel>().Clients.Add(this);
             }
@@ -364,22 +315,17 @@ namespace VipFit.ViewModels
             await App.GetService<IClientRepository>().UpsertAsync(Model);
         }
 
-        /// <summary>
-        /// Cancels any in progress edits.
-        /// </summary>
-        public async Task CancelEditsAsync()
+        /// <inheritdoc/>
+        public override async Task CancelEditsAsync()
         {
-            if (IsNewClient)
+            if (IsNew)
                 AddNewClientCanceled?.Invoke(this, EventArgs.Empty);
             else
                 await RevertChangesAsync();
         }
 
-        /// <summary>
-        /// Deletes user.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task DeleteAsync()
+        /// <inheritdoc/>
+        public override async Task DeleteAsync()
         {
             if (Model != null)
             {
@@ -389,15 +335,12 @@ namespace VipFit.ViewModels
             }
         }
 
-        /// <summary>
-        /// Discards any edits that have been made, restoring the original values.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RevertChangesAsync()
+        /// <inheritdoc/>
+        public override async Task RevertChangesAsync()
         {
             IsInEdit = false;
 
-            if (isNewClient)
+            if (IsNew)
             {
                 IsModified = false;
                 return;
@@ -455,14 +398,14 @@ namespace VipFit.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task LoadPassesAsync()
         {
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 IsLoading = true;
             });
 
             var passes = await App.GetService<IPassRepository>().GetForClientAsync(Model.Id);
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 Passes.Clear();
                 foreach (var p in passes)
@@ -478,14 +421,17 @@ namespace VipFit.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task LoadEntriesAsync()
         {
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 IsLoading = true;
             });
 
+            if (SelectedPass == null)
+                return;
+
             var entries = await App.GetService<IEntryRepository>().GetForPassAsync(SelectedPass.Id);
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 Entries.Clear();
                 foreach (var e in entries)

@@ -3,8 +3,6 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
     using Microsoft.UI.Dispatching;
-    using Microsoft.UI.Xaml.Controls;
-    using Microsoft.Windows.ApplicationModel.DynamicDependency;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;

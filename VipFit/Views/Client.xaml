@@ -34,38 +34,46 @@
 
             <AppBarButton 
                 x:Uid="Client_Menu_SellPass"
-                Icon="Shop" 
-                IsEnabled="False"
+                Icon="Shop"
+                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                 Click="{x:Bind SellPassButton_Click}"/>
             <AppBarButton 
                 x:Uid="Client_Menu_RegisterEntry"
+                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                 IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPass), Mode=OneWay}"
                 Click="RegisterEntryButton_Click">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE726;"/>
             </AppBarButton>
             <AppBarButton 
                 x:Uid="Client_Menu_ShowPayments"
+                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                 IsEnabled="{x:Bind helpers:Converters.IsNotNull(ViewModel.SelectedPass), Mode=OneWay}"
                 Click="ShowPaymentsButton_Click">
                 <AppBarButton.Icon>
                     <BitmapIcon UriSource="ms-appx:///Assets/Icons/money.png"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarSeparator Visibility="Visible"/>
-            <AppBarButton x:Uid="Edit"
+            <AppBarSeparator
+                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"/>
+            <AppBarButton 
+                x:Uid="Edit"
                 Click="{x:Bind ViewModel.StartEdit}"
+                Visibility="{x:Bind helpers:Converters.CollapsedIf(ViewModel.IsInEdit), Mode=OneWay}"
                 IsEnabled="{x:Bind helpers:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                LabelPosition="Collapsed"
                 Icon="Edit"/>
-
-            <AppBarButton x:Uid="Save"
+            <AppBarButton
+                x:Uid="Save"
                 Click="{x:Bind SaveButton_Click}"
                 Icon="Save"
                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
-            <AppBarButton x:Uid="Cancel"
+            <AppBarButton
+                x:Uid="Cancel"
                 Click="{x:Bind CancelButton_Click}"
                 Icon="Cancel"
                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-            <AppBarButton x:Uid="Delete"
+            <AppBarButton 
+                x:Uid="Delete"
                 Click="{x:Bind DeleteButton_Click}"
                 Icon="Delete"
                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />

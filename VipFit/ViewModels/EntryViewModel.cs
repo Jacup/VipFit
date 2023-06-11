@@ -2,7 +2,6 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
-    using Microsoft.Extensions.Options;
     using Microsoft.UI.Dispatching;
     using System;
     using System.Collections.ObjectModel;
@@ -51,7 +50,6 @@
             Client = matchedClientFromList;
             isClientReadOnly = true;
         }
-
 
         private async void LoadClients()
         {
@@ -216,7 +214,7 @@
 
         public int? UsedEntriesCounter => Pass?.Entries.Count;
 
-        public int? LeftEntriesCounter => Pass == null ? null : Pass.PassTemplate.Entries - UsedEntriesCounter;
+        public int? LeftEntriesCounter => Pass == null ? null : Pass.PassTemplate.TotalEntries - UsedEntriesCounter;
 
         public int? ThisEntryCounter => UsedEntriesCounter == null ? null : UsedEntriesCounter + 1;
 
