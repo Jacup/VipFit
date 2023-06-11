@@ -257,17 +257,17 @@
   <data name="PassTemplate_Duration.Header" xml:space="preserve">
     <value>Czas trwania</value>
   </data>
-  <data name="PassTemplate_Entries.Header" xml:space="preserve">
-    <value>Ilość wejść</value>
+  <data name="PassTemplate_TotalEntries.Header" xml:space="preserve">
+    <value>Łączna ilość wejść</value>
   </data>
   <data name="PassTemplate_MonthsDuration.Header" xml:space="preserve">
     <value>Czas trwania w miesiącach</value>
   </data>
   <data name="PassTemplate_PassCode.Header" xml:space="preserve">
-    <value>ID</value>
+    <value>Nazwa</value>
   </data>
-  <data name="PassTemplate_Type.Header" xml:space="preserve">
-    <value>Typ</value>
+  <data name="PassTemplate_TotalPrice.Header" xml:space="preserve">
+    <value>Cena całkowita</value>
   </data>
   <data name="Shell_PassList.Content" xml:space="preserve">
     <value>Lista karnetów</value>
@@ -278,29 +278,26 @@
   <data name="PassTemplateList_Menu_Edit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Edytuj</value>
   </data>
-  <data name="PassTemplatePage_Duration.Text" xml:space="preserve">
-    <value>Czas trwania</value>
-  </data>
-  <data name="PassTemplatePage_Duration_Desc.Text" xml:space="preserve">
-    <value>Wybierz czas trwania karnetu.</value>
+  <data name="PassTemplatePage_MonthsDuration_Desc.Text" xml:space="preserve">
+    <value>Wybierz długość trwania karnetu. Wpływa na całkowitą cenę.</value>
   </data>
   <data name="PassTemplatePage_Entries.Text" xml:space="preserve">
-    <value>Ilość wejść</value>
+    <value>Łączna ilość wejść</value>
   </data>
   <data name="PassTemplatePage_MonthsDuration.Text" xml:space="preserve">
     <value>Czas trwania w miesiącach</value>
   </data>
-  <data name="PassTemplatePage_Price.Text" xml:space="preserve">
-    <value>Cena</value>
+  <data name="PassTemplatePage_PricePerMonth.Text" xml:space="preserve">
+    <value>Cena miesięczna</value>
   </data>
-  <data name="PassTemplatePage_Price_Desc.Text" xml:space="preserve">
-    <value>Cena karnetu za cały okres trwania</value>
+  <data name="PassTemplatePage_PricePerMonth_Desc.Text" xml:space="preserve">
+    <value>Miesięczny koszt karnetu. Wpływa na całkowitą cenę.</value>
   </data>
-  <data name="PassTemplatePage_Type.Text" xml:space="preserve">
-    <value>Typ karnetu</value>
+  <data name="PassTemplatePage_Name.Text" xml:space="preserve">
+    <value>Nazwa karnetu</value>
   </data>
-  <data name="PassTemplatePage_Type_Desc.Text" xml:space="preserve">
-    <value>Typ karnetu wpływa na ilość wejść w tygodniu.</value>
+  <data name="PassTemplatePage_Name_Desc.Text" xml:space="preserve">
+    <value>Nazwa karnetu jest przydatna do identyfikacji rodzaju karnetu.</value>
   </data>
   <data name="NewPassPage_Client.Text" xml:space="preserve">
     <value>Klient</value>
@@ -433,5 +430,26 @@
   </data>
   <data name="Suspended" xml:space="preserve">
     <value>Zawieszone</value>
+  </data>
+  <data name="NewClient" xml:space="preserve">
+    <value>Nowy klient</value>
+  </data>
+  <data name="PassTemplatePage_EntriesPerMonth.Text" xml:space="preserve">
+    <value>Ilość wejść w miesiącu</value>
+  </data>
+  <data name="PassTemplatePage_EntriesPerMonth_Desc.Text" xml:space="preserve">
+    <value>Ilość możliwych wejść na trening w ciągu miesiąca.</value>
+  </data>
+  <data name="PassTemplatePage_TotalPrice.Text" xml:space="preserve">
+    <value>Cena całkowita</value>
+  </data>
+  <data name="PassTemplatePage_TotalPrice_Desc.Text" xml:space="preserve">
+    <value>Całkowity koszt karnetu przez cały okres trwania.</value>
+  </data>
+  <data name="PassTemplate_PricePerMonth.Header" xml:space="preserve">
+    <value>Cena za miesiąc</value>
+  </data>
+  <data name="PassTemplate_EntriesPerMonth.Header" xml:space="preserve">
+    <value>Ilość wejść na miesiąc</value>
   </data>
 </root>

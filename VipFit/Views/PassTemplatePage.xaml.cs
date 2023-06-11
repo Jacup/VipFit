@@ -6,23 +6,30 @@ namespace VipFit.Views
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;
+    using VipFit.Views.Dialogs;
 
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// A page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class PassTemplatePage : Page, IHeaderChanger
     {
         /// <summary>
-        /// PassTemplate ViewModel.
+        /// Initializes a new instance of the <see cref="PassTemplatePage"/> class.
+        /// </summary>
+        public PassTemplatePage()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Gets or sets the PassTemplate ViewModel.
         /// </summary>
         public PassTemplateViewModel ViewModel { get; set; }
 
         /// <summary>
-        /// Helper to change header.
+        /// Gets Header Helper.
         /// </summary>
         public HeaderHelper Header { get; private set; } = new();
-
-        public PassTemplatePage() => InitializeComponent();
 
         #region INavigation
 
@@ -33,15 +40,15 @@ namespace VipFit.Views
                 ViewModel = new PassTemplateViewModel
                 {
                     IsNew = true,
-                    IsInEdit = true
+                    IsInEdit = true,
                 };
             }
             else
             {
                 ViewModel = App.GetService<PassTemplateListViewModel>().PassTemplates
                                .First(c => c.Model.Id == (Guid)e.Parameter);
-
             }
+
             Header.Text = ViewModel.PassCode;
             ViewModel.IsInEdit = true;
             ViewModel.AddNewPassTemplateCanceled += AddNewCanceled;
@@ -55,10 +62,10 @@ namespace VipFit.Views
         {
             if (ViewModel.IsModified)
             {
-                // Cancel the navigation immediately, otherwise it will continue at the await call. 
+                // Cancel the navigation immediately, otherwise it will continue at the await call.
                 e.Cancel = true;
 
-                void resumeNavigation()
+                void ResumeNavigation()
                 {
                     if (e.NavigationMode == NavigationMode.Back)
                         Frame.GoBack();
@@ -68,7 +75,7 @@ namespace VipFit.Views
 
                 SaveChangesDialog saveDialog = new()
                 {
-                    XamlRoot = Content.XamlRoot
+                    XamlRoot = Content.XamlRoot,
                 };
 
                 await saveDialog.ShowAsync();
@@ -77,11 +84,11 @@ namespace VipFit.Views
                 {
                     case SaveChangesDialogResult.Save:
                         await ViewModel.SaveAsync();
-                        resumeNavigation();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.DontSave:
                         await ViewModel.RevertChangesAsync();
-                        resumeNavigation();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.Cancel:
                         break;
@@ -110,6 +117,8 @@ namespace VipFit.Views
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.SaveAsync();
+            //ShowSuccessDialog();
+
             Frame.GoBack();
         }
 
@@ -132,12 +141,13 @@ namespace VipFit.Views
             {
                 case SaveChangesDialogResult.Save:
                     await ViewModel.SaveAsync();
-                    // TODO: Show Save confirmation dialog
+                    //ShowSuccessDialog();
                     Frame.GoBack();
                     break;
                 case SaveChangesDialogResult.DontSave:
                     if (!ViewModel.IsNew)
                         await ViewModel.RevertChangesAsync();
+                    ViewModel.IsModified = false;
                     Frame.GoBack();
                     break;
                 case SaveChangesDialogResult.Cancel:
@@ -149,7 +159,7 @@ namespace VipFit.Views
         {
             DeleteDialog deleteDialog = new()
             {
-                XamlRoot = Content.XamlRoot
+                XamlRoot = Content.XamlRoot,
             };
             await deleteDialog.ShowAsync();
 
@@ -181,9 +191,16 @@ namespace VipFit.Views
             {
                 decimal.TryParse(text, out decimal value);
 
-                if (value != ViewModel.Price)
-                    ViewModel.Price = value;
+                if (value != ViewModel.PricePerMonth)
+                    ViewModel.PricePerMonth = value;
             }
+        }
+
+        private async void ShowSuccessDialog()
+        {
+            SuccessDialog successDialog = new();
+            XamlRoot = Content.XamlRoot;
+            await successDialog.ShowAsync();
         }
     }
 }

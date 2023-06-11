@@ -75,21 +75,30 @@
 
             <controls:DataGrid.Columns>
 
-                <controls:DataGridTextColumn x:Uid="PassTemplate_PassCode"
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_PassCode"
                     Tag="PassCode"
                     Binding="{Binding PassCode}" />
-                <controls:DataGridTextColumn x:Uid="PassTemplate_Type"
-                    Tag="Type"
-                    Binding="{Binding Type}" />
-                <controls:DataGridTextColumn x:Uid="PassTemplate_MonthsDuration"
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_MonthsDuration"
                     Tag="MonthsDuration"
                     Binding="{Binding MonthsDuration}" />
-                <controls:DataGridTextColumn x:Uid="PassTemplate_Entries"
-                    Tag="Entries"
-                    Binding="{Binding Entries}" />
-                <controls:DataGridTextColumn x:Uid="PassTemplate_Price"
-                    Tag="Price"
-                    Binding="{Binding Price}"/>
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_PricePerMonth"
+                    Tag="PricePerMonth"
+                    Binding="{Binding PricePerMonth}" />
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_EntriesPerMonth"
+                    Tag="EntriesPerMonth"
+                    Binding="{Binding EntriesPerMonth}" />
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_TotalEntries"
+                    Tag="TotalEntries"
+                    Binding="{Binding TotalEntries}"/>
+                <controls:DataGridTextColumn
+                    x:Uid="PassTemplate_TotalPrice"
+                    Tag="TotalPrice"
+                    Binding="{Binding TotalPrice}"/>
             </controls:DataGrid.Columns>
 
         </controls:DataGrid>
