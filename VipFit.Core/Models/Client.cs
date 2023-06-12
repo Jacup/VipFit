@@ -11,21 +11,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
-        /// <param name="firstName">Client's first name.</param>
-        /// <param name="lastName">Client's last name.</param>
-        /// <param name="phone">Client's phone number.</param>
-        /// <param name="email">Client's email.</param>
-        public Client(string firstName, string lastName, string phone, string email)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Phone = phone;
-            Email = email;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
-        /// </summary>
         public Client()
         {
         }

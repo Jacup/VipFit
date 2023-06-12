@@ -34,23 +34,21 @@ namespace VipFit.Views
         {
             if (e.Parameter == null)
             {
-                ViewModel = new PassViewModel
+                ViewModel = new(isNewPass: true)
                 {
-                    IsNewPass = true,
                     IsInEdit = true,
                 };
             }
             else
             {
-                var guid = (Guid)e.Parameter;
-                var client = App.GetService<ClientListViewModel>().Clients.FirstOrDefault(c => c.Model.Id == guid) ?? throw new NotImplementedException("Exception thrown when user tried to create order and NON-VALID clientID was provided.");
-
-                ViewModel = new PassViewModel
+                ViewModel = e.Parameter switch
                 {
-                    Client = client.Model,
-                    IsNewPass = true,
-                    IsInEdit = true,
+                    Core.Models.Client client => new(client),
+                    _ => throw new NotImplementedException(),
                 };
+
+                ViewModel.IsNew = true;
+                ViewModel.IsInEdit = true;
             }
 
             ViewModel.AddNewPassCanceled += AddNewPassCanceled;

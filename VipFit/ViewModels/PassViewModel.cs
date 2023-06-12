@@ -1,8 +1,6 @@
 ﻿namespace VipFit.ViewModels
 {
-    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.WinUI;
-    using Microsoft.UI.Dispatching;
     using System.Collections.ObjectModel;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
@@ -11,34 +9,54 @@
     /// <summary>
     /// Pass ViewModel.
     /// </summary>
-    public class PassViewModel : ObservableRecipient
+    public class PassViewModel : BaseViewModel
     {
-        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        private readonly bool isClientReadOnly;
 
         private Pass model;
         private Client client;
         private PassTemplate passTemplate;
 
-        private bool isLoading;
-        private bool isNewPass;
-        private bool isInEdit = false;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PassViewModel"/> class.
         /// </summary>
         /// <param name="model">Pass model.</param>
-        public PassViewModel(Pass? model = null)
+        /// <param name="isNewPass">Indicates whether that is new pass.</param>
+        public PassViewModel(Pass? model = null, bool isNewPass = false)
         {
             Model = model ?? new Pass();
+            IsNew = isNewPass;
+            StartDate = DateOnly.FromDateTime(DateTime.Now);
+            EndDate = null;
+
+            LoadClients();
 
             if (!isNewPass)
             {
                 LoadClient(Model.ClientId);
                 LoadPass(Model.PassTemplateId);
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassViewModel"/> class.
+        /// </summary>
+        /// <param name="client">Client model.</param>
+        public PassViewModel(Client client)
+        {
+            Model = new();
 
             StartDate = DateOnly.FromDateTime(DateTime.Now);
             EndDate = null;
+
+            LoadClients();
+            var matchedClientFromList = AvailableClients.FirstOrDefault(c => c.Id == client.Id);
+
+            if (matchedClientFromList == null)
+                return;
+
+            Client = matchedClientFromList;
+            isClientReadOnly = true;
         }
 
         /// <summary>
@@ -58,7 +76,6 @@
                     return;
 
                 model = value;
-
                 OnPropertyChanged(string.Empty);
             }
         }
@@ -73,13 +90,13 @@
             get => client;
             set
             {
-                if (value != client)
-                {
-                    client = value;
-                    Model.ClientId = value.Id;
-                    IsModified = true;
-                    OnPropertyChanged();
-                }
+                if (value == client)
+                    return;
+
+                client = value;
+                Model.ClientId = value.Id;
+                IsModified = true;
+                OnPropertyChanged();
             }
         }
 
@@ -91,16 +108,16 @@
             get => passTemplate;
             set
             {
-                if (value != passTemplate)
-                {
-                    passTemplate = value;
-                    model.PassTemplate = value;
-                    Model.PassTemplateId = value.Id;
-                    IsModified = true;
-                    OnPropertyChanged();
+                if (value == passTemplate)
+                    return;
 
-                    SetDependentOptions();
-                }
+                passTemplate = value;
+                Model.PassTemplate = value;
+                Model.PassTemplateId = value.Id;
+                IsModified = true;
+                OnPropertyChanged();
+
+                SetDependentOptions();
             }
         }
 
@@ -113,7 +130,6 @@
             set
             {
                 // TODO: Validation if set in the past. some dialog would be nice.
-
                 if (value is not null && value != Model.StartDate)
                 {
                     Model.StartDate = (DateOnly)value;
@@ -152,6 +168,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets a list of entries.
+        /// </summary>
         public IList<Entry> Entries
         {
             get => Model.Entries;
@@ -176,12 +195,12 @@
             get => Model.CreatedAt;
             set
             {
-                if (value != Model.CreatedAt)
-                {
-                    Model.CreatedAt = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                }
+                if (value == Model.CreatedAt)
+                    return;
+
+                Model.CreatedAt = value;
+                IsModified = true;
+                OnPropertyChanged();
             }
         }
 
@@ -193,56 +212,28 @@
             get => Model.ModifiedAt;
             set
             {
-                if (value != Model.ModifiedAt)
-                {
-                    Model.ModifiedAt = value;
-                    IsModified = true;
-                    OnPropertyChanged();
-                }
+                if (value == Model.ModifiedAt)
+                    return;
+
+                Model.ModifiedAt = value;
+                IsModified = true;
+                OnPropertyChanged();
             }
         }
 
+        #endregion
+
+        #endregion
+
+        /// <summary>
+        /// Gets a value indicating whether client is already set and can't be changed.
+        /// </summary>
+        public bool IsClientReadOnly => isClientReadOnly;
+
+        /// <summary>
+        /// Gets or sets an observable collection of payments.
+        /// </summary>
         public ObservableCollection<Payment> Payments { get; set; }
-
-        #endregion
-
-        #endregion
-
-        #region Miscellaneous Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the underlying model has been modified.
-        /// </summary>
-        public bool IsModified { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the underlying model is being loaded. Used to show a progress bar.
-        /// </summary>
-        public bool IsLoading
-        {
-            get => isLoading;
-            set => SetProperty(ref isLoading, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this is new pass object.
-        /// </summary>
-        public bool IsNewPass
-        {
-            get => isNewPass;
-            set => SetProperty(ref isNewPass, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the pass data is being edited.
-        /// </summary>
-        public bool IsInEdit
-        {
-            get => isInEdit;
-            set => SetProperty(ref isInEdit, value);
-        }
-
-        #endregion
 
         /// <summary>
         /// Gets collection of clients in the list.
@@ -254,19 +245,16 @@
         /// </summary>
         public ObservableCollection<PassTemplate> AvailablePassTemplates { get; } = new();
 
-        /// <summary>
-        /// Insert new Pass (if new) and save changes to database.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SaveAsync()
+        /// <inheritdoc/>
+        public override async Task SaveAsync()
         {
-            isInEdit = false;
+            IsInEdit = false;
             IsModified = false;
             var dateTime = DateTime.Now;
 
-            if (IsNewPass)
+            if (IsNew)
             {
-                IsNewPass = false;
+                IsNew = false;
                 Model.CreatedAt = dateTime;
 
                 Payments = new(PaymentManager.CreatePaymentList(Model));
@@ -280,35 +268,32 @@
             await SavePaymentsAsync();
         }
 
-        public async Task SavePaymentsAsync()
+        /// <inheritdoc/>
+        public override async Task CancelEditsAsync()
         {
-            foreach (var payment in Payments)
-            {
-                await App.GetService<IPaymentRepository>().UpsertAsync(payment);
-            }
-        }
-
-        /// <summary>
-        /// Cancels any in progress edits.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CancelEditsAsync()
-        {
-            if (IsNewPass)
+            if (IsNew)
                 AddNewPassCanceled?.Invoke(this, EventArgs.Empty);
             else
                 await RevertChangesAsync();
         }
 
-        /// <summary>
-        /// Discards any edits that have been made, restoring the original values.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RevertChangesAsync()
+        /// <inheritdoc/>
+        public override async Task DeleteAsync()
+        {
+            if (Model != null)
+            {
+                IsModified = false;
+                App.GetService<PassListViewModel>().Passes.Remove(this);
+                await App.GetService<IPassRepository>().DeleteAsync(Model.Id);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override async Task RevertChangesAsync()
         {
             IsInEdit = false;
 
-            if (IsNewPass)
+            if (IsNew)
             {
                 IsModified = false;
                 return;
@@ -322,46 +307,24 @@
         }
 
         /// <summary>
-        /// Reloads all of the pass data.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RefreshPassAsync() => Model = await App.GetService<IPassRepository>().GetAsync(Model.Id);
-
-        /// <summary>
         /// Enables edit mode.
         /// </summary>
         public void StartEdit() => IsInEdit = true;
 
-        internal async Task GetAvailableClientListAsync()
-        {
-            await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
-
-            var clients = await App.GetService<IClientRepository>().GetAsync();
-
-            if (clients == null)
-                return;
-
-            await dispatcherQueue.EnqueueAsync(() =>
-            {
-                AvailableClients.Clear();
-
-                foreach (var c in clients)
-                    AvailableClients.Add(c);
-
-                IsLoading = false;
-            });
-        }
-
+        /// <summary>
+        /// Obtains list of available pass templates from database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         internal async Task GetAvailablePassTemplateListAsync()
         {
-            await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
+            await DispatcherQueue.EnqueueAsync(() => IsLoading = true);
 
             var passTemplates = await App.GetService<IPassTemplateRepository>().GetAsync();
 
             if (passTemplates == null)
                 return;
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 AvailablePassTemplates.Clear();
 
@@ -372,11 +335,46 @@
             });
         }
 
+        private async Task GetAvailableClientListAsync()
+        {
+            await DispatcherQueue.EnqueueAsync(() => IsLoading = true);
+
+            var clients = await App.GetService<IClientRepository>().GetAsync();
+
+            if (clients == null)
+                return;
+
+            await DispatcherQueue.EnqueueAsync(() =>
+            {
+                AvailableClients.Clear();
+
+                foreach (var c in clients)
+                    AvailableClients.Add(c);
+
+                IsLoading = false;
+            });
+        }
+
+        private async Task RefreshPassAsync() => Model = await App.GetService<IPassRepository>().GetAsync(Model.Id);
+
+        private async Task SavePaymentsAsync()
+        {
+            foreach (var payment in Payments)
+            {
+                await App.GetService<IPaymentRepository>().UpsertAsync(payment);
+            }
+        }
+
+        private async void LoadClients()
+        {
+            await GetAvailableClientListAsync();
+        }
+
         private async void LoadClient(Guid clientId)
         {
             var c = await App.GetService<IClientRepository>().GetAsync(clientId);
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 Client = c;
             });
@@ -386,7 +384,7 @@
         {
             var pt = await App.GetService<IPassTemplateRepository>().GetAsync(passTemplateId);
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.EnqueueAsync(() =>
             {
                 PassTemplate = pt;
             });

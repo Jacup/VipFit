@@ -67,6 +67,7 @@
             GridLinesVisibility="Horizontal"
             ItemsSource="{x:Bind ViewModel.PassTemplates}"
             SelectedItem="{x:Bind ViewModel.SelectedPassTemplate, Mode=TwoWay}"
+            IsReadOnly="True"
             SelectionMode="Single">
 
             <controls:DataGrid.Resources>

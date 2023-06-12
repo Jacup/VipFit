@@ -72,7 +72,7 @@
                         Margin="16,8"
                         RelativePanel.AlignRightWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Loaded="{x:Bind ViewModel.GetAvailableClientListAsync}"
+                        IsEnabled="{x:Bind helpers:Converters.Not(ViewModel.IsClientReadOnly), Mode=OneWay}"
                         ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
                         SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
                 </RelativePanel>
