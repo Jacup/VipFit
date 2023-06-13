@@ -4,12 +4,14 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
     using System;
+    using VipFit.Helpers;
+    using VipFit.Interfaces;
     using VipFit.ViewModels;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PassPage : Page
+    public sealed partial class PassPage : Page, IHeaderChanger
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PassPage"/> class.
@@ -20,17 +22,20 @@ namespace VipFit.Views
             DataContext = ViewModel;
         }
 
+        /// <summary>
+        /// Gets or sets the Pass ViewModel.
+        /// </summary>
         public PassViewModel ViewModel { get; set; }
 
         /// <summary>
-        /// Navigate to the previous page when the user cancels the creation of a new customer record.
+        /// Gets header.
         /// </summary>
-        private void AddNewPassCanceled(object sender, EventArgs e) => Frame.GoBack();
+        public HeaderHelper Header { get; private set; } = new();
 
         #region INavigation Implementations
 
         /// <inheritdoc/>
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter == null)
             {
@@ -46,10 +51,12 @@ namespace VipFit.Views
                     Core.Models.Client client => new(client),
                     _ => throw new NotImplementedException(),
                 };
-
                 ViewModel.IsNew = true;
                 ViewModel.IsInEdit = true;
             }
+
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("Resources");
+            Header.Text = resourceLoader.GetString("Page_SellPass");
 
             ViewModel.AddNewPassCanceled += AddNewPassCanceled;
             base.OnNavigatedTo(e);
@@ -62,10 +69,9 @@ namespace VipFit.Views
         {
             if (ViewModel.IsModified)
             {
-                // Cancel the navigation immediately, otherwise it will continue at the await call. 
                 e.Cancel = true;
 
-                void resumeNavigation()
+                void ResumeNavigation()
                 {
                     if (e.NavigationMode == NavigationMode.Back)
                         Frame.GoBack();
@@ -82,11 +88,11 @@ namespace VipFit.Views
                 {
                     case SaveChangesDialogResult.Save:
                         await ViewModel.SaveAsync();
-                        resumeNavigation();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.DontSave:
                         await ViewModel.RevertChangesAsync();
-                        resumeNavigation();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.Cancel:
                         break;
@@ -107,6 +113,11 @@ namespace VipFit.Views
         }
 
         #endregion
+
+        /// <summary>
+        /// Navigate to the previous page when the user cancels the creation of a new customer record.
+        /// </summary>
+        private void AddNewPassCanceled(object sender, EventArgs e) => Frame.GoBack();
 
         #region CommandBar Button_Click
 

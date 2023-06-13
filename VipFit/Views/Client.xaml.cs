@@ -51,6 +51,7 @@ namespace VipFit.Views
                     .Where(c => c.Model.Id == (Guid)e.Parameter)
                     .First();
             }
+
             Header.Text = ViewModel.Name;
             ViewModel.AddNewClientCanceled += AddNewClientCanceled;
             base.OnNavigatedTo(e);
@@ -104,6 +105,8 @@ namespace VipFit.Views
 
         #endregion
 
+        private static SlideNavigationTransitionInfo SlideInNavigation() => new() { Effect = SlideNavigationTransitionEffect.FromRight };
+
         /// <summary>
         /// Navigate to the previous page when the user cancels the creation of a new customer record.
         /// </summary>
@@ -113,17 +116,8 @@ namespace VipFit.Views
 
         private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
         {
-            // If the SelectAll box is checked (all options are selected),
-            // clicking the box will change it to its indeterminate state.
-            // Instead, we want to uncheck all the boxes,
-            // so we do this programatically. The indeterminate state should
-            // only be set programatically, not by the user.
             if (ViewModel.AgreementMarketing && ViewModel.AgreementPromoImage && ViewModel.AgreementWebsiteImage && ViewModel.AgreementSocialsImage)
-            {
-                // This will cause SelectAll_Unchecked to be executed, so
-                // we don't need to uncheck the other boxes here.
                 ViewModel.AgreementsAll = false;
-            }
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -197,10 +191,8 @@ namespace VipFit.Views
 
         private async void SellPassButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PassPage), ViewModel.Model.Id, SlideInNavigation());
+            Frame.Navigate(typeof(PassPage), ViewModel.Model, SlideInNavigation());
         }
-
-        private static SlideNavigationTransitionInfo SlideInNavigation() => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight };
 
         private async void RegisterEntryButton_Click(object sender, RoutedEventArgs e)
         {
