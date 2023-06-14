@@ -5,6 +5,7 @@ namespace VipFit.Views
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Navigation;
     using VipFit.ViewModels;
+    using Windows.ApplicationModel.Background;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -17,7 +18,7 @@ namespace VipFit.Views
 
         public PaymentListViewModel ViewModel { get; set; }
 
-        private async Task ResetPaymentList() => await dispatcherQueue.EnqueueAsync(ViewModel.GetPaymentListAsync);
+        private async Task ResetPaymentList() => await dispatcherQueue.EnqueueAsync(ViewModel.GetPaymentsForPassAsync);
 
         /// <summary>
         /// Resets the clients list when leaving the page.
@@ -59,12 +60,40 @@ namespace VipFit.Views
                 calendarDatePicker.Date = DateTime.Today;
         }
 
-        private void RefreshButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void RefreshButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.Refresh();
+            if (!ViewModel.IsModified)
+            {
+                ViewModel.Refresh();
+                return;
+            }
+
+            SaveChangesDialog saveDialog = new()
+            {
+                XamlRoot = Content.XamlRoot,
+            };
+
+            await saveDialog.ShowAsync();
+
+            switch (saveDialog.Result)
+            {
+                case SaveChangesDialogResult.Save:
+                    await ViewModel.SaveAsync();
+                    await ViewModel.Refresh();
+                    break;
+                case SaveChangesDialogResult.DontSave:
+                    ViewModel.IsModified = false;
+                    ViewModel.Refresh();
+                    break;
+                case SaveChangesDialogResult.Cancel:
+                    break;
+            }
         }
 
-        private void SaveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => ViewModel.Save();
+        private async void SaveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            await ViewModel.SaveAsync();
+        }
 
         private void SuspendButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {

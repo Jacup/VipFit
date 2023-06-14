@@ -452,4 +452,7 @@
   <data name="PassTemplate_EntriesPerMonth.Header" xml:space="preserve">
     <value>Ilość wejść na miesiąc</value>
   </data>
+  <data name="Page_SellPass" xml:space="preserve">
+    <value>Sprzedaż karnetu</value>
+  </data>
 </root>

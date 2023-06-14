@@ -4,16 +4,23 @@
     using System.Collections.Generic;
     using VipFit.Core.Models;
 
+    /// <summary>
+    /// Class that implements business logic for payments module.
+    /// </summary>
     internal static class PaymentManager
     {
+        /// <summary>
+        /// Creates collection of Payments based on provided pass object.
+        /// </summary>
+        /// <param name="pass">Pass object.</param>
+        /// <returns>Collection of created payments.</returns>
         internal static IEnumerable<Payment> CreatePaymentList(Pass pass)
         {
-            byte installments = pass.PassTemplate.MonthsDuration;
-            decimal amount = pass.PassTemplate.Price;
-            decimal installmentAmount = amount / installments;
+            byte payments = pass.PassTemplate.MonthsDuration;
+            decimal installmentAmount = pass.PassTemplate.PricePerMonth;
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-            for (byte i = 0; i < installments; i++)
+            for (byte i = 0; i < payments; i++)
             {
                 DateTime? paymentDate = i == 0 ? DateTime.Now : null;
                 bool paid = i == 0;
@@ -32,23 +39,21 @@
             }
         }
 
+        /// <summary>
+        /// Creates single payment added as the next (or last) payment of the provided pass.
+        /// </summary>
+        /// <param name="lastPayment">Base payment.</param>
+        /// <param name="pass">Base pass.</param>
+        /// <returns>Created payment.</returns>
         internal static Payment CreateNextPayment(Payment lastPayment, Pass pass)
         {
             return new()
             {
-                Amount = lastPayment.Amount,
+                Amount = pass.PassTemplate.PricePerMonth,
                 DueDate = lastPayment.DueDate.AddMonths(1),
                 Pass = pass,
                 PassId = pass.Id,
             };
         }
-
-        internal static decimal GetSinglePaymentAmountForPass(Pass pass)
-        {
-            byte installments = pass.PassTemplate.MonthsDuration;
-            decimal passPrice = pass.PassTemplate.Price;
-            return passPrice / installments;
-        }
-
     }
 }

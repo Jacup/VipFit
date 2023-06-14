@@ -71,6 +71,8 @@
         /// <inheritdoc/>
         public async Task<Payment> UpsertAsync(Payment payment)
         {
+            payment.Pass = null;
+
             var current = await db.Payments.FirstOrDefaultAsync(p => p.Id == payment.Id);
 
             if (current == null)

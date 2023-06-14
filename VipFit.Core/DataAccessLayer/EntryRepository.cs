@@ -61,6 +61,7 @@
         /// <inheritdoc/>
         public async Task<Entry> UpsertAsync(Entry entry)
         {
+            entry.Pass = null;
             var current = await db.Entries.FirstOrDefaultAsync(p => p.Id == entry.Id);
 
             if (current == null)
