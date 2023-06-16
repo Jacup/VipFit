@@ -3,12 +3,20 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:VipFit.Views"
+    xmlns:behaviors="using:VipFit.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:VipFit.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:VipFit.ViewModels"
+    behaviors:NavigationViewHeaderBehavior.HeaderContext="{x:Bind Header, Mode=OneWay}"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:PassViewModel}">
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="helpers:HeaderHelper">
+            <TextBlock Text="{x:Bind Text, Mode=OneWay}" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Page.Resources>
         <helpers:DateOnlyConverter x:Key="DateOnlyConverter" />
@@ -72,7 +80,7 @@
                         Margin="16,8"
                         RelativePanel.AlignRightWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Loaded="{x:Bind ViewModel.GetAvailableClientListAsync}"
+                        IsEnabled="{x:Bind helpers:Converters.Not(ViewModel.IsClientReadOnly), Mode=OneWay}"
                         ItemsSource="{x:Bind ViewModel.AvailableClients, Mode=OneWay}" 
                         SelectedItem="{x:Bind ViewModel.Client, Mode=TwoWay}"/>
                 </RelativePanel>

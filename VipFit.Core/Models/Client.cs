@@ -2,28 +2,12 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using VipFit.Core.Enums;
 
     /// <summary>
     /// Represents a client entity.
     /// </summary>
     public class Client : DbObject, IEquatable<Client>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
-        /// </summary>
-        /// <param name="firstName">Client's first name.</param>
-        /// <param name="lastName">Client's last name.</param>
-        /// <param name="phone">Client's phone number.</param>
-        /// <param name="email">Client's email.</param>
-        public Client(string firstName, string lastName, string phone, string email)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Phone = phone;
-            Email = email;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
@@ -111,11 +95,6 @@
         public string Comment { get; set; }
 
         /// <summary>
-        /// Gets or sets client's status.
-        /// </summary>
-        public ClientStatus Status { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether client is removed and is in "bin".
         /// </summary>
         public bool Trash { get; set; }
@@ -124,6 +103,9 @@
 
         #region Relationships
 
+        /// <summary>
+        /// Gets or sets collection of Client's Passes.
+        /// </summary>
         [InverseProperty("Client")]
         public ICollection<Pass> Passes { get; set; }
 

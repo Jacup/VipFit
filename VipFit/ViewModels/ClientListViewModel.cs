@@ -22,7 +22,7 @@
         public ClientListViewModel() => Task.Run(GetClientListAsync);
 
         /// <summary>
-        /// Collection of clients in the list.
+        /// Gets the collection of clients in the list.
         /// </summary>
         public ObservableCollection<ClientViewModel> Clients { get; } = new ObservableCollection<ClientViewModel>();
 
@@ -80,7 +80,6 @@
 
                 IsLoading = true;
                 await GetClientListAsync();
-                await Task.Delay(TimeSpan.FromSeconds(2));
                 isLoading = false;
             });
         }

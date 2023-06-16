@@ -7,6 +7,7 @@ namespace VipFit.Views
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;
+    using VipFit.Views.Dialogs;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -28,20 +29,16 @@ namespace VipFit.Views
         /// </summary>
         public HeaderHelper Header { get; private set; } = new();
 
-        /// <summary>
-        /// Navigate to the previous page when the user cancels the creation of a new customer record.
-        /// </summary>
-        private void AddNewClientCanceled(object sender, EventArgs e) => Frame.GoBack();
-
         #region INavigation Implementations
 
+        /// <inheritdoc/>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter == null)
             {
                 ViewModel = new ClientViewModel
                 {
-                    IsNewClient = true,
+                    IsNew = true,
                     IsInEdit = true,
                 };
                 VisualStateManager.GoToState(this, "NewCustomer", false);
@@ -54,22 +51,21 @@ namespace VipFit.Views
                     .Where(c => c.Model.Id == (Guid)e.Parameter)
                     .First();
             }
+
             Header.Text = ViewModel.Name;
             ViewModel.AddNewClientCanceled += AddNewClientCanceled;
             base.OnNavigatedTo(e);
         }
 
-        /// <summary>
-        /// Check whether there are unsaved changes and warn the user.
-        /// </summary>
+        /// <inheritdoc/>
         protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (ViewModel.IsModified)
             {
-                // Cancel the navigation immediately, otherwise it will continue at the await call. 
+                // Cancel the navigation immediately, otherwise it will continue at the await call.
                 e.Cancel = true;
 
-                void resumeNavigation()
+                void ResumeNavigation()
                 {
                     if (e.NavigationMode == NavigationMode.Back)
                         Frame.GoBack();
@@ -77,20 +73,20 @@ namespace VipFit.Views
                         Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
                 }
 
-                var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
-                saveDialog.XamlRoot = this.Content.XamlRoot;
+                var saveDialog = new SaveChangesDialog();
+                saveDialog.XamlRoot = Content.XamlRoot;
                 await saveDialog.ShowAsync();
                 SaveChangesDialogResult result = saveDialog.Result;
 
                 switch (result)
                 {
                     case SaveChangesDialogResult.Save:
-                        SaveAndUpdateHeader();
-                        resumeNavigation();
+                        SaveAndUpdate();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.DontSave:
                         await ViewModel.RevertChangesAsync();
-                        resumeNavigation();
+                        ResumeNavigation();
                         break;
                     case SaveChangesDialogResult.Cancel:
                         break;
@@ -100,10 +96,7 @@ namespace VipFit.Views
             base.OnNavigatingFrom(e);
         }
 
-        /// <summary>
-        /// Disconnects the AddNewCustomerCanceled event handler from the ViewModel 
-        /// when the parent frame navigates to a different page.
-        /// </summary>
+        /// <inheritdoc/>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             ViewModel.AddNewClientCanceled -= AddNewClientCanceled;
@@ -112,38 +105,44 @@ namespace VipFit.Views
 
         #endregion
 
+        private static SlideNavigationTransitionInfo SlideInNavigation() => new() { Effect = SlideNavigationTransitionEffect.FromRight };
+
+        /// <summary>
+        /// Navigate to the previous page when the user cancels the creation of a new customer record.
+        /// </summary>
+        private void AddNewClientCanceled(object sender, EventArgs e) => Frame.GoBack();
+
         #region Buttons Actions
 
-        public void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
+        private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
         {
-            // If the SelectAll box is checked (all options are selected),
-            // clicking the box will change it to its indeterminate state.
-            // Instead, we want to uncheck all the boxes,
-            // so we do this programatically. The indeterminate state should
-            // only be set programatically, not by the user.
-
             if (ViewModel.AgreementMarketing && ViewModel.AgreementPromoImage && ViewModel.AgreementWebsiteImage && ViewModel.AgreementSocialsImage)
-            {
-                // This will cause SelectAll_Unchecked to be executed, so
-                // we don't need to uncheck the other boxes here.
                 ViewModel.AgreementsAll = false;
-            }
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ViewModel.IsModified)
             {
-                // todo: dialog: not made any changes.
+                await ViewModel.RevertChangesAsync();
+                return;
             }
 
-            SaveAndUpdateHeader();
+            SaveAndUpdate();
         }
 
-        private async void SaveAndUpdateHeader()
+        private async void SaveAndUpdate()
         {
             await ViewModel.SaveAsync();
             Header.Text = ViewModel.Name;
+            //ShowSuccessDialog();
+        }
+
+        private async void ShowSuccessDialog()
+        {
+            var successDialog = new SuccessDialog();
+            XamlRoot = Content.XamlRoot;
+            await successDialog.ShowAsync();
         }
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -154,15 +153,15 @@ namespace VipFit.Views
                 return;
             }
 
-            var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
-            saveDialog.XamlRoot = this.Content.XamlRoot;
+            var saveDialog = new SaveChangesDialog();
+            saveDialog.XamlRoot = Content.XamlRoot;
             await saveDialog.ShowAsync();
             SaveChangesDialogResult result = saveDialog.Result;
 
             switch (result)
             {
                 case SaveChangesDialogResult.Save:
-                    SaveAndUpdateHeader();
+                    SaveAndUpdate();
                     break;
                 case SaveChangesDialogResult.DontSave:
                     await ViewModel.RevertChangesAsync();
@@ -190,23 +189,21 @@ namespace VipFit.Views
             }
         }
 
-        private void SellPassButton_Click(object sender, RoutedEventArgs e)
+        private async void SellPassButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PassPage), ViewModel.Model, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(PassPage), ViewModel.Model, SlideInNavigation());
         }
 
         private async void RegisterEntryButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(EntryPage), ViewModel.SelectedPass, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(EntryPage), ViewModel.SelectedPass, SlideInNavigation());
         }
 
-        private void ShowPaymentsButton_Click(object sender, RoutedEventArgs e)
+        private async void ShowPaymentsButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ClientPaymentsPage), ViewModel.SelectedPass, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(ClientPaymentsPage), ViewModel.SelectedPass, SlideInNavigation());
         }
 
         #endregion
-
-
     }
 }

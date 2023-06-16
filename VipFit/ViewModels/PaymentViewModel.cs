@@ -1,51 +1,25 @@
 ﻿namespace VipFit.ViewModels
 {
-    using CommunityToolkit.Mvvm.ComponentModel;
-    using Microsoft.UI.Dispatching;
-    using Newtonsoft.Json.Linq;
     using VipFit.Core.DataAccessLayer.Interfaces;
     using VipFit.Core.Models;
-    using VipFit.Managers;
     using Windows.ApplicationModel.Resources;
 
     /// <summary>
     /// Payment ViewModel.
     /// </summary>
-    public class PaymentViewModel : ObservableRecipient
+    public class PaymentViewModel : BaseViewModel
     {
-        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
-        private bool isLoading;
-        private bool isNew;
         private Payment model;
 
-        public PaymentViewModel(Payment model)
-        {
-            Model = model;
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PaymentViewModel"/> class.
+        /// </summary>
+        /// <param name="model">Payment model.</param>
+        public PaymentViewModel(Payment model) => Model = model ?? new();
 
         /// <summary>
-        /// Raised when the user cancels the changes they've made to the payment data.
+        /// Gets or sets the underlying Payment object.
         /// </summary>
-        public event EventHandler AddNewPaymentCanceled;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the underlying model has been modified.
-        /// </summary>
-        /// <remarks>
-        /// Used when syncing with the server to reduce load and only upload the models that have changed.
-        /// </remarks>
-        public bool IsModified { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the underlying model is being loaded. Used to show a progress bar.
-        /// </summary>
-        public bool IsLoading
-        {
-            get => isLoading;
-            set => SetProperty(ref isLoading, value);
-        }
-
         public Payment Model
         {
             get => model;
@@ -59,6 +33,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Payment DueDate.
+        /// </summary>
         public DateOnly DueDate
         {
             get => Model.DueDate;
@@ -73,6 +50,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the current Payment date.
+        /// </summary>
         public DateTime? PaymentDate
         {
             get => Model.PaymentDate;
@@ -80,12 +60,16 @@
             {
                 if (Model.PaymentDate == value)
                     return;
+
                 IsModified = true;
                 Model.PaymentDate = value;
                 OnPropertyChanged();
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the payment is done. Affects Comment and Payment date.
+        /// </summary>
         public bool Paid
         {
             get => Model.Paid;
@@ -98,21 +82,23 @@
                 Model.Paid = value;
                 OnPropertyChanged();
 
-                if (value)
-                {
-                    PaymentDate = DateTime.Now;
-
-                    var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
-                    Comment = resourceLoader == null ? "Paid" : resourceLoader.GetString("Paid");
-                }
-                else
+                if (!value)
                 {
                     PaymentDate = null;
                     Comment = string.Empty;
+                    return;
                 }
+
+                PaymentDate = DateTime.Now;
+
+                var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+                Comment = resourceLoader == null ? "Paid" : resourceLoader.GetString("Paid");
             }
         }
 
+        /// <summary>
+        /// Gets or sets the comment.
+        /// </summary>
         public string Comment
         {
             get => Model.Comment;
@@ -120,13 +106,16 @@
             {
                 if (Model.Comment == value)
                     return;
-                
+
                 IsModified = true;
                 Model.Comment = value;
                 OnPropertyChanged();
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of payment.
+        /// </summary>
         public decimal Amount
         {
             get => Model.Amount;
@@ -141,6 +130,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the pass is suspended.
+        /// </summary>
         public bool IsSuspended
         {
             get => Model.IsSuspended;
@@ -154,40 +146,14 @@
                 OnPropertyChanged();
 
                 if (value)
-                    Suspend();
+                    SuspendPayment();
                 else
-                    Resume();
+                    ResumePass();
             }
         }
 
-        private void Suspend()
-        {
-            PaymentDate = null;
-            Paid = false;
-            Amount = 0;
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
-            Comment = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
-        }
-
-        private async void Resume()
-        {
-            if (Model.Pass == null)
-                Model.Pass = await GetPassForPaymentAsync(Model);
-
-            Amount = PaymentManager.GetSinglePaymentAmountForPass(Model.Pass);
-
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
-            string suspendString = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
-            Comment = Comment.Replace(suspendString, string.Empty);
-        }
-
-        private async Task<Pass> GetPassForPaymentAsync(Payment model) => await App.GetService<IPassRepository>().GetAsync(Model.PassId);
-
-        /// <summary>
-        /// Saves modified data.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SaveAsync()
+        /// <inheritdoc/>
+        public async override Task SaveAsync()
         {
             IsModified = false;
 
@@ -195,17 +161,20 @@
             await App.GetService<IPaymentRepository>().UpsertAsync(Model);
         }
 
-        /// <summary>
-        /// Cancels any in progress edits.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CancelEditsAsync() => await RevertChangesAsync();
+        /// <inheritdoc/>
+        public override Task DeleteAsync()
+        {
+            throw new NotImplementedException();
+        }
 
-        /// <summary>
-        /// Discards any edits that have been made, restoring the original values.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RevertChangesAsync()
+        /// <inheritdoc/>
+        public async override Task CancelEditsAsync()
+        {
+            await RevertChangesAsync();
+        }
+
+        /// <inheritdoc/>
+        public async override Task RevertChangesAsync()
         {
             if (!IsModified)
                 return;
@@ -215,16 +184,9 @@
         }
 
         /// <summary>
-        /// Reloads all of the payment data.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RefreshPaymentAsync() =>
-            Model = await App.GetService<IPaymentRepository>().GetAsync(Model.Id);
-
-        /// <summary>
         /// Called when a bound DataGrid control causes the payment to enter edit mode.
         /// </summary>
-        public void BeginEdit()
+        internal void BeginEdit()
         {
             // Not used.
         }
@@ -232,11 +194,37 @@
         /// <summary>
         /// Called when a bound DataGrid control cancels the edits that have been made to a payment.
         /// </summary>
-        public async void CancelEdit() => await CancelEditsAsync();
+        internal async void CancelEdit() => await CancelEditsAsync();
 
         /// <summary>
         /// Called when a bound DataGrid control commits the edits that have been made to a payment.
         /// </summary>
-        public async void EndEdit() => await SaveAsync();
+        internal async void EndEdit() => await SaveAsync();
+
+        private void SuspendPayment()
+        {
+            PaymentDate = null;
+            Paid = false;
+            Amount = 0;
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+            Comment = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
+        }
+
+        private async void ResumePass()
+        {
+            if (Model.Pass == null)
+                Model.Pass = await GetPassForPaymentAsync(Model);
+
+            Amount = Model.Pass.PassTemplate.PricePerMonth;
+
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
+            string suspendString = resourceLoader == null ? "Suspended" : resourceLoader.GetString("Suspended");
+            Comment = Comment.Replace(suspendString, string.Empty);
+        }
+
+        private async Task<Pass> GetPassForPaymentAsync(Payment model) => await App.GetService<IPassRepository>().GetAsync(Model.PassId);
+
+        private async Task RefreshPaymentAsync() =>
+            Model = await App.GetService<IPaymentRepository>().GetAsync(Model.Id);
     }
 }

@@ -63,90 +63,123 @@
                 <StackPanel x:Name="propertiesGroup1" HorizontalAlignment="Stretch">
                     <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Width="Auto">
                         <FontIcon
-                        x:Name="TypeIcon"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Margin="18"
-                        FontSize="35"
-                        Glyph="&#xE97C;"/>
+                            x:Name="NameIcon"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Margin="18"
+                            FontSize="35"
+                            Glyph="&#xE8AC;"/>
                         <TextBlock
-                        x:Uid="PassTemplatePage_Type"
-                        x:Name="TypeTitle"
-                        RelativePanel.RightOf="TypeIcon"
-                        Margin="8,16,16,1"
-                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                            x:Uid="PassTemplatePage_Name"
+                            x:Name="NameTitle"
+                            RelativePanel.RightOf="NameIcon"
+                            Margin="8,16,16,1"
+                            Style="{ThemeResource BodyTextBlockStyle}"/>
                         <TextBlock 
-                        x:Uid="PassTemplatePage_Type_Desc"
-                        x:Name="TypeDesc"
-                        RelativePanel.RightOf="TypeIcon"
-                        RelativePanel.Below="TypeTitle"
-                        Margin="8,1,16,16"
-                        TextWrapping="WrapWholeWords"
-                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            x:Uid="PassTemplatePage_Name_Desc"
+                            x:Name="NameDesc"
+                            RelativePanel.RightOf="NameIcon"
+                            RelativePanel.Below="NameTitle"
+                            Margin="8,1,16,16"
+                            TextWrapping="WrapWholeWords"
+                            Style="{ThemeResource CaptionTextBlockStyle}"/>
                         <ComboBox
-                        MinWidth="140"
-                        Margin="16,8"
-                        RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        ItemsSource="{x:Bind ViewModel.AvailablePassTypes, Mode=OneWay}" 
-                        SelectedItem="{x:Bind ViewModel.Type.ToString(), BindBack=ViewModel.SetType, Mode=TwoWay}" />
+                            x:Name="Name_ComboBox"
+                            IsEditable="True"
+                            MinWidth="140"
+                            Margin="16,8"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            ItemsSource="{x:Bind ViewModel.SuggestedNames, Mode=OneWay}" 
+                            Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </RelativePanel>
                     <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
                         <FontIcon
-                        x:Name="DurationIcon"
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Margin="18"
-                        FontSize="35"
-                        Glyph="&#xEC92;"/>
+                            x:Name="MonthsDurationIcon"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Margin="18"
+                            FontSize="35"
+                            Glyph="&#xEC92;"/>
                         <TextBlock
-                        x:Uid="PassTemplatePage_Duration"
-                        x:Name="DurationTitle"
-                        RelativePanel.RightOf="DurationIcon"
-                        Margin="8,16,16,2"
-                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                            x:Uid="PassTemplatePage_MonthsDuration"
+                            x:Name="MonthsDurationTitle"
+                            RelativePanel.RightOf="MonthsDurationIcon"
+                            Margin="8,16,16,2"
+                            Style="{ThemeResource BodyTextBlockStyle}"/>
                         <TextBlock 
-                        x:Uid="PassTemplatePage_Duration_Desc"
-                        x:Name="DurationDesc"
-                        RelativePanel.RightOf="DurationIcon"
-                        RelativePanel.Below="DurationTitle"
-                        Margin="8,2,16,16"
-                        TextWrapping="WrapWholeWords"
-                        Style="{ThemeResource CaptionTextBlockStyle}"/>
-                        <ComboBox
-                        MinWidth="140"
-                        Margin="16,8"
-                        RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        ItemsSource="{x:Bind ViewModel.AvailablePassDurations, Mode=OneWay}" 
-                        SelectedItem="{x:Bind ViewModel.Duration.ToString(), BindBack=ViewModel.SetDuration, Mode=TwoWay}" />
+                            x:Uid="PassTemplatePage_MonthsDuration_Desc"
+                            x:Name="MonthsDurationDesc"
+                            RelativePanel.RightOf="MonthsDurationIcon"
+                            RelativePanel.Below="MonthsDurationTitle"
+                            Margin="8,2,16,16"
+                            TextWrapping="WrapWholeWords"
+                            Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <NumberBox
+                            MinWidth="140"
+                            Margin="16,8"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            SpinButtonPlacementMode="Inline"
+                            Value="{ x:Bind ViewModel.MonthsDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </RelativePanel>
                     <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
                         <FontIcon
-                        x:Name="PriceIcon"
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Margin="18"
-                        FontSize="35"
-                        Glyph="&#xE7BF;"/>
+                            x:Name="EntriesPerMonthIcon"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Margin="18"
+                            FontSize="35"
+                            Glyph="&#xE8B1;"/>
                         <TextBlock
-                        x:Uid="PassTemplatePage_Price"
-                        x:Name="PriceTitle"
-                        RelativePanel.RightOf="PriceIcon"
-                        Margin="8,16,16,1"
-                        Style="{ThemeResource BodyTextBlockStyle}"/>
+                            x:Uid="PassTemplatePage_EntriesPerMonth"
+                            x:Name="EntriesPerMonthTitle"
+                            RelativePanel.RightOf="EntriesPerMonthIcon"
+                            Margin="8,16,16,2"
+                            Style="{ThemeResource BodyTextBlockStyle}"/>
                         <TextBlock 
-                        x:Uid="PassTemplatePage_Price_Desc"
-                        x:Name="PriceDesc"
-                        RelativePanel.RightOf="PriceIcon"
-                        RelativePanel.Below="PriceTitle"
-                        Margin="8,1,16,16"
-                        Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            x:Uid="PassTemplatePage_EntriesPerMonth_Desc"
+                            x:Name="EntriesPerMonthDesc"
+                            RelativePanel.RightOf="EntriesPerMonthIcon"
+                            RelativePanel.Below="EntriesPerMonthTitle"
+                            Margin="8,2,16,16"
+                            TextWrapping="WrapWholeWords"
+                            Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <NumberBox
+                            MinWidth="140"
+                            Margin="16,8"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            SpinButtonPlacementMode="Inline"
+                            Value="{ x:Bind ViewModel.EntriesPerMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </RelativePanel>
+                    <RelativePanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
+                        <FontIcon
+                            x:Name="PriceIcon"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Margin="18"
+                            FontSize="35"
+                            Glyph="&#xE7BF;"/>
+                        <TextBlock
+                            x:Uid="PassTemplatePage_PricePerMonth"
+                            x:Name="PriceTitle"
+                            RelativePanel.RightOf="PriceIcon"
+                            Margin="8,16,16,1"
+                            Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock 
+                            x:Uid="PassTemplatePage_PricePerMonth_Desc"
+                            x:Name="PriceDesc"
+                            RelativePanel.RightOf="PriceIcon"
+                            RelativePanel.Below="PriceTitle"
+                            Margin="8,1,16,16"
+                            Style="{ThemeResource CaptionTextBlockStyle}"/>
                         <NumberBox
                             x:Uid="PassTemplate_Price"
                             MinWidth="140"
@@ -155,19 +188,20 @@
                             RelativePanel.AlignVerticalCenterWithPanel="True"
                             AcceptsExpression="False"
                             Loaded="NumberBox_Loaded"
-                            Value="{x:Bind ViewModel.Price, Converter={StaticResource DecimalToDoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/> <!-- TODO NIE DZIALA PROPERTYCHANGED-->
+                            Value="{x:Bind ViewModel.PricePerMonth, Converter={StaticResource DecimalToDoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- TODO NIE DZIALA PROPERTYCHANGED-->
                     </RelativePanel>
                 </StackPanel>
-                
+
                 <StackPanel x:Name="propertiesGroup2">
                     <StackPanel Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="6" Margin="0,4,0,0">
                         <TextBlock 
                             Style="{ThemeResource BodyTextBlockStyle}" 
-                            x:Uid="PassTemplatePage_MonthsDuration"
+                            x:Uid="PassTemplatePage_TotalPrice"
                             Margin="8,16,16,1"/>
                         <TextBlock 
                             Style="{ThemeResource CaptionTextBlockStyle}" 
-                            Text="{x:Bind ViewModel.MonthsDuration, Mode=OneWay}"
+                            Text="{x:Bind ViewModel.TotalPrice, Mode=OneWay}"
                             Margin="8,1,16,16"/>
                     </StackPanel>
 
@@ -178,12 +212,12 @@
                             Margin="8,16,16,1"/>
                         <TextBlock 
                             Style="{ThemeResource CaptionTextBlockStyle}" 
-                            Text="{x:Bind ViewModel.Entries, Mode=OneWay}" 
+                            Text="{x:Bind ViewModel.TotalEntries, Mode=OneWay}" 
                             Margin="8,1,16,16"/>
                     </StackPanel>
 
                 </StackPanel>
-                
+
             </StackPanel>
         </ScrollViewer>
 

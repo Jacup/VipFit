@@ -1,26 +1,12 @@
 namespace VipFit.Core.Models
 {
-    using System;
-    using VipFit.Core.Enums;
+    using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// Represents a model for a pass.
+    /// Represents a model for the pass template.
     /// </summary>
     public class PassTemplate : DbObject
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PassTemplate"/> class.
-        /// </summary>
-        /// <param name="type">Pass type.</param>
-        /// <param name="duration">Pass duration.</param>
-        /// <param name="price">Price of pass.</param>
-        public PassTemplate(PassType type, PassDuration duration, decimal price)
-        {
-            Type = type;
-            Duration = duration;
-            Price = price;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PassTemplate"/> class.
         /// </summary>
@@ -29,50 +15,46 @@ namespace VipFit.Core.Models
         }
 
         /// <summary>
-        /// Gets or sets the type of pass.
+        /// Gets or sets the name of pass.
         /// </summary>
-        public PassType Type { get; set; }
+        [Required]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the duration of pass. Affects <see cref="EndDate"/>.
+        /// Gets or sets the duration of pass.
         /// </summary>
-        public PassDuration Duration { get; set; }
+        [Required]
+        public byte MonthsDuration { get; set; }
 
         /// <summary>
         /// Gets or sets pass price.
         /// </summary>
-        public decimal Price { get; set; }
-
-        #region ReadOnly Values
-
-        /// <summary>
-        /// Gets pass duration in months based on Duration and Type of pass.
-        /// </summary>
-        public byte MonthsDuration => GetMonths(Type, Duration);
+        [Required]
+        public decimal PricePerMonth { get; set; }
 
         /// <summary>
-        /// Gets amount of entries to the gym.
+        /// Gets or sets the amount of entries per month.
         /// </summary>
-        public byte Entries => GetTotalEntries(MonthsDuration, Type);
+        [Required]
+        public byte EntriesPerMonth { get; set; }
+
+        /// <summary>
+        /// Gets total entries. Based on duration and amount of entries per month.
+        /// </summary>
+        public int TotalEntries => EntriesPerMonth * MonthsDuration;
+
+        /// <summary>
+        /// Gets total entries. Based on duration and amount of entries per month.
+        /// </summary>
+        public decimal TotalPrice => PricePerMonth * MonthsDuration;
 
         /// <summary>
         /// Gets code represantation of pass.
         /// </summary>
-        public string PassCode => $"VF-{Type}-{MonthsDuration}M";
-
-        #endregion
+        public string PassCode => $"VF-{Name}-{MonthsDuration}M";
 
         /// <inheritdoc/>
         public override string ToString() => PassCode;
-
-        internal static byte GetMonths(PassType type, PassDuration duration) => duration switch
-        {
-            PassDuration.Short => (byte)(type == PassType.Standard ? 3 : 1),
-            PassDuration.Medium => (byte)(type == PassType.Standard ? 6 : 3),
-            PassDuration.Long => (byte)(type == PassType.Standard ? 12 : 10),
-            _ => throw new NotImplementedException(),
-        };
-
-        internal static byte GetTotalEntries(byte months, PassType type) => (byte)(months * (byte)type);
     }
 }

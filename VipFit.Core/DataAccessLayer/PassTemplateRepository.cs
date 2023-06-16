@@ -28,7 +28,6 @@
             if (current == null)
                 return;
 
-            // Remove dependencies?
             db.PassTemplates.Remove(current);
             await db.SaveChangesAsync();
         }
