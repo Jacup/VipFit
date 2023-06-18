@@ -6,7 +6,6 @@ namespace VipFit.Views
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;
-    using VipFit.Views.Dialogs;
 
     /// <summary>
     /// A page that can be used on its own or navigated to within a Frame.
@@ -117,7 +116,6 @@ namespace VipFit.Views
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.SaveAsync();
-            //ShowSuccessDialog();
 
             Frame.GoBack();
         }
@@ -194,13 +192,6 @@ namespace VipFit.Views
                 if (value != ViewModel.PricePerMonth)
                     ViewModel.PricePerMonth = value;
             }
-        }
-
-        private async void ShowSuccessDialog()
-        {
-            SuccessDialog successDialog = new();
-            XamlRoot = Content.XamlRoot;
-            await successDialog.ShowAsync();
         }
     }
 }
