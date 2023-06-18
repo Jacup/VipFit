@@ -1,13 +1,9 @@
 ﻿namespace VipFit
 {
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.UI.Xaml;
-    
-    using System.Configuration;
-    using System.IO;
     using VipFit.Activation;
     using VipFit.Contracts.Services;
     using VipFit.Core.Contracts.Services;
@@ -19,16 +15,12 @@
     using VipFit.Services;
     using VipFit.ViewModels;
     using VipFit.Views;
-    using Windows.Storage;
 
     /// <summary>
     /// App class.
     /// </summary>
     public partial class App : Application
     {
-        private static readonly string DbName = "vipfit_sqlite.db";
-        private static readonly string Dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, DbName);
-
         // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
         // https://docs.microsoft.com/dotnet/core/extensions/generic-host
         // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection

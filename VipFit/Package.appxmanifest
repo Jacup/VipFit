@@ -11,9 +11,9 @@
   IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
-    Name="22219JakubGramburg.VipFit"
+    Name="JakubGramburg.VipFit"
     Publisher="CN=696A1AB9-5BDC-4FF6-A397-8D5CE0867746"
-    Version="0.3.0.0" />
+    Version="0.4.0.0" />
     
   <mp:PhoneIdentity PhoneProductId="d7910237-6a1c-429b-ac2b-2fa3239e30e8" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
@@ -37,11 +37,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="ms-resource:AppDisplayName"
         Description="ms-resource:AppDescription"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png">
+        Square44x44Logo="Assets\Square44x44Logo.png" DisplayName="ms-resource:AppDisplayName">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>

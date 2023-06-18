@@ -22,7 +22,7 @@
 		<RepositoryUrl>https://github.com/Jacup/VipFit</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<Authors>Jakub Gramburg</Authors>
-		<AssemblyVersion>0.1.0.0</AssemblyVersion>
+		<AssemblyVersion>0.4.0.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<Title>VipFit</Title>

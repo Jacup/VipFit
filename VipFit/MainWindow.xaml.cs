@@ -1,15 +1,19 @@
-﻿using VipFit.Helpers;
-
-namespace VipFit;
-
-public sealed partial class MainWindow : WindowEx
+﻿namespace VipFit
 {
-    public MainWindow()
+    /// <summary>
+    /// Represents Main window.
+    /// </summary>
+    public sealed partial class MainWindow : WindowEx
     {
-        InitializeComponent();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
+        public MainWindow()
+        {
+            InitializeComponent();
 
-        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/WindowIcon.ico"));
-        Content = null;
-        Title = "AppDisplayName".GetLocalized();
+            AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/WindowIcon.ico"));
+            Content = null;
+        }
     }
 }
