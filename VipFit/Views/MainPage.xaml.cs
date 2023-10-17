@@ -19,6 +19,9 @@
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets ViewModel.
+        /// </summary>
         public MainViewModel ViewModel
         {
             get;
