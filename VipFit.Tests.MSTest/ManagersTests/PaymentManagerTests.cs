@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using VipFit.Core.Enums;
     using VipFit.Core.Models;
     using VipFit.Managers;
 

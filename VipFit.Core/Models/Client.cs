@@ -119,6 +119,7 @@
         /// <inheritdoc/>
         public bool Equals(Client other) =>
             other != null &&
+            Id == other.Id &&
             FirstName == other.FirstName &&
             LastName == other.LastName &&
             Phone == other.Phone &&
@@ -133,6 +134,7 @@
             var c = obj as Client;
 
             return
+                Id == c.Id &&
                 FirstName == c.FirstName
                 && LastName == c.LastName
                 && Phone == c.Phone
@@ -140,7 +142,19 @@
         }
 
         /// <inheritdoc/>
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = (hash * 23) + (!Id.Equals(Guid.Empty) ? Id.GetHashCode() : 0);
+                hash = (hash * 23) + (FirstName?.GetHashCode() ?? 0);
+                hash = (hash * 23) + (LastName?.GetHashCode() ?? 0);
+                hash = (hash * 23) + (Phone?.GetHashCode() ?? 0);
+                hash = (hash * 23) + (Email?.GetHashCode() ?? 0);
+                return hash;
+            }
+        }
 
         #endregion
 
