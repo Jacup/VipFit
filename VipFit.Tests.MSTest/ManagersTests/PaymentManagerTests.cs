@@ -28,7 +28,7 @@
         {
             // Arrange
             Pass pass = GetPass();
-            var expectedPrice = pass.PassTemplate.Price;
+            var expectedPrice = pass.PassTemplate.PricePerMonth;
 
             // Act
             var payments = PaymentManager.CreatePaymentList(pass);
@@ -154,7 +154,7 @@
 
         #region SetUp Methods
 
-        private static PassTemplate GetPassTemplate() => new(PassType.Standard, PassDuration.Short, 1500m);
+        private static PassTemplate GetPassTemplate() => new() { Name = "Standard", EntriesPerMonth = 4, MonthsDuration = 3 };
 
         private static Pass GetPass() => new()
         {
