@@ -7,7 +7,6 @@ namespace VipFit.Views
     using VipFit.Helpers;
     using VipFit.Interfaces;
     using VipFit.ViewModels;
-    using VipFit.Views.Dialogs;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -135,14 +134,6 @@ namespace VipFit.Views
         {
             await ViewModel.SaveAsync();
             Header.Text = ViewModel.Name;
-            //ShowSuccessDialog();
-        }
-
-        private async void ShowSuccessDialog()
-        {
-            var successDialog = new SuccessDialog();
-            XamlRoot = Content.XamlRoot;
-            await successDialog.ShowAsync();
         }
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)

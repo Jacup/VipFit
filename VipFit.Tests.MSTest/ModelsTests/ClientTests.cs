@@ -6,18 +6,99 @@
     public class ClientTests
     {
         [TestMethod]
-        public void Equals_TwoObjectsWithSameData_ShouldReturnTrue()
+        public void Client_ToString_ReturnsFullName()
         {
             // Arrange
-            Client client1 = GetBasicClient();
-            Client client2 = GetBasicClient();
+            var client = new Client
+            {
+                FirstName = "Andrzej",
+                LastName = "Kowalski",
+            };
 
-            // Act & Assert
-            Assert.IsTrue(client1.Equals(client2));
+            // Act
+            var result = client.ToString();
+
+            // Assert
+            Assert.AreEqual("Andrzej Kowalski", result);
         }
 
         [TestMethod]
-        public void IdTest_TwoObjectsWithSameData_IdShouldBeDifferent()
+        public void Client_Equals_ReturnsTrueForEqualObjects()
+        {
+            // Arrange
+            Client client1 = GetBasicClient();
+
+            // Act & Assert
+            Assert.IsTrue(client1.Equals(client1));
+        }
+
+        [TestMethod]
+        public void Client_Equals_ReturnsFalseForDifferentObjectsWithTheSameProperties()
+        {
+            // Arrange
+            Client client1 = GetBasicClient("Andrzej", "Kowalski");
+            Client client2 = GetBasicClient("Andrzej", "Kowalski");
+
+            // Act & Assert
+            Assert.IsFalse(client1.Equals(client2));
+        }
+
+        [TestMethod]
+        public void Client_Equals_ReturnsFalseForDifferentObjectsWithDifferentProperties()
+        {
+            // Arrange
+            Client client1 = GetBasicClient("Andrzej", "Kowalski");
+            Client client2 = GetBasicClient("Marian", "Kowal");
+
+            // Act & Assert
+            Assert.IsFalse(client1.Equals(client2));
+        }
+
+        [TestMethod]
+        public void Client_EqualsObj_ReturnsTrueForEqualObjects()
+        {
+            // Arrange
+            Client client1 = GetBasicClient();
+
+            // Act & Assert
+            Assert.IsTrue(client1.Equals((object)client1));
+        }
+
+        [TestMethod]
+        public void Client_EqualsObj_ReturnsFalseForDifferentObjectsWithTheSameProperties()
+        {
+            // Arrange
+            Client client1 = GetBasicClient("Andrzej", "Kowalski");
+            Client client2 = GetBasicClient("Andrzej", "Kowalski");
+
+            // Act & Assert
+            Assert.IsFalse(client1.Equals((object)client2));
+        }
+
+        [TestMethod]
+        public void Client_EqualsObj_ReturnsFalseForDifferentObjectsWithDifferentProperties()
+        {
+            // Arrange
+            Client client1 = GetBasicClient("Andrzej", "Kowalski");
+            Client client2 = GetBasicClient("Marian", "Kowal");
+
+            // Act & Assert
+            Assert.IsFalse(client1.Equals((object)client2));
+        }
+
+        [TestMethod]
+        public void Client_GetHashCode_ReturnsDifferentValueForDifferentObjects()
+        {
+            // Arrange
+            var client1 = GetBasicClient();
+            var client2 = GetBasicClient();
+
+            // Act & Assert
+            Assert.AreNotEqual(client1.GetHashCode(), client2.GetHashCode());
+        }
+
+        [TestMethod]
+        public void Client_TwoObjectsWithSameData_IdShouldBeDifferent()
         {
             // Arrange
             Client client1 = GetBasicClient();
@@ -45,7 +126,7 @@
             string lname = "Kowalski";
 
             string expectedValue = $"{fname} {lname}";
-            Client client = new(fname, lname, "123456789", "example@example.pl");
+            Client client = GetBasicClient(fname, lname);
 
             // Act & Assert
             Assert.AreEqual(expectedValue, client.ToString());
@@ -56,11 +137,7 @@
         {
             // Arrange
             string fname = "Andrzej";
-            string lname = "Kowalski";
-            string phone = "123456789";
-            string email = "example@example.pl";
-
-            Client client1 = new(fname, lname, phone, email);
+            Client client1 = new() { FirstName = fname, };
 
             // Act & Assert
             Assert.AreEqual(fname, client1.FirstName);
@@ -70,12 +147,8 @@
         public void Properties_TheSameLastNameProvided_ShouldBeTheSame()
         {
             // Arrange
-            string fname = "Andrzej";
             string lname = "Kowalski";
-            string phone = "123456789";
-            string email = "example@example.pl";
-
-            Client client1 = new(fname, lname, phone, email);
+            Client client1 = new() { LastName = lname, };
 
             // Act & Assert
             Assert.AreEqual(lname, client1.LastName);
@@ -85,12 +158,8 @@
         public void Properties_TheSamePhoneProvided_ShouldBeTheSame()
         {
             // Arrange
-            string fname = "Andrzej";
-            string lname = "Kowalski";
             string phone = "123456789";
-            string email = "example@example.pl";
-
-            Client client1 = new(fname, lname, phone, email);
+            Client client1 = new() { Phone = phone, };
 
             // Act & Assert
             Assert.AreEqual(phone, client1.Phone);
@@ -100,17 +169,15 @@
         public void Properties_TheSameEmailProvided_ShouldBeTheSame()
         {
             // Arrange
-            string fname = "Andrzej";
-            string lname = "Kowalski";
-            string phone = "123456789";
             string email = "example@example.pl";
-
-            Client client1 = new(fname, lname, phone, email);
+            Client client1 = new() { Email = email };
 
             // Act & Assert
             Assert.AreEqual(email, client1.Email);
         }
 
-        private static Client GetBasicClient() => new("Andrzej", "Kowalski", "123456789", "example@example.pl");
+        private static Client GetBasicClient() => new() { FirstName = "Andrzej", LastName = "Kowalski", Phone = "123456789", Email = "example@mail.com" };
+
+        private static Client GetBasicClient(string fname, string lname) => new() { FirstName = fname, LastName = lname, Phone = "123456789", Email = "example@mail.com" };
     }
 }
